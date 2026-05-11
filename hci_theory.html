@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>HCI Theory Guide · PUSL3122</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d1117;
+  --bg1:#111820;
+  --bg2:#161f2a;
+  --bg3:#1c2737;
+  --border:#22334a;
+  --border2:#2a3f58;
+  --tx:#d4e4f4;
+  --txm:#7d9bb8;
+  --txd:#3f5570;
+  --acc:#c5a86a;
+  --acc2:rgba(197,168,106,.15);
+  --acc3:rgba(197,168,106,.08);
+  --teal:#5ec4b0;
+  --teal2:rgba(94,196,176,.12);
+  --coral:#e07e6a;
+  --coral2:rgba(224,126,106,.12);
+  --violet:#9b84e8;
+  --violet2:rgba(155,132,232,.12);
+  --green:#74c47a;
+  --green2:rgba(116,196,122,.12);
+  --blue:#5da8e8;
+  --blue2:rgba(93,168,232,.12);
+  --pink:#e87ab6;
+  --pink2:rgba(232,122,182,.12);
+  --amber:#e8c45a;
+  --amber2:rgba(232,196,90,.12);
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --nav:240px;
+  --rad:10px;
+  --rad2:6px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+a{color:inherit;text-decoration:none;}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;width:var(--nav);height:100vh;
+  background:var(--bg1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:100;overflow-y:auto;
+  transition:transform .25s ease;
+}
+.nav-head{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--serif);font-size:18px;color:var(--acc);font-style:italic;line-height:1.1;}
+.nav-sub{font-size:10px;color:var(--txd);margin-top:2px;letter-spacing:.04em;}
+#navSearch{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad2);padding:7px 10px;color:var(--tx);font-family:var(--sans);font-size:12px;outline:none;margin-top:10px;}
+#navSearch:focus{border-color:var(--border2);}
+#navSearch::placeholder{color:var(--txd);}
+.nav-list{padding:8px 0 24px;flex:1;}
+.nav-group{margin-bottom:2px;}
+.nav-cat{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--txd);padding:10px 16px 4px;font-weight:500;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;transition:.18s;border-left:2px solid transparent;font-size:13px;color:var(--txm);}
+.nav-item:hover{background:var(--bg2);color:var(--tx);}
+.nav-item.active{background:var(--acc2);border-left-color:var(--acc);color:var(--acc);}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;opacity:.6;}
+.nav-item.active .nav-dot{opacity:1;}
+.nav-count{margin-left:auto;font-family:var(--mono);font-size:9px;background:var(--bg3);color:var(--txd);padding:1px 5px;border-radius:3px;}
+
+/* ── TOPBAR (mobile) ── */
+#topbar{display:none;position:fixed;top:0;left:0;right:0;height:52px;background:var(--bg1);border-bottom:1px solid var(--border);z-index:200;align-items:center;gap:12px;padding:0 16px;}
+#menuBtn{background:var(--bg2);border:1px solid var(--border);color:var(--txm);border-radius:var(--rad2);padding:6px 10px;cursor:pointer;font-size:18px;line-height:1;}
+.topbar-title{font-family:var(--serif);font-size:15px;color:var(--acc);font-style:italic;}
+
+/* ── MAIN ── */
+#main{margin-left:var(--nav);padding:32px 36px 80px;max-width:1100px;}
+.page{display:none;}
+.page.show{display:block;animation:fadeUp .28s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── PAGE HEADER ── */
+.page-header{margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.page-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+.page-title{font-family:var(--serif);font-size:clamp(26px,4vw,36px);font-weight:400;letter-spacing:-.01em;line-height:1.1;color:var(--tx);}
+.page-title em{font-style:italic;color:var(--acc);}
+.page-desc{color:var(--txm);font-size:14px;margin-top:8px;max-width:640px;line-height:1.6;}
+
+/* ── GRID ── */
+.grid{display:grid;gap:14px;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.g1{grid-template-columns:1fr;}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad);padding:18px 20px;}
+.card-title{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--tx);}
+.card-author{font-size:11px;color:var(--txd);margin-bottom:8px;}
+.card-body{font-size:13px;color:var(--txm);line-height:1.65;}
+.card-body strong{color:var(--tx);font-weight:500;}
+.card-body b{color:var(--acc);font-weight:500;}
+
+/* Accent card variants */
+.card.c-acc{border-color:rgba(197,168,106,.3);background:var(--acc3);}
+.card.c-teal{border-color:rgba(94,196,176,.25);background:var(--teal2);}
+.card.c-coral{border-color:rgba(224,126,106,.25);background:var(--coral2);}
+.card.c-violet{border-color:rgba(155,132,232,.25);background:var(--violet2);}
+.card.c-green{border-color:rgba(116,196,122,.25);background:var(--green2);}
+.card.c-blue{border-color:rgba(93,168,232,.25);background:var(--blue2);}
+.card.c-pink{border-color:rgba(232,122,182,.25);background:var(--pink2);}
+.card.c-amber{border-color:rgba(232,196,90,.25);background:var(--amber2);}
+
+/* ── SPECIAL ELEMENTS ── */
+.formula{font-family:var(--mono);font-size:12.5px;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:0 var(--rad2) var(--rad2) 0;padding:10px 14px;margin:10px 0;color:var(--tx);line-height:1.7;}
+.formula.teal{border-left-color:var(--teal);}
+.formula.violet{border-left-color:var(--violet);}
+.formula.coral{border-left-color:var(--coral);}
+.formula.green{border-left-color:var(--green);}
+.formula.blue{border-left-color:var(--blue);}
+.formula.pink{border-left-color:var(--pink);}
+
+.tip{background:var(--acc2);border:1px solid rgba(197,168,106,.3);border-radius:var(--rad2);padding:8px 12px;font-size:12px;color:var(--acc);margin-top:10px;line-height:1.5;}
+.tip::before{content:"★ Exam: ";font-weight:600;}
+
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;letter-spacing:.05em;margin-bottom:8px;}
+.tag-acc{background:var(--acc2);color:var(--acc);}
+.tag-teal{background:var(--teal2);color:var(--teal);}
+.tag-coral{background:var(--coral2);color:var(--coral);}
+.tag-violet{background:var(--violet2);color:var(--violet);}
+.tag-green{background:var(--green2);color:var(--green);}
+.tag-blue{background:var(--blue2);color:var(--blue);}
+.tag-pink{background:var(--pink2);color:var(--pink);}
+.tag-amber{background:var(--amber2);color:var(--amber);}
+
+ul.bullets{padding-left:18px;margin:8px 0;}
+ul.bullets li{color:var(--txm);font-size:13px;line-height:1.7;}
+ul.bullets li strong{color:var(--tx);font-weight:500;}
+ul.bullets li b{color:var(--acc);font-weight:500;}
+
+.compare-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.compare-table th{background:var(--bg3);color:var(--txm);font-weight:500;padding:8px 10px;border:1px solid var(--border);text-align:left;}
+.compare-table td{padding:7px 10px;border:1px solid var(--border);color:var(--txm);vertical-align:top;}
+.compare-table td strong{color:var(--tx);font-weight:500;}
+.compare-table tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+
+.badge{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad2);padding:5px 10px;font-size:12px;color:var(--txm);margin:3px;}
+.badge b{color:var(--acc);font-weight:600;}
+
+.number-list{counter-reset:nl;padding:0;margin:8px 0;}
+.number-list li{list-style:none;counter-increment:nl;display:flex;gap:10px;margin-bottom:7px;font-size:13px;color:var(--txm);}
+.number-list li::before{content:counter(nl);min-width:22px;height:22px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--mono);color:var(--txd);flex-shrink:0;margin-top:1px;}
+.number-list li strong{color:var(--tx);font-weight:500;}
+.number-list li b{color:var(--acc);}
+
+.divider{height:1px;background:var(--border);margin:24px 0;}
+.section-h{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--txd);font-weight:600;margin-bottom:12px;margin-top:24px;}
+
+/* Highlight box */
+.highlight{background:var(--bg3);border-radius:var(--rad);padding:16px 18px;border:1px solid var(--border2);}
+.highlight-title{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:8px;}
+
+/* Two-col inline */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+
+/* ── PROGRESS ── */
+.progress-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;}
+.progress-text{font-size:13px;color:var(--txm);}
+.progress-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--acc),#d9c08a);border-radius:3px;transition:width .4s ease;}
+.progress-pct{font-family:var(--mono);font-size:12px;color:var(--acc);min-width:32px;text-align:right;}
+
+/* ── MOBILE ── */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
+@media(max-width:768px){
+  #nav{transform:translateX(-100%);}
+  #nav.open{transform:translateX(0);}
+  #main{margin-left:0;padding:72px 16px 60px;}
+  #topbar{display:flex;}
+  #overlay.show{display:block;}
+  .g2{grid-template-columns:1fr;}
+  .g3{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-head">
+    <div class="nav-logo">HCI Theory</div>
+    <div class="nav-sub">PUSL3122 · Exam Reference</div>
+    <input id="navSearch" placeholder="Search topics…" autocomplete="off"/>
+  </div>
+  <div class="nav-list" id="navList">
+    <div class="nav-group">
+      <div class="nav-cat">HCI Core</div>
+      <div class="nav-item active" data-page="p0" onclick="show('p0',this)"><span class="nav-dot" style="background:var(--acc)"></span>HCI & IxD Basics<span class="nav-count">8</span></div>
+      <div class="nav-item" data-page="p1" onclick="show('p1',this)"><span class="nav-dot" style="background:var(--coral)"></span>Design Principles<span class="nav-count">6</span></div>
+      <div class="nav-item" data-page="p2" onclick="show('p2',this)"><span class="nav-dot" style="background:var(--blue)"></span>Nielsen's Heuristics<span class="nav-count">10</span></div>
+      <div class="nav-item" data-page="p3" onclick="show('p3',this)"><span class="nav-dot" style="background:var(--teal)"></span>Usability & UX Goals<span class="nav-count">2</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-cat">Laws & Models</div>
+      <div class="nav-item" data-page="p4" onclick="show('p4',this)"><span class="nav-dot" style="background:var(--violet)"></span>Cognitive Laws<span class="nav-count">3</span></div>
+      <div class="nav-item" data-page="p5" onclick="show('p5',this)"><span class="nav-dot" style="background:var(--coral)"></span>Norman's Model<span class="nav-count">2</span></div>
+      <div class="nav-item" data-page="p6" onclick="show('p6',this)"><span class="nav-dot" style="background:var(--amber)"></span>Error Types<span class="nav-count">3</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-cat">Design Process</div>
+      <div class="nav-item" data-page="p7" onclick="show('p7',this)"><span class="nav-dot" style="background:var(--blue)"></span>Evaluation Methods<span class="nav-count">7</span></div>
+      <div class="nav-item" data-page="p8" onclick="show('p8',this)"><span class="nav-dot" style="background:var(--acc)"></span>Interface Types<span class="nav-count">20</span></div>
+      <div class="nav-item" data-page="p9" onclick="show('p9',this)"><span class="nav-dot" style="background:var(--teal)"></span>Prototyping<span class="nav-count">4</span></div>
+      <div class="nav-item" data-page="p10" onclick="show('p10',this)"><span class="nav-dot" style="background:var(--pink)"></span>UX Process<span class="nav-count">5</span></div>
+      <div class="nav-item" data-page="p11" onclick="show('p11',this)"><span class="nav-dot" style="background:var(--green)"></span>Data Gathering<span class="nav-count">5</span></div>
+      <div class="nav-item" data-page="p12" onclick="show('p12',this)"><span class="nav-dot" style="background:var(--violet)"></span>AgileUX & Lifecycle<span class="nav-count">3</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-cat">Technical</div>
+      <div class="nav-item" data-page="p13" onclick="show('p13',this)"><span class="nav-dot" style="background:var(--amber)"></span>Visualization<span class="nav-count">6</span></div>
+      <div class="nav-item" data-page="p14" onclick="show('p14',this)"><span class="nav-dot" style="background:var(--pink)"></span>Line & Circle Algorithms<span class="nav-count">3</span></div>
+      <div class="nav-item" data-page="p15" onclick="show('p15',this)"><span class="nav-dot" style="background:var(--teal)"></span>Image Processing<span class="nav-count">8</span></div>
+      <div class="nav-item" data-page="p16" onclick="show('p16',this)"><span class="nav-dot" style="background:var(--coral)"></span>Java Swing<span class="nav-count">7</span></div>
+      <div class="nav-item" data-page="p17" onclick="show('p17',this)"><span class="nav-dot" style="background:var(--green)"></span>Java OpenGL / JOGL<span class="nav-count">5</span></div>
+    </div>
+  </div>
+</nav>
+
+<div id="topbar">
+  <button id="menuBtn" onclick="toggleNav()">☰</button>
+  <div class="topbar-title">HCI Theory Guide</div>
+</div>
+<div id="overlay" onclick="closeNav()"></div>
+
+<main id="main">
+
+<!-- ══════ P0: HCI BASICS ══════ -->
+<div id="p0" class="page show">
+  <div class="page-header">
+    <span class="page-tag tag-acc">Topic 1</span>
+    <div class="page-title">HCI & <em>IxD</em> Basics</div>
+    <div class="page-desc">The foundation — what HCI is, who it involves, and the core activities of interaction design.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-acc">
+      <div class="tag tag-acc">Definition</div>
+      <div class="card-title">What is HCI?</div>
+      <div class="card-body">HCI (Human–Computer Interaction) studies how people interact with computers and focuses on <strong>improving usability and interaction quality</strong>. It's NOT about hardware or algorithms — it's about the human side.</div>
+      <div class="tip">MCQs often test this: HCI = usability & interaction, not speed or cryptography.</div>
+    </div>
+    <div class="card c-teal">
+      <div class="tag tag-teal">Transdisciplinary</div>
+      <div class="card-title">Interaction Design (IxD)</div>
+      <div class="card-body">IxD pulls from many fields:</div>
+      <ul class="bullets">
+        <li><strong>Academic:</strong> Psychology, Cognitive Science, Social Sciences, Engineering, CS</li>
+        <li><strong>Interdisciplinary:</strong> HCI, CSCW, Human Factors, Cognitive Engineering, Ergonomics</li>
+        <li><strong>Design:</strong> Graphic, Product, Industrial, Film</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-h">4 Core IxD Activities (the "lifeblood")</div>
+  <div class="grid g2">
+    <div class="highlight">
+      <ol class="number-list">
+        <li><strong>Discovering requirements</strong> — what do users need?</li>
+        <li><strong>Designing alternatives</strong> — explore multiple solutions</li>
+        <li><strong>Prototyping</strong> — build testable versions</li>
+        <li><strong>Evaluating</strong> — test with users or experts</li>
+      </ol>
+    </div>
+    <div class="card c-violet">
+      <div class="tag tag-violet">UCD</div>
+      <div class="card-title">User-Centered Design — 3 Principles</div>
+      <ol class="number-list">
+        <li><strong>Early focus on users & tasks</strong></li>
+        <li><strong>Empirical measurement</strong> — observe & measure real users</li>
+        <li><strong>Iterative design</strong> — test → fix → repeat</li>
+      </ol>
+      <div class="tip">These 3 come up in MCQs as a list — memorise the exact phrasing.</div>
+    </div>
+  </div>
+
+  <div class="section-h">Key Concepts</div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="card-title">Mental Model</div>
+      <div class="card-body">The user's <strong>internal understanding</strong> of how the system works. Good design aligns with users' mental models — mismatch causes errors.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cognitive Load</div>
+      <div class="card-body">The <strong>mental effort</strong> required to use an interface. Reduce it with chunking, recognition over recall, and progressive disclosure.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Discoverability</div>
+      <div class="card-body">How easily users find <strong>available actions</strong> without reading a manual. High discoverability = users just explore.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Direct Manipulation</div>
+      <div class="card-body">Users interact <strong>directly with objects</strong> on screen — drag, drop, resize. Feels natural. No commands to memorise.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Chunking</div>
+      <div class="card-body">Breaking info into <strong>smaller units</strong>. Phone: 077-123-4567 not 0771234567. Exploits Miller's 7±2 limit.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Progressive Disclosure</div>
+      <div class="card-body">Show only what's needed at each step. <strong>Reveal complexity gradually</strong> — reduces overwhelm. Combats Hick's Law.</div>
+    </div>
+  </div>
+
+  <div class="section-h">WCAG Accessibility</div>
+  <div class="card c-blue">
+    <div class="tag tag-blue">Accessibility</div>
+    <div class="card-title">WCAG = Web Content Accessibility Guidelines (W3C) — 4 Principles: POUR</div>
+    <div class="two-col">
+      <div>
+        <div class="formula blue"><b>P</b>erceivable — users can perceive content<br><b>O</b>perable — users can operate the interface</div>
+      </div>
+      <div>
+        <div class="formula blue"><b>U</b>nderstandable — content is understandable<br><b>R</b>obust — works with assistive tech</div>
+      </div>
+    </div>
+    <div class="tip">POUR mnemonic. WCAG = accessibility standard. Disability = broad: visual, motor, cognitive, hearing.</div>
+  </div>
+</div>
+
+<!-- ══════ P1: DESIGN PRINCIPLES ══════ -->
+<div id="p1" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-coral">Topic 2</span>
+    <div class="page-title">Norman's <em>Design Principles</em></div>
+    <div class="page-desc">Six generalizable rules — the dos and don'ts derived from theory, experience, and common sense.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-coral">
+      <div class="tag tag-coral">Principle 1</div>
+      <div class="card-title">Visibility</div>
+      <div class="card-body">Controls and options should be <strong>visible</strong> so users can see what actions are possible. Hidden features = frustrated users.<br><br><b>Example:</b> Lift control panel with unmarked buttons — no visibility of what each does.</div>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Principle 2</div>
+      <div class="card-title">Feedback</div>
+      <div class="card-body">System <strong>informs the user</strong> about the result of their action. Must be immediate, clear, and informative.<br><br><b>Examples:</b> Loading spinner, save confirmation, sound cue, error highlight.</div>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Principle 3</div>
+      <div class="card-title">Affordance</div>
+      <div class="card-body">A property that <strong>suggests how an object is used</strong>. Coined by Don Norman (from Gibson).<br><br><b>Real:</b> Button = push, handle = pull.<br><b>Digital:</b> Perceived affordances — learned conventions (underline = link).</div>
+      <div class="tip">Affordance = capability. Signifier = the indicator showing it (e.g. "PUSH" label).</div>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Principle 4</div>
+      <div class="card-title">Mapping</div>
+      <div class="card-body">The <strong>relationship between controls and their effects</strong>.<br><br><b>Good:</b> Stove knobs laid out matching burner positions.<br><b>Bad:</b> Random switch placement with no spatial link.</div>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Principle 5</div>
+      <div class="card-title">Consistency</div>
+      <div class="card-body">Similar actions produce similar results. Reduces learning time.<br><br><b>Internal:</b> within the app. <b>External:</b> matches platform conventions (File menu, Ctrl+Z).</div>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Principle 6</div>
+      <div class="card-title">Constraints</div>
+      <div class="card-body"><strong>Restrict interactions</strong> to prevent errors and guide users toward valid actions.<br><br><b>Examples:</b> Grey-out unavailable menu items, USB plug shape prevents wrong insertion, required fields.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-h">Important distinctions</div>
+  <div class="grid g2">
+    <div class="card c-acc">
+      <div class="card-title">Slips vs Mistakes</div>
+      <table class="compare-table">
+        <tr><th>Slips</th><th>Mistakes</th></tr>
+        <tr><td>Right goal, <strong>wrong action</strong></td><td><strong>Wrong goal</strong> entirely</td></tr>
+        <tr><td>Delete instead of Save</td><td>Wrong mental model</td></tr>
+        <tr><td>Fix: undo, confirmation</td><td>Fix: better feedback, real-world match</td></tr>
+      </table>
+    </div>
+    <div class="card c-acc">
+      <div class="card-title">Mode Errors</div>
+      <div class="card-body">Action valid in one system state but invalid in another. User thinks system is in mode A but it's in mode B.<br><br><b>Classic:</b> Typing with Caps Lock on without realising it's on.</div>
+      <div class="tip">Mode error = state mismatch between user belief and system reality.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ P2: NIELSEN'S HEURISTICS ══════ -->
+<div id="p2" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-blue">Topic 3</span>
+    <div class="page-title">Nielsen's <em>10 Heuristics</em></div>
+    <div class="page-desc">The most widely used usability principles. Used in heuristic evaluation (3–5 experts, no users needed).</div>
+  </div>
+
+  <div class="card c-blue" style="margin-bottom:20px;">
+    <div class="card-title">What is Heuristic Evaluation?</div>
+    <div class="card-body">Experts review an interface against Nielsen's 10 principles. <strong>3–5 evaluators</strong> find ~75% of problems. Fast and cheap. It's an <strong>inspection method</strong> (not user testing — no real users involved).</div>
+    <div class="tip">Inspection method ≠ user testing. Heuristic = expert review. User testing = real users.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card"><div class="tag tag-blue">#1</div><div class="card-title">Visibility of System Status</div><div class="card-body">Keep users <strong>informed</strong> about what's happening through timely feedback.<br><b>Example:</b> Progress bar, "Saving…" toast, network indicator.</div></div>
+    <div class="card"><div class="tag tag-blue">#2</div><div class="card-title">Match Between System & Real World</div><div class="card-body">Speak the <strong>user's language</strong>. Familiar words, concepts, phrases — no internal jargon.<br><b>Example:</b> Stove knobs matching burner layout.</div></div>
+    <div class="card"><div class="tag tag-blue">#3</div><div class="card-title">User Control & Freedom</div><div class="card-body">Provide clear <strong>"emergency exits"</strong> — undo, cancel, back. Users make mistakes; they need escape routes.<br><b>Example:</b> Ctrl+Z, Cancel button.</div></div>
+    <div class="card"><div class="tag tag-blue">#4</div><div class="card-title">Consistency & Standards</div><div class="card-body">Follow <strong>platform conventions</strong>. Users shouldn't wonder if different words mean the same thing.<br><b>Example:</b> Standard File/Edit/View/Help menu bar.</div></div>
+    <div class="card"><div class="tag tag-blue">#5</div><div class="card-title">Error Prevention</div><div class="card-body">Best designs <strong>prevent problems</strong> from occurring. Better than great error messages.<br><b>Example:</b> "Are you sure?" dialog, greyed-out invalid options, input validation.</div></div>
+    <div class="card"><div class="tag tag-blue">#6</div><div class="card-title">Recognition Rather Than Recall</div><div class="card-body">Make options <strong>visible</strong> — minimize memory load. Users shouldn't need to remember info between screens.<br><b>Example:</b> Visible icons, context menus, autocomplete.</div></div>
+    <div class="card"><div class="tag tag-blue">#7</div><div class="card-title">Flexibility & Efficiency of Use</div><div class="card-body"><strong>Shortcuts</strong> for experts, clear path for novices. Accelerators speed up interaction for experienced users.<br><b>Example:</b> Keyboard shortcuts, gestures, macros.</div></div>
+    <div class="card"><div class="tag tag-blue">#8</div><div class="card-title">Aesthetic & Minimalist Design</div><div class="card-body">No <strong>irrelevant information</strong>. Every extra unit competes with relevant units for attention.<br><b>Example:</b> A minimal three-legged stool is still a place to sit.</div></div>
+    <div class="card"><div class="tag tag-blue">#9</div><div class="card-title">Help Recognize, Diagnose & Recover from Errors</div><div class="card-body">Error messages in <strong>plain language</strong>. Precisely indicate the problem. Constructively suggest a solution.<br><b>Example:</b> "File not found. Check the filename or path." — not "Error 404".</div></div>
+    <div class="card"><div class="tag tag-blue">#10</div><div class="card-title">Help & Documentation</div><div class="card-body">Best if no help needed — but when required, it should be <strong>easy to search, task-focused, and concise</strong>.<br><b>Example:</b> Airport information kiosk — recognisable and context-relevant.</div></div>
+  </div>
+
+  <div class="section-h">Quick scenario → heuristic map</div>
+  <div class="highlight">
+    <table class="compare-table">
+      <tr><th>Scenario</th><th>Heuristic</th></tr>
+      <tr><td>Progress bar during upload</td><td><strong>#1</strong> Visibility of system status</td></tr>
+      <tr><td>"Are you sure you want to delete?"</td><td><strong>#5</strong> Error prevention</td></tr>
+      <tr><td>Standard menu bar (File/Edit/View/Help)</td><td><strong>#4</strong> Consistency & standards</td></tr>
+      <tr><td>Mobile icons (home, search, settings)</td><td><strong>#6</strong> Recognition not recall</td></tr>
+      <tr><td>Login with masked password + inline validation</td><td><strong>#5</strong> Error prevention</td></tr>
+      <tr><td>Undo/Cancel buttons</td><td><strong>#3</strong> User control & freedom</td></tr>
+      <tr><td>Plain-language error message with suggestion</td><td><strong>#9</strong> Help recover from errors</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════ P3: USABILITY & UX GOALS ══════ -->
+<div id="p3" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-teal">Topic 4</span>
+    <div class="page-title">Usability & <em>UX Goals</em></div>
+    <div class="page-desc">Usability = measurable performance. UX = subjective feeling. Both matter, both are different.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-teal">
+      <div class="tag tag-teal">Memorise this list</div>
+      <div class="card-title">The 6 Usability Goals</div>
+      <ol class="number-list">
+        <li><strong>Effective</strong> — users can accomplish tasks accurately</li>
+        <li><strong>Efficient</strong> — tasks completed quickly once known</li>
+        <li><strong>Safe</strong> — protects from serious errors & their consequences</li>
+        <li><strong>Utility</strong> — it works / provides right functionality</li>
+        <li><strong>Easy to Learn</strong> — low onboarding cost for new users</li>
+        <li><strong>Easy to Remember</strong> — after a break, users recall quickly</li>
+      </ol>
+      <div class="tip">Aesthetically pleasing is NOT a usability goal — it's a UX goal.</div>
+    </div>
+    <div class="card c-acc">
+      <div class="tag tag-acc">Know the words</div>
+      <div class="card-title">UX Goals — Desirable vs Undesirable</div>
+      <div class="two-col">
+        <div>
+          <div class="formula" style="font-family:var(--sans);font-size:12px;line-height:1.9;border-left-color:var(--green);">
+            ✓ Fun<br>✓ Engaging<br>✓ Helpful<br>✓ Exciting<br>✓ Fulfilling<br>✓ Entertaining<br>✓ Cognitively stimulating<br>✓ Emotionally rewarding<br>✓ Supporting
+          </div>
+        </div>
+        <div>
+          <div class="formula" style="font-family:var(--sans);font-size:12px;line-height:1.9;border-left-color:var(--coral);">
+            ✗ Boring<br>✗ Frustrating<br>✗ Dull<br>✗ Annoying<br>✗ Patronizing<br>✗ Childish<br>✗ Cutesy<br>✗ Old-fashioned<br>✗ Makes feel stupid
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-h">Key distinction</div>
+  <div class="card c-blue">
+    <table class="compare-table">
+      <tr><th>Usability Goals</th><th>UX Goals</th></tr>
+      <tr><td><strong>Objective</strong> and measurable</td><td><strong>Subjective</strong> feelings and emotions</td></tr>
+      <tr><td>Task completion rate, time on task, error rate</td><td>Fun, engaging, emotionally rewarding</td></tr>
+      <tr><td>Can I do it? How fast? How accurately?</td><td>How did it make me feel?</td></tr>
+      <tr><td>Measured with SUS, benchmarks</td><td>Measured with interviews, observations</td></tr>
+    </table>
+    <div class="tip">MCQ trap: "Aesthetically pleasing" → UX goal, not usability goal.</div>
+  </div>
+</div>
+
+<!-- ══════ P4: COGNITIVE LAWS ══════ -->
+<div id="p4" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-violet">Topic 5</span>
+    <div class="page-title">Cognitive <em>Laws</em></div>
+    <div class="page-desc">Predictive laws about human behaviour — used to justify design decisions.</div>
+  </div>
+
+  <div class="grid g1">
+    <div class="card c-violet">
+      <div class="tag tag-violet">Fitts' Law · Paul Fitts, 1954</div>
+      <div class="card-title">Time to reach a target depends on its size and distance</div>
+      <div class="formula violet">T = a + b · log₂(D/W + 1)
+where D = distance to target, W = width of target</div>
+      <div class="card-body">Bigger + closer = faster to click. Used for button sizing and placement.<br><br>
+        <strong>Practical implications:</strong>
+      </div>
+      <ul class="bullets">
+        <li>Minimum tappable mobile area = <strong>44×44 points</strong></li>
+        <li>Menu bars at screen edge are fast — "infinite width" (you can't overshoot)</li>
+        <li>Large targets for frequently used buttons (e.g. submit)</li>
+        <li>Keep targets close to where user's cursor/finger already is</li>
+      </ul>
+      <div class="tip">Exam often asks: what does Fitts' Law predict? Answer: time based on size AND distance.</div>
+    </div>
+
+    <div class="card c-violet">
+      <div class="tag tag-violet">Hick's Law · Hick & Hyman, 1952</div>
+      <div class="card-title">Decision time increases with number and complexity of choices</div>
+      <div class="formula violet">T = b · log₂(n + 1)
+where n = number of choices</div>
+      <div class="card-body">More options = slower decisions. Even if user knows the options well.<br><br>
+        <strong>Practical implications:</strong>
+      </div>
+      <ul class="bullets">
+        <li>Reduce choices in menus — keep to essentials</li>
+        <li>Use <strong>progressive disclosure</strong> to hide secondary options</li>
+        <li>Use categorisation to reduce apparent number of choices</li>
+        <li>Avoid mega-menus and cluttered toolbars</li>
+      </ul>
+      <div class="tip">Hick's → progressive disclosure, simplified menus. Classic exam pairing.</div>
+    </div>
+
+    <div class="card c-violet">
+      <div class="tag tag-violet">Miller's Law · George Miller, 1956</div>
+      <div class="card-title">Working memory holds approximately 7 (±2) items at once</div>
+      <div class="formula violet">Capacity ≈ 7 ± 2 chunks
+(range: 5–9 items)</div>
+      <div class="card-body">Beyond ~7 items, things get dropped from working memory. <strong>Chunking</strong> helps by grouping items into meaningful units.<br><br>
+        <strong>Practical implications:</strong>
+      </div>
+      <ul class="bullets">
+        <li>Keep menus to ≤7 items where possible</li>
+        <li>Chunk phone numbers: 077-123-4567 not 0771234567</li>
+        <li>Group related controls together</li>
+        <li>Don't ask users to remember things between screens</li>
+      </ul>
+      <div class="tip">Miller's Law → chunking. 7±2 is the magic number.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ P5: NORMAN'S MODEL ══════ -->
+<div id="p5" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-coral">Topic 6</span>
+    <div class="page-title">Norman's <em>Interaction Model</em></div>
+    <div class="page-desc">Two phases describe every user interaction: Execution and Evaluation.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-coral">
+      <div class="tag tag-coral">Phase 1</div>
+      <div class="card-title">Execution</div>
+      <div class="card-body">User side — moving from intention to action:</div>
+      <ol class="number-list">
+        <li><strong>Form a goal</strong> — what do I want to achieve?</li>
+        <li><strong>Plan</strong> — what actions will achieve it?</li>
+        <li><strong>Specify</strong> — which exact actions?</li>
+        <li><strong>Execute</strong> — perform the actions</li>
+      </ol>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Phase 2</div>
+      <div class="card-title">Evaluation</div>
+      <div class="card-body">User side — interpreting what happened:</div>
+      <ol class="number-list">
+        <li><strong>Perceive</strong> — observe system state</li>
+        <li><strong>Interpret</strong> — make sense of what changed</li>
+        <li><strong>Evaluate</strong> — did I achieve my goal?</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="section-h">The Two Gulfs</div>
+  <div class="grid g2">
+    <div class="card c-acc">
+      <div class="card-title">⚡ Gulf of Execution</div>
+      <div class="card-body">The gap between the <strong>user's intended action</strong> and what actions are actually available in the system.<br><br>
+        <b>Large gulf:</b> Hidden save button, no visible way to undo.<br>
+        <b>Small gulf:</b> Visible, labelled controls that match user intent.
+      </div>
+      <div class="tip">Gulf of Execution = "Can I do what I want to do?"</div>
+    </div>
+    <div class="card c-acc">
+      <div class="card-title">👁 Gulf of Evaluation</div>
+      <div class="card-body">The gap between the <strong>system's state</strong> and the user's ability to perceive and understand it.<br><br>
+        <b>Large gulf:</b> No save confirmation — user doesn't know if it worked.<br>
+        <b>Small gulf:</b> "Saved ✓" toast — clear, immediate feedback.
+      </div>
+      <div class="tip">Gulf of Evaluation = "Can I tell what happened?"</div>
+    </div>
+  </div>
+
+  <div class="card c-blue" style="margin-top:14px;">
+    <div class="card-title">Remember: Both gulfs relate to design principles</div>
+    <table class="compare-table">
+      <tr><th>Gulf</th><th>Reduced by…</th><th>Related principle</th></tr>
+      <tr><td><strong>Execution</strong></td><td>Visible controls, affordances, good mapping</td><td>Visibility, Affordance, Mapping</td></tr>
+      <tr><td><strong>Evaluation</strong></td><td>Immediate, clear feedback; status indicators</td><td>Feedback, Visibility of system status</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════ P6: ERROR TYPES ══════ -->
+<div id="p6" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-amber">Topic 7</span>
+    <div class="page-title">Human <em>Error Types</em></div>
+    <div class="page-desc">Understanding error types helps design better prevention and recovery.</div>
+  </div>
+
+  <div class="grid g3">
+    <div class="card c-amber">
+      <div class="tag tag-amber">Reason / Norman</div>
+      <div class="card-title">Slips</div>
+      <div class="card-body"><b>Right goal, wrong action.</b><br><br>User knows what to do but executes it incorrectly — usually automatic actions that go wrong.</div>
+      <ul class="bullets">
+        <li>Clicked Delete instead of Save</li>
+        <li>Typed wrong key while distracted</li>
+        <li>Poured coffee into wrong cup</li>
+      </ul>
+      <div class="formula amber" style="font-family:var(--sans);">Correct intent → Wrong execution</div>
+      <div class="tip">Fix: undo button, distinct button placement, confirmation dialogs.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="tag tag-amber">Reason / Norman</div>
+      <div class="card-title">Mistakes</div>
+      <div class="card-body"><b>Wrong goal entirely.</b><br><br>User has a flawed mental model and chooses the wrong action intentionally — they just don't know it's wrong.</div>
+      <ul class="bullets">
+        <li>Deleted file because user thought it was a duplicate (it wasn't)</li>
+        <li>Applied wrong format because they didn't understand options</li>
+      </ul>
+      <div class="formula amber" style="font-family:var(--sans);">Wrong plan → Wrong execution</div>
+      <div class="tip">Fix: better feedback, real-world match, error messages that teach.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="tag tag-amber">Norman</div>
+      <div class="card-title">Mode Errors</div>
+      <div class="card-body"><b>Wrong action for the current mode.</b><br><br>User believes the system is in mode A and acts accordingly — but it's in mode B.</div>
+      <ul class="bullets">
+        <li>Typing with Caps Lock on</li>
+        <li>Vim editor (insert vs command mode)</li>
+        <li>Drawing tool — select mode vs draw mode</li>
+      </ul>
+      <div class="formula amber" style="font-family:var(--sans);">Right action → Wrong mode</div>
+      <div class="tip">Fix: clear mode indicators, minimise modes, make current mode obvious.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="grid g2">
+    <div class="card c-teal">
+      <div class="card-title">Error Prevention vs Recovery</div>
+      <table class="compare-table">
+        <tr><th>Prevention</th><th>Recovery</th></tr>
+        <tr><td>Stop errors before they happen</td><td>Let users undo / fix errors</td></tr>
+        <tr><td>Constraints, confirmation, validation</td><td>Undo, informative messages</td></tr>
+        <tr><td><strong>Better</strong> — no harm done</td><td>Essential when prevention fails</td></tr>
+      </table>
+      <div class="tip">Prevention is better than recovery — Nielsen heuristic #5.</div>
+    </div>
+    <div class="card c-teal">
+      <div class="card-title">Forgiving Interfaces</div>
+      <div class="card-body">Allows users to make mistakes <strong>without severe consequences</strong>. Users feel safer exploring.<br><br>
+      Techniques: auto-save, soft delete (30-day trash), undo history, version history, confirmation before irreversible actions.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ P7: EVALUATION METHODS ══════ -->
+<div id="p7" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-blue">Topic 8</span>
+    <div class="page-title">Evaluation <em>Methods</em></div>
+    <div class="page-desc">Different methods for different stages and purposes — no single method catches everything.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-blue"><div class="tag tag-blue">Inspection</div><div class="card-title">Heuristic Evaluation</div><div class="card-body">3–5 experts review against Nielsen's 10 heuristics. No users. Fast and cheap. Finds ~75% of problems. Good for early design stages.</div><div class="tip">Inspection method = expert review. ≠ user testing.</div></div>
+    <div class="card c-blue"><div class="tag tag-blue">Inspection</div><div class="card-title">Cognitive Walkthrough</div><div class="card-body">Experts simulate user reasoning step-by-step through tasks. Focuses on <strong>learnability</strong> for first-time users. Asks: will user know what to do? See the control? Understand feedback?</div></div>
+    <div class="card c-blue"><div class="tag tag-blue">User Testing</div><div class="card-title">User Testing</div><div class="card-body">Real users do real tasks. Most reliable method. Measures: <strong>task completion rate, time on task, error rate, satisfaction (SUS)</strong>. 5 users find ~85% of issues.</div><div class="tip">SUS = 10-item questionnaire scored 0–100. Above 68 = above average.</div></div>
+    <div class="card c-blue"><div class="tag tag-blue">User Testing</div><div class="card-title">Think-Aloud Protocol</div><div class="card-body">Users <strong>verbalize thoughts</strong> while using the system. Reveals confusion, mental models, expectations in real time. Very powerful for qualitative insight.</div></div>
+    <div class="card c-blue"><div class="tag tag-blue">Comparison</div><div class="card-title">A/B Testing</div><div class="card-body">Two design variants shown to different user groups. Measures <strong>real behavior at scale</strong> — not opinions. AKA split testing. Best for final design optimization.</div></div>
+    <div class="card c-blue"><div class="tag tag-blue">Observation</div><div class="card-title">Eye-Tracking</div><div class="card-body">Tracks where users look. Heatmaps show what grabs attention, what gets missed. Objective data on visual focus. Used for layout, hierarchy, and ad placement.</div></div>
+    <div class="card c-blue"><div class="tag tag-blue">Prototype</div><div class="card-title">Wizard of Oz</div><div class="card-body">Human secretly performs system tasks while user thinks it's real. Tests complex AI or expensive features before building them. e.g. test a chatbot with a human typing the responses.</div></div>
+  </div>
+
+  <div class="section-h">Formative vs Summative</div>
+  <div class="card c-acc">
+    <table class="compare-table">
+      <tr><th>Formative</th><th>Summative</th></tr>
+      <tr><td><strong>During</strong> design</td><td><strong>After</strong> design</td></tr>
+      <tr><td>To <strong>improve</strong> the product</td><td>To <strong>assess</strong> final quality</td></tr>
+      <tr><td>Iterative, ongoing</td><td>End-of-project benchmark</td></tr>
+      <tr><td>Heuristic eval, think-aloud</td><td>Controlled study, SUS score</td></tr>
+    </table>
+    <div class="tip">"To improve" = formative. "To measure final quality" = summative.</div>
+  </div>
+</div>
+
+<!-- ══════ P8: INTERFACE TYPES ══════ -->
+<div id="p8" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-acc">Topic 9</span>
+    <div class="page-title">20 <em>Interface Types</em></div>
+    <div class="page-desc">The textbook covers exactly 20 types. Know each one's defining characteristic.</div>
+  </div>
+
+  <div class="grid g3">
+    <div class="card"><div class="tag tag-coral">#1</div><div class="card-title">Command (CLI)</div><div class="card-body">Typed text commands. <strong>Powerful for experts</strong>, high learning curve. Good for visually impaired users (screen readers). e.g. Terminal.</div></div>
+    <div class="card"><div class="tag tag-acc">#2</div><div class="card-title">Graphical (GUI / WIMP)</div><div class="card-body"><b>W</b>indows <b>I</b>cons <b>M</b>enus <b>P</b>ointers. The dominant desktop paradigm since Xerox PARC / Apple Mac.</div></div>
+    <div class="card"><div class="tag tag-blue">#3</div><div class="card-title">Multimedia</div><div class="card-body">Combines <strong>text, image, audio, video, animation</strong>. Rich communication of complex content.</div></div>
+    <div class="card"><div class="tag tag-violet">#4</div><div class="card-title">Virtual Reality (VR)</div><div class="card-body">Illusion of participation in a <strong>fully synthetic 3D environment</strong>. Immersive, not observational. Headsets, gloves.</div></div>
+    <div class="card"><div class="tag tag-teal">#5</div><div class="card-title">Web</div><div class="card-body">Browser-based interfaces. Cross-platform access, hyperlinks. Governed by web standards.</div></div>
+    <div class="card"><div class="tag tag-teal">#6</div><div class="card-title">Mobile</div><div class="card-body">Touchscreen, GPS, accelerometer, camera. Limited screen. Fat-finger problem. Always-on connectivity.</div></div>
+    <div class="card"><div class="tag tag-acc">#7</div><div class="card-title">Appliance</div><div class="card-body">Dedicated single-purpose devices: microwave, ATM, washing machine. Simple inputs + limited display.</div></div>
+    <div class="card"><div class="tag tag-coral">#8</div><div class="card-title">Voice (VUI)</div><div class="card-body">Speech input/output. <strong>Limitation: struggles with accent/dialect variability</strong>. No visual feedback.</div><div class="tip">VUI main weakness = accents/speech variability.</div></div>
+    <div class="card"><div class="tag tag-blue">#9</div><div class="card-title">Pen</div><div class="card-body">Stylus-based: handwriting, sketching, annotation. Tablets, e-readers, signature pads.</div></div>
+    <div class="card"><div class="tag tag-green">#10</div><div class="card-title">Touch</div><div class="card-body">Direct finger interaction. Natural, intuitive. <strong>Limitation: lacks tactile feedback</strong> vs physical buttons.</div><div class="tip">Touch limitation = no tactile feedback.</div></div>
+    <div class="card"><div class="tag tag-green">#11</div><div class="card-title">Gesture</div><div class="card-body">Natural hand/body movements (swipe, pinch). <strong>Challenge: discoverability</strong> — users don't know available gestures.</div></div>
+    <div class="card"><div class="tag tag-pink">#12</div><div class="card-title">Haptic</div><div class="card-body">Tactile feedback via <strong>vibration or force</strong>. Smartphone vibration, ultrahaptics, force-feedback joysticks.</div></div>
+    <div class="card"><div class="tag tag-acc">#13</div><div class="card-title">Multimodal</div><div class="card-body">Combines <strong>2+ input channels</strong> (voice + gesture, touch + speech). Common for accessibility. Kinect is an example.</div></div>
+    <div class="card"><div class="tag tag-teal">#14</div><div class="card-title">Shareable</div><div class="card-body"><strong>Multiple users simultaneously</strong>. Interactive tabletops, large displays, multi-touch surfaces.</div></div>
+    <div class="card"><div class="tag tag-violet">#15</div><div class="card-title">Tangible</div><div class="card-body"><strong>Physical objects</strong> manipulated to control digital content. Challenge: mapping physical actions to digital effect.</div></div>
+    <div class="card"><div class="tag tag-blue">#16</div><div class="card-title">Augmented Reality (AR)</div><div class="card-body">Overlays <strong>virtual content on the physical world</strong> via camera. e.g. Pokémon Go, IKEA Place, surgical AR.</div><div class="tip">AR ≠ VR. AR overlays real world. VR replaces it.</div></div>
+    <div class="card"><div class="tag tag-coral">#17</div><div class="card-title">Wearables</div><div class="card-body">Smartwatches, fitness bands, AR glasses, smart clothing. <strong>Challenge: tiny display + limited input</strong>.</div></div>
+    <div class="card"><div class="tag tag-green">#18</div><div class="card-title">Robots & Drones</div><div class="card-body">Embodied physical agents in the real world. Controlled via gesture, voice, or app. Remote operation.</div></div>
+    <div class="card"><div class="tag tag-violet">#19</div><div class="card-title">Brain-Computer (BCI)</div><div class="card-body">Neural input — reads brain signals (EEG). Research + assistive tech. Spell-by-thought systems.</div></div>
+    <div class="card"><div class="tag tag-teal">#20</div><div class="card-title">Smart</div><div class="card-body">Context-aware, adapts via AI/sensors (location, activity, time). Smart thermostats, predictive search.</div></div>
+  </div>
+</div>
+
+<!-- ══════ P9: PROTOTYPING ══════ -->
+<div id="p9" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-teal">Topic 10</span>
+    <div class="page-title">Prototyping</div>
+    <div class="page-desc">Build to learn — prototypes test ideas before expensive full development.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-teal">
+      <div class="tag tag-teal">Low-Fidelity</div>
+      <div class="card-title">Lo-Fi Prototypes</div>
+      <div class="card-body">Quick, cheap, easily changed. <strong>Unfinished look invites feedback</strong> — users feel free to critique.</div>
+      <ul class="bullets">
+        <li>Paper sketches and post-it notes</li>
+        <li>Card-based prototypes (one card = one screen)</li>
+        <li>Storyboards (comic-strip sequence)</li>
+        <li>Wizard of Oz technique</li>
+      </ul>
+      <div class="tip">Lo-fi = explore ideas. Sketching doesn't need artistic skill — practice simple symbols.</div>
+    </div>
+    <div class="card c-acc">
+      <div class="tag tag-acc">High-Fidelity</div>
+      <div class="card-title">Hi-Fi Prototypes</div>
+      <div class="card-body">Looks and behaves close to the final product. Built in Figma, Axure, Balsamiq, Moqups.</div>
+      <ul class="bullets">
+        <li>Interactive wireframes linked to design pattern libraries</li>
+        <li>Real assets (fonts, colors, icons)</li>
+        <li>Clickable user flows</li>
+      </ul>
+      <div class="card-body" style="margin-top:8px;"><b>Risk:</b> stakeholders may think design is final and resist further changes.</div>
+      <div class="tip">Hi-fi risk = people think it's done. Lo-fi advantage = invites change.</div>
+    </div>
+  </div>
+
+  <div class="section-h">Comparison</div>
+  <div class="card c-blue">
+    <table class="compare-table">
+      <tr><th>Low-Fidelity</th><th>High-Fidelity</th></tr>
+      <tr><td>Paper, post-its, sketches</td><td>Figma, Axure, Balsamiq</td></tr>
+      <tr><td>Quick and cheap</td><td>More time and investment</td></tr>
+      <tr><td>Encourages feedback</td><td>Stakeholders think it's final</td></tr>
+      <tr><td>Tests structure and flow</td><td>Tests interaction and visual design</td></tr>
+      <tr><td>Discards easily</td><td>Harder to change</td></tr>
+    </table>
+  </div>
+
+  <div class="section-h">Prototype types</div>
+  <div class="grid g3">
+    <div class="card"><div class="card-title">Storyboard</div><div class="card-body">Visual <strong>comic-strip sequence</strong> of user interactions. Generated from a scenario broken into steps. Shows context, emotion, and motivation.</div></div>
+    <div class="card"><div class="card-title">Card-Based</div><div class="card-body">One card = one interaction step/screen. Cards arranged in sequence = user flow. Quick to rearrange.</div></div>
+    <div class="card"><div class="card-title">Wizard of Oz</div><div class="card-body">Human secretly drives the system while user thinks it's real. Tests expensive/complex features cheaply before building.</div></div>
+  </div>
+</div>
+
+<!-- ══════ P10: UX PROCESS ══════ -->
+<div id="p10" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-pink">Topic 11</span>
+    <div class="page-title">UX <em>Process Artefacts</em></div>
+    <div class="page-desc">Personas, scenarios, storyboards — tools for understanding and communicating about users.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-pink">
+      <div class="tag tag-pink">Core artefact</div>
+      <div class="card-title">Persona</div>
+      <div class="card-body"><strong>Fictional but realistic</strong> representation of a typical user. Built from real user research. NOT a specific real person — a composite archetype.<br><br>
+        <b>Contains:</b> name + photo, demographics, goals, pain points, behaviours, tech comfort, sample scenario.</div>
+      <div class="tip">Personas guide ongoing design: "Would [Persona] find this helpful?" Aligns cross-functional teams.</div>
+    </div>
+    <div class="card c-pink">
+      <div class="tag tag-pink">Narrative artefact</div>
+      <div class="card-title">Scenario</div>
+      <div class="card-body">Short <strong>narrative story</strong> about a persona achieving a goal in a context. Written in everyday language. About the <strong>persona's experience</strong>, not UI solutions.<br><br>
+        <b>Scenario ≠ Use Case</b> — Use case = technical function list. Scenario = human story.</div>
+      <div class="tip">Scenarios make requirements concrete. They inform what to prototype.</div>
+    </div>
+    <div class="card c-pink">
+      <div class="tag tag-pink">Visual artefact</div>
+      <div class="card-title">Storyboard</div>
+      <div class="card-body">Turns a scenario into a <strong>visual comic-strip</strong>. Each frame = one scene of the interaction. Shows emotion, context, and environment — not just UI.</div>
+    </div>
+    <div class="card c-pink">
+      <div class="tag tag-pink">Agile artefact</div>
+      <div class="card-title">User Story</div>
+      <div class="card-body">Short need statement in persona's voice:<br><br>
+        <div class="formula pink" style="font-family:var(--sans);">As a [user type],<br>I want to [action],<br>So that [benefit].</div>
+        Shorter than scenarios. Drives sprint planning in Agile.</div>
+    </div>
+    <div class="card c-violet">
+      <div class="tag tag-violet">Technical artefact</div>
+      <div class="card-title">Use Case</div>
+      <div class="card-body">Technical blueprint listing <strong>steps between user (actor) and system</strong>. Includes preconditions, main flow, alternate flows, postconditions.<br><br><b>Scenario ≠ Use Case ≠ User Story</b></div>
+    </div>
+    <div class="card c-acc">
+      <div class="card-title">Key comparison</div>
+      <table class="compare-table">
+        <tr><th>Artefact</th><th>Focus</th><th>Length</th></tr>
+        <tr><td><strong>Scenario</strong></td><td>User experience, emotions</td><td>Paragraph</td></tr>
+        <tr><td><strong>User Story</strong></td><td>User need</td><td>1–2 sentences</td></tr>
+        <tr><td><strong>Use Case</strong></td><td>System functions</td><td>Structured list</td></tr>
+        <tr><td><strong>Storyboard</strong></td><td>Visual journey</td><td>Frames/panels</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-h">Task Analysis</div>
+  <div class="card c-teal">
+    <div class="card-title">Hierarchical Task Analysis (HTA)</div>
+    <div class="card-body">Breaks user activities into a <strong>hierarchy of goals, sub-goals, and operations</strong> — like a tree structure. Reveals pain points and design opportunities.<br><br>
+      Top-level goal at root → sub-goals as branches → individual operations at leaves.</div>
+  </div>
+</div>
+
+<!-- ══════ P11: DATA GATHERING ══════ -->
+<div id="p11" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-green">Topic 12</span>
+    <div class="page-title">Data Gathering <em>& Analysis</em></div>
+    <div class="page-desc">How to collect and make sense of user data. Combining methods gives the richest picture.</div>
+  </div>
+
+  <div class="section-h">Gathering methods</div>
+  <div class="grid g3">
+    <div class="card c-green">
+      <div class="card-title">Interviews</div>
+      <table class="compare-table">
+        <tr><th>Type</th><th>Key trait</th></tr>
+        <tr><td><strong>Unstructured</strong></td><td>No script. Rich, not replicable.</td></tr>
+        <tr><td><strong>Structured</strong></td><td>Fixed script. Replicable, less deep.</td></tr>
+        <tr><td><b>Semi-structured</b></td><td>Best of both. Recommended.</td></tr>
+        <tr><td><strong>Focus groups</strong></td><td>Group dynamics; debate reveals issues.</td></tr>
+      </table>
+      <div class="tip">Semi-structured = best balance. Focus groups ≠ interviews.</div>
+    </div>
+    <div class="card c-green">
+      <div class="card-title">Observation</div>
+      <ul class="bullets">
+        <li><strong>Direct:</strong> watch users live (lab or field)</li>
+        <li><strong>Indirect:</strong> diaries, logs, video, analytics</li>
+        <li>Field = natural context, richer insight</li>
+        <li>Lab = controlled, replicable</li>
+      </ul>
+      <div class="card-body" style="margin-top:8px;">Simple framework: <b>Person / Place / Thing</b><br>Full (Robson): Space, Actors, Activities, Objects, Acts, Events, Time, Goals, Feelings</div>
+    </div>
+    <div class="card c-green">
+      <div class="card-title">Other Methods</div>
+      <ul class="bullets">
+        <li><strong>Questionnaires:</strong> Open (free text) or Closed (yes/no, scale)</li>
+        <li><strong>Studying documentation:</strong> background without consuming stakeholder time</li>
+        <li><strong>Researching similar products</strong></li>
+        <li><strong>Diaries:</strong> indirect, longitudinal</li>
+        <li><strong>Cultural probes</strong></li>
+      </ul>
+      <div class="tip">Combining methods = triangulation = highly productive.</div>
+    </div>
+  </div>
+
+  <div class="section-h">Analysis: Quantitative vs Qualitative</div>
+  <div class="grid g2">
+    <div class="card c-blue">
+      <div class="tag tag-blue">Numbers</div>
+      <div class="card-title">Quantitative Analysis</div>
+      <ul class="bullets">
+        <li>Expressed as <strong>numbers</strong></li>
+        <li><strong>Mean</strong> = sum ÷ count</li>
+        <li><strong>Median</strong> = middle value when ranked</li>
+        <li><strong>Mode</strong> = most frequent value</li>
+        <li>Percentages, standard deviation</li>
+        <li>Tools: Excel, SAS, SPSS, R</li>
+      </ul>
+      <div class="tip">Visualizations are our "universal language" for quantitative data.</div>
+    </div>
+    <div class="card c-acc">
+      <div class="tag tag-acc">Themes</div>
+      <div class="card-title">Qualitative Analysis</div>
+      <ul class="bullets">
+        <li>Expressed as <strong>themes, patterns, stories</strong></li>
+        <li><strong>Inductive:</strong> themes emerge from data (bottom-up)</li>
+        <li><strong>Deductive:</strong> pre-set categories applied to data (top-down)</li>
+        <li>Critical incident analysis</li>
+        <li>Tools: NVivo, Dedoose, ATLAS.ti</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-h">Data types (important for visualization)</div>
+  <div class="card c-teal">
+    <table class="compare-table">
+      <tr><th>Type</th><th>Subtype</th><th>Example</th></tr>
+      <tr><td><strong>Qualitative</strong></td><td>Nominal (no order)</td><td>Gender, colour, country</td></tr>
+      <tr><td><strong>Qualitative</strong></td><td>Ordinal (ordered)</td><td>A/B/C grades, satisfaction 1–5</td></tr>
+      <tr><td><strong>Quantitative</strong></td><td>Discrete (integers)</td><td>Number of children, errors made</td></tr>
+      <tr><td><strong>Quantitative</strong></td><td>Continuous (floats)</td><td>Height, time, temperature</td></tr>
+    </table>
+  </div>
+
+  <div class="section-h">Ethics in data gathering</div>
+  <div class="card c-violet">
+    <div class="card-body">Ethical research requires: <strong>ethical approval</strong> before starting, <strong>informed consent</strong> from participants, <strong>right to withdraw</strong>, anonymisation, and responsible use of data especially eye-tracking and behavioral data.</div>
+  </div>
+</div>
+
+<!-- ══════ P12: AGILEUX ══════ -->
+<div id="p12" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-violet">Topic 13</span>
+    <div class="page-title">AgileUX & <em>Lifecycle</em></div>
+    <div class="page-desc">Combining interaction design with agile development — balance research with speed.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-violet">
+      <div class="tag tag-violet">Key idea</div>
+      <div class="card-title">AgileUX</div>
+      <div class="card-body">Integrates <strong>IxD + Agile</strong>. Requirements evolve and re-prioritise (not fixed up-front). Focus on <strong>product as deliverable</strong>, not design documents. Cross-functional teams.<br><br>
+        Three practical areas: <b>user research</b>, <b>aligning work practices</b>, <b>documentation</b>.</div>
+      <div class="tip">AgileUX ≠ skip design. All UX techniques still relevant — timing and depth need planning.</div>
+    </div>
+    <div class="card c-violet">
+      <div class="tag tag-violet">Sy, 2007</div>
+      <div class="card-title">Parallel Tracks</div>
+      <div class="card-body">Designers work <strong>one iteration ahead</strong> of developers:</div>
+      <div class="formula violet" style="font-family:var(--sans);line-height:2;">Cycle 0: Plan + gather customer data<br>Dev track: implement high-dev/low-UI features<br>Design track: design for NEXT cycle<br>Each cycle: design tests + gathers for n+1</div>
+      <div class="tip">No wasted design, timely feedback, agile flexibility. Cycle 0 = plan + data gathering.</div>
+    </div>
+  </div>
+
+  <div class="section-h">Design Thinking (5 Stages)</div>
+  <div class="card c-teal">
+    <div class="card-body" style="margin-bottom:8px;">Human-centered, iterative — not linear. Loop back at any stage.</div>
+    <div class="formula teal" style="font-family:var(--sans);">
+      1. <b>Empathize</b> — understand users via observation & interviews<br>
+      2. <b>Define</b> — frame the problem clearly (point-of-view statement)<br>
+      3. <b>Ideate</b> — brainstorm many solutions without judgment<br>
+      4. <b>Prototype</b> — build to learn<br>
+      5. <b>Test</b> — validate with real users → loop back
+    </div>
+    <div class="tip">First stage = Empathize. It's iterative and non-linear.</div>
+  </div>
+
+  <div class="section-h">LeanUX</div>
+  <div class="card c-acc">
+    <div class="card-title">Build → Measure → Learn (MVP)</div>
+    <div class="card-body">Build a <strong>Minimum Viable Product (MVP)</strong> — the smallest thing that tests a core assumption. Measure real user behavior. Learn. Iterate. MVPs are minimal — they're hypothesis tests, NOT the final product.</div>
+    <div class="tip">MVP ≠ final product. It tests assumptions cheaply before heavy investment.</div>
+  </div>
+</div>
+
+<!-- ══════ P13: VISUALIZATION ══════ -->
+<div id="p13" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-amber">Topic 14</span>
+    <div class="page-title">Data <em>Visualization</em></div>
+    <div class="page-desc">Turning abstract data into visual form to reveal hidden patterns and amplify human cognition.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-amber">
+      <div class="tag tag-amber">Card, Mackinlay & Shneiderman, 1999</div>
+      <div class="card-title">Definition</div>
+      <div class="formula amber" style="font-family:var(--sans);">"Computer-supported, interactive, visual representations of <strong>abstract data</strong> to <strong>amplify cognition</strong>."</div>
+      <div class="tip">Key phrase: amplify cognition. Not just pretty charts — it enhances thinking.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="tag tag-amber">Vandoni, 1989</div>
+      <div class="card-title">Earlier Definition</div>
+      <div class="card-body">"The process of transforming information into a visual form, enabling users to <strong>observe features not otherwise apparent</strong>."</div>
+      <div class="tip">Vandoni = reveal what was hidden. Card et al = amplify cognition. Know both authors.</div>
+    </div>
+  </div>
+
+  <div class="section-h">The 3 Ds — what InfoVis enables</div>
+  <div class="grid g3">
+    <div class="card c-amber"><div class="card-title">Discoveries</div><div class="card-body">Find hidden patterns, trends, clusters, gaps, and outliers in data.</div></div>
+    <div class="card c-amber"><div class="card-title">Decisions</div><div class="card-body">Support choosing a course of action by making options and tradeoffs visible.</div></div>
+    <div class="card c-amber"><div class="card-title">Explanations</div><div class="card-body">Communicate insights to others in a clear, memorable visual form.</div></div>
+  </div>
+
+  <div class="section-h">Chart types — which to use when</div>
+  <div class="card c-blue">
+    <table class="compare-table">
+      <tr><th>Chart type</th><th>Best for</th></tr>
+      <tr><td><strong>Line chart</strong></td><td>Trends over time</td></tr>
+      <tr><td><strong>Bar chart</strong></td><td>Comparing values across categories</td></tr>
+      <tr><td><strong>Pie chart</strong></td><td>Parts of a whole (keep to ~5 slices max)</td></tr>
+      <tr><td><strong>Scatter plot</strong></td><td>Relationship between 2 continuous variables</td></tr>
+      <tr><td><strong>Histogram</strong></td><td>Distribution of a single variable</td></tr>
+      <tr><td><strong>Heatmap</strong></td><td>2D density / intensity / correlation matrix</td></tr>
+      <tr><td><strong>Treemap</strong></td><td>Hierarchical data — area encodes value</td></tr>
+      <tr><td><strong>Bubble (animated)</strong></td><td>Multi-variable over time — GapMinder by Hans Rosling</td></tr>
+    </table>
+    <div class="tip">GapMinder (Hans Rosling TED talk) = animated bubble chart. Classic InfoVis exam example.</div>
+  </div>
+
+  <div class="section-h">Visual Design Principles (5 + Gestalt)</div>
+  <div class="grid g3">
+    <div class="card"><div class="card-title">Scale</div><div class="card-body">Relative size signals <strong>importance and rank</strong>. Bigger = more important.</div></div>
+    <div class="card"><div class="card-title">Visual Hierarchy</div><div class="card-body">Guide the eye in <strong>order of importance</strong> using size, colour, and position.</div></div>
+    <div class="card"><div class="card-title">Balance</div><div class="card-body">Equal visual weight on both sides of an axis — symmetric or intentional asymmetry.</div></div>
+    <div class="card"><div class="card-title">Contrast</div><div class="card-body">Juxtapose dissimilar elements to <strong>show they are different</strong>. Draws the eye.</div></div>
+    <div class="card"><div class="card-title">Gestalt — Proximity</div><div class="card-body">Objects <strong>close together</strong> are perceived as a group.</div></div>
+    <div class="card"><div class="card-title">Gestalt — Similarity</div><div class="card-body">Objects sharing colour/shape are perceived as <strong>belonging together</strong>.</div></div>
+    <div class="card"><div class="card-title">Gestalt — Closure</div><div class="card-body">Mind <strong>completes incomplete shapes</strong> — we see wholes, not parts.</div></div>
+    <div class="card"><div class="card-title">Gestalt — Continuity</div><div class="card-body">The eye follows <strong>smooth paths</strong> rather than abrupt turns.</div></div>
+    <div class="card c-acc"><div class="card-title">Visualization umbrella — 9 areas</div><div class="card-body">Animation, software viz, viz environments, volume rendering, computer graphics, visual programming, image processing, VR, <b>Scientific Viz</b>, <b>Information Viz</b>.</div></div>
+  </div>
+</div>
+
+<!-- P14: ALGORITHMS -->
+<div id="p14" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-pink">Topic 15</span>
+    <div class="page-title">Line & Circle <em>Algorithms</em></div>
+    <div class="page-desc">Rasterization — converting continuous geometric shapes into discrete pixels on a grid.</div>
+  </div>
+
+  <div class="grid g1">
+    <div class="card c-acc">
+      <div class="tag tag-acc">DDA — Digital Differential Analyzer</div>
+      <div class="card-title">Floating-point incremental line drawing</div>
+      <div class="formula">1. dx = x2 - x1,  dy = y2 - y1
+2. steps = max(|dx|, |dy|)
+3. xInc = dx / steps
+4. yInc = dy / steps
+5. Plot rounded (x+xInc, y+yInc) at each step</div>
+      <ul class="bullets">
+        <li><strong>Arithmetic:</strong> Floating-point (slow)</li>
+        <li><strong>Weakness:</strong> Round-off errors accumulate, especially on steep lines</li>
+        <li><strong>Advantage:</strong> Conceptually simple to implement and understand</li>
+        <li>Slope (m) determines stepping axis — if |m| ≤ 1, step x; if |m| > 1, step y</li>
+      </ul>
+    </div>
+
+    <div class="card c-pink">
+      <div class="tag tag-pink">Bresenham's Line Algorithm · Jack Bresenham, 1962</div>
+      <div class="card-title">Integer-only line drawing — faster and exact</div>
+      <div class="formula pink">Initial decision parameter: p₀ = 2·dy − dx
+
+For each step along x-axis:
+  If p < 0:  next pixel = (x+1, y),     p = p + 2·dy
+  If p ≥ 0:  next pixel = (x+1, y+1),   p = p + 2·dy − 2·dx</div>
+      <ul class="bullets">
+        <li><strong>Arithmetic:</strong> Integer only — add and subtract</li>
+        <li><strong>Speed:</strong> Faster than DDA — preferred for raster hardware</li>
+        <li><strong>Output:</strong> Exact pixel selection, no round-off errors</li>
+      </ul>
+      <div class="tip">Bresenham = integer = faster = preferred. DDA = float = slower. This is the #1 comparison MCQ.</div>
+    </div>
+
+    <div class="card c-violet">
+      <div class="tag tag-violet">Midpoint Circle Algorithm (Bresenham's Circle)</div>
+      <div class="card-title">Integer arithmetic + 8-way symmetry</div>
+      <div class="formula violet">Start point: (x, y) = (0, r)  ← top of circle
+Initial decision parameter: p₀ = 3 − 2·r
+
+For each step:
+  If p < 0:  move East → (x+1, y),       p = p + 4·x + 6
+  If p ≥ 0:  move Southeast → (x+1, y-1), p = p + 4·(x−y) + 10
+
+Plot 8 symmetric points per step:
+  (cx+x, cy+y), (cx−x, cy+y), (cx+x, cy−y), (cx−x, cy−y)
+  (cx+y, cy+x), (cx−y, cy+x), (cx+y, cy−x), (cx−y, cy−x)</div>
+      <ul class="bullets">
+        <li><strong>Starts at:</strong> (0, r) — the top of the circle</li>
+        <li><strong>8-way symmetry:</strong> compute 1 octant → mirror to all 8 → full circle</li>
+        <li><strong>Per step:</strong> 8 reflected points plotted simultaneously</li>
+        <li><strong>Arithmetic:</strong> Integer only — efficient on raster hardware</li>
+      </ul>
+      <div class="tip">Initial p = 3 − 2r. Start = (0, r). 8-way symmetry = the key efficiency trick.</div>
+    </div>
+  </div>
+
+  <div class="section-h">DDA vs Bresenham — the comparison MCQs love</div>
+  <div class="card c-blue">
+    <table class="compare-table">
+      <tr><th>Feature</th><th>DDA</th><th>Bresenham</th></tr>
+      <tr><td><strong>Arithmetic</strong></td><td>Floating-point</td><td>Integer only</td></tr>
+      <tr><td><strong>Speed</strong></td><td>Slower</td><td>Faster ✓</td></tr>
+      <tr><td><strong>Accuracy</strong></td><td>Round-off errors</td><td>Exact ✓</td></tr>
+      <tr><td><strong>Complexity</strong></td><td>Simple to understand</td><td>Slightly more complex</td></tr>
+      <tr><td><strong>Preferred for</strong></td><td>Teaching / learning</td><td>Real raster hardware ✓</td></tr>
+    </table>
+  </div>
+
+  <div class="section-h">Anti-aliasing</div>
+  <div class="card c-acc">
+    <div class="two-col">
+      <div>
+        <div class="card-title">Aliasing</div>
+        <div class="card-body">Jagged stair-step effect on diagonal or curved lines. Caused by representing continuous shapes on a discrete pixel grid — pixels are square, diagonals are not.</div>
+      </div>
+      <div>
+        <div class="card-title">Anti-aliasing</div>
+        <div class="card-body">Smooths edges by blending pixels with intermediate colours between the shape and background. Creates the illusion of a smooth edge. Technique: change pixels around edges to intermediate colours or grey scales.</div>
+      </div>
+    </div>
+    <div class="tip">Anti-aliasing = blend intermediate colours around edges to reduce stair-stepping.</div>
+  </div>
+</div>
+
+<!-- P15: IMAGE PROCESSING -->
+<div id="p15" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-teal">Topic 16</span>
+    <div class="page-title">Digital <em>Image Processing</em></div>
+    <div class="page-desc">Algorithms that take an image as input and produce a modified image as output.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-teal">
+      <div class="tag tag-teal">Definition</div>
+      <div class="card-title">What is Image Processing?</div>
+      <div class="card-body"><strong>Input: image → Algorithm → Output: image.</strong><br><br>
+        Improves images for human or machine interpretation. Applications include: display, editing, enhancement, restoration, compression, segmentation, object recognition.</div>
+      <div class="tip">Image Processing ≠ Computer Vision (CV is higher-level understanding). IP = transformation.</div>
+    </div>
+    <div class="card c-teal">
+      <div class="tag tag-teal">Pixels & Digitization</div>
+      <div class="card-title">Digital Image basics</div>
+      <div class="card-body">Digitization = approximation of a real scene on a discrete grid. Each pixel holds intensity values:</div>
+      <div class="formula teal" style="font-family:var(--sans);">Grayscale: 1 value/pixel  (intensity 0–255)
+RGB:       3 values/pixel  (Red, Green, Blue)
+RGBA:      4 values/pixel  (R, G, B, Alpha/opacity)</div>
+      <div class="tip">RGBA: A = Alpha = opacity/transparency. 0 = fully transparent.</div>
+    </div>
+  </div>
+
+  <div class="section-h">The Pipeline — memorise this exact order</div>
+  <div class="card c-acc">
+    <div class="formula" style="font-family:var(--sans);line-height:2.2;font-size:13px;">
+      <span style="color:var(--acc);font-weight:600;">1.</span> <strong>Image Acquisition</strong> — capture the image (e.g. take a photo, scan a document)<br>
+      <span style="color:var(--acc);font-weight:600;">2.</span> <strong>Image Enhancement</strong> — improve contrast/brightness/sharpness for human use (subjective)<br>
+      <span style="color:var(--acc);font-weight:600;">3.</span> <strong>Image Restoration</strong> — model known degradation (blur, noise) and invert it to recover original<br>
+      <span style="color:var(--acc);font-weight:600;">4.</span> <strong>Morphological Processing</strong> — extract shape/structure (dilation, erosion, opening, closing)<br>
+      <span style="color:var(--acc);font-weight:600;">5.</span> <strong>Segmentation</strong> — divide image into constituent meaningful parts/regions<br>
+      <span style="color:var(--acc);font-weight:600;">6.</span> <strong>Representation & Description</strong> — extract features/attributes for computer processing<br>
+      <span style="color:var(--acc);font-weight:600;">7.</span> <strong>Object Recognition</strong> — identify and label objects in the scene<br>
+      <br>
+      <span style="color:var(--txd);">Supporting branches (not sequential steps):</span><br>
+      &nbsp;&nbsp;&nbsp;↳ Colour Image Processing<br>
+      &nbsp;&nbsp;&nbsp;↳ Image Compression (JPEG = lossy, PNG = lossless)
+    </div>
+    <div class="tip">Acquisition is FIRST. Recognition is LAST. Colour & Compression are branches, not pipeline steps.</div>
+  </div>
+
+  <div class="section-h">Pipeline stage details</div>
+  <div class="grid g3">
+    <div class="card"><div class="card-title">Enhancement</div><div class="card-body">Boost useful features for the viewer. Contrast, sharpness, brightness. <strong>Subjective</strong> — depends on task. Example: Sobel filter for edge detection.</div></div>
+    <div class="card"><div class="card-title">Restoration</div><div class="card-body">Model the known degradation (motion blur, sensor noise) and mathematically invert it. More <strong>objective</strong> than enhancement.</div></div>
+    <div class="card"><div class="card-title">Morphological Processing</div><div class="card-body">Shape-based operations on binary/greyscale images:<br><b>Dilation</b> = expand shapes<br><b>Erosion</b> = shrink shapes<br><b>Opening</b> = erode then dilate<br><b>Closing</b> = dilate then erode</div></div>
+    <div class="card"><div class="card-title">Segmentation</div><div class="card-body">Divide image into <strong>meaningful regions</strong>. Classic example: brain MRI segmented into tissue types (white matter, grey matter, CSF).</div></div>
+    <div class="card"><div class="card-title">Compression</div><div class="card-body"><b>JPEG</b> = lossy, smaller files, good for photos.<br><b>PNG</b> = lossless, preserves every pixel, supports transparency.<br><b>GIF</b> = lossless but 256 colours only.</div></div>
+    <div class="card c-acc"><div class="card-title">HCI Applications</div><div class="card-body"><b>Face recognition</b> — security, photo tagging<br><b>Gesture recognition</b> — Kinect, touchless UI<br><b>Number plate recognition</b> — speed cameras<br><b>Fingerprint recognition</b> — law enforcement</div></div>
+  </div>
+
+  <div class="section-h">Colour models</div>
+  <div class="grid g2">
+    <div class="card c-blue">
+      <div class="card-title">RGB — Additive (screens)</div>
+      <div class="card-body">Red + Green + Blue <strong>light</strong> added together. Used by monitors, cameras, scanners, projectors.<br><br>R=255, G=255, B=255 = white. R=0, G=0, B=0 = black.</div>
+    </div>
+    <div class="card c-acc">
+      <div class="card-title">CMYK — Subtractive (printing)</div>
+      <div class="card-body"><strong>Cyan + Magenta + Yellow + Key (black).</strong><br><br>Subtract pigments from white paper. Used in inkjet/laser printers.<br><br>K = Key plate = black ink. Not 'K for blacK' — it's the <em>key</em> printing plate.</div>
+      <div class="tip">CMYK trap: K = Key (the black plate), not an abbreviation of black. Common MCQ trick.</div>
+    </div>
+  </div>
+</div>
+
+<!-- P16: JAVA SWING -->
+<div id="p16" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-coral">Topic 17</span>
+    <div class="page-title">Java <em>Swing</em></div>
+    <div class="page-desc">Java's GUI toolkit — lightweight, platform-independent, part of JFC.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-coral">
+      <div class="tag tag-coral">Overview</div>
+      <div class="card-title">What is Swing?</div>
+      <ul class="bullets">
+        <li>Part of <strong>JFC (Java Foundation Classes)</strong></li>
+        <li>Built on top of <strong>AWT</strong> (Abstract Windowing Toolkit)</li>
+        <li><strong>Lightweight</strong> — drawn entirely in Java, not using OS native widgets</li>
+        <li><strong>Platform-independent</strong> — consistent look across Windows, Mac, Linux</li>
+        <li>Package: <code style="font-family:var(--mono);font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--teal);">javax.swing</code> (note the 'x')</li>
+      </ul>
+      <div class="tip">Swing = lightweight + platform-independent. AWT = heavyweight + OS-native (dependent).</div>
+    </div>
+    <div class="card c-coral">
+      <div class="tag tag-coral">Class Hierarchy</div>
+      <div class="card-title">Swing Inheritance Tree</div>
+      <div class="formula coral" style="font-family:var(--mono);font-size:11.5px;line-height:2.1;">Object
+ └─ Component
+     └─ Container
+         ├─ Window
+         │   └─ Frame ← Dialog
+         └─ Panel ← Applet
+
+JComponent (extends Container)
+ ├─ JLabel, JList, JTable, JComboBox, JSlider
+ ├─ AbstractButton → JButton, JCheckBox
+ └─ JTextComponent → JTextField → JPasswordField
+                   → JTextArea</div>
+    </div>
+  </div>
+
+  <div class="section-h">Key Swing components — know each one's purpose</div>
+  <div class="grid g3">
+    <div class="card"><div class="card-title">JTextField</div><div class="card-body"><strong>Single-line</strong> editable text input. Most common form field.</div></div>
+    <div class="card"><div class="card-title">JTextArea</div><div class="card-body"><strong>Multi-line</strong> editable text. For larger text blocks.</div></div>
+    <div class="card"><div class="card-title">JPasswordField</div><div class="card-body">Masked input — extends <strong>JTextField</strong>. Hides characters.</div></div>
+    <div class="card"><div class="card-title">JButton</div><div class="card-body">Clickable button. Extends <strong>AbstractButton</strong>.</div></div>
+    <div class="card"><div class="card-title">JLabel</div><div class="card-body">Read-only text or icon. <strong>Not interactive</strong>.</div></div>
+    <div class="card"><div class="card-title">JComboBox</div><div class="card-body"><strong>Dropdown</strong> selector list.</div></div>
+    <div class="card"><div class="card-title">JSlider</div><div class="card-body"><strong>Numeric range</strong> — drag to select value.</div></div>
+    <div class="card"><div class="card-title">JTable</div><div class="card-body">Display <strong>tabular</strong> (grid) data.</div></div>
+    <div class="card"><div class="card-title">JTree</div><div class="card-body">Display <strong>hierarchical</strong> data. File system explorer style.</div></div>
+    <div class="card"><div class="card-title">JColorChooser</div><div class="card-body">Visual <strong>color picker</strong> dialog. RGB, HSV, swatches.</div></div>
+    <div class="card"><div class="card-title">JFrame</div><div class="card-body"><strong>Top-level window</strong> container. The main application window.</div></div>
+    <div class="card"><div class="card-title">JMenu / JMenuBar</div><div class="card-body">Menu hierarchy. Implement the <strong>MenuElement</strong> interface.</div></div>
+  </div>
+
+  <div class="section-h">Two ways to create a JFrame</div>
+  <div class="grid g2">
+    <div class="card c-teal">
+      <div class="card-title">1. Association (instantiate)</div>
+      <div class="formula teal" style="font-family:var(--mono);font-size:12px;line-height:1.9;">JFrame frame = new JFrame("My App");
+frame.setSize(400, 300);
+frame.setVisible(true);</div>
+      <div class="card-body" style="margin-top:8px;">Create an <strong>object of Frame class</strong>.</div>
+    </div>
+    <div class="card c-teal">
+      <div class="card-title">2. Inheritance (extend)</div>
+      <div class="formula teal" style="font-family:var(--mono);font-size:12px;line-height:1.9;">class MyApp extends JFrame {
+  MyApp() {
+    setTitle("My App");
+    setSize(400, 300);
+    setVisible(true);
+  }
+}</div>
+      <div class="card-body" style="margin-top:8px;"><strong>Subclass Frame</strong> — your class IS-A frame.</div>
+    </div>
+  </div>
+
+  <div class="section-h">2D Transformations & Java conventions</div>
+  <div class="grid g2">
+    <div class="card c-acc">
+      <div class="card-title">Graphics2D + AffineTransform</div>
+      <div class="formula" style="font-family:var(--mono);font-size:11.5px;line-height:1.9;">Graphics2D g2d = (Graphics2D) g;
+AffineTransform at = new AffineTransform();
+at.translate(50, 100);   // move
+at.scale(2.0, 2.0);      // resize
+at.rotate(Math.PI / 4);  // rotate 45°
+g2d.setTransform(at);</div>
+    </div>
+    <div class="card c-acc">
+      <div class="card-title">Java Naming Conventions</div>
+      <ul class="bullets">
+        <li>Java is <strong>case-sensitive</strong> — Hello ≠ hello ≠ HELLO</li>
+        <li><strong>Classes:</strong> UpperCamelCase — <code style="font-family:var(--mono);font-size:11px;">MyFirstClass</code></li>
+        <li><strong>Methods:</strong> lowerCamelCase — <code style="font-family:var(--mono);font-size:11px;">myMethodName()</code></li>
+        <li><strong>Variables:</strong> lowerCamelCase — <code style="font-family:var(--mono);font-size:11px;">myVariable</code></li>
+        <li><strong>Constants:</strong> ALL_CAPS — <code style="font-family:var(--mono);font-size:11px;">MAX_VALUE</code></li>
+      </ul>
+      <div class="tip">Case-sensitive: MyClass and myClass are different. Class = uppercase start.</div>
+    </div>
+  </div>
+</div>
+
+<!-- P17: JOGL -->
+<div id="p17" class="page">
+  <div class="page-header">
+    <span class="page-tag tag-green">Topic 18</span>
+    <div class="page-title">Java OpenGL <em>(JOGL)</em></div>
+    <div class="page-desc">Java binding for OpenGL — 2D and 3D graphics rendering in Java.</div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card c-green">
+      <div class="tag tag-green">What is JOGL?</div>
+      <div class="card-title">Java binding for OpenGL</div>
+      <ul class="bullets">
+        <li><strong>JOGL</strong> = Java binding for OpenGL (wrapper)</li>
+        <li>Developed by <strong>Ken Russell & Chris Kline</strong> (former MIT graduates)</li>
+        <li>Open-source — wraps the native OpenGL API for Java</li>
+        <li>Used for both <strong>2D and 3D</strong> graphics applications</li>
+        <li>Alternative: <strong>LWJGL</strong> = Lightweight Java Game Library</li>
+      </ul>
+      <div class="tip">JOGL = Java + OpenGL. Developers = Ken Russell & Chris Kline.</div>
+    </div>
+    <div class="card c-green">
+      <div class="tag tag-green">Java3D API</div>
+      <div class="card-title">Required JAR files</div>
+      <div class="formula green" style="font-family:var(--mono);">j3dcore.jar   — core Java3D API
+j3dutils.jar  — utility classes
+vecmath.jar   — vectors & matrices</div>
+      <div class="card-body" style="margin-top:8px;">Download from Oracle website. Add to project library (Project Structure → Libraries).</div>
+      <div class="tip">Three jars needed: j3dcore, j3dutils, vecmath. Know all three.</div>
+    </div>
+  </div>
+
+  <div class="section-h">OpenGL Suffix convention</div>
+  <div class="card c-acc" style="margin-bottom:14px;">
+    <div class="card-body">The number = how many coordinates. The letter = data type.</div>
+    <div class="formula" style="font-family:var(--sans);">glVertex<b>3f</b>(x, y, z)  →  3 coordinates, float type
+glColor<b>3f</b>(r, g, b)    →  3 values (RGB), float 0.0–1.0
+glVertex<b>2i</b>(x, y)      →  2 coordinates, integer type
+glScalef, glTranslatef, glRotatef  →  all float</div>
+    <div class="tip">f = float. i = int. d = double. The number = argument count.</div>
+  </div>
+
+  <div class="section-h">Essential JOGL methods</div>
+  <div class="card c-blue">
+    <table class="compare-table">
+      <tr><th>Method</th><th>Purpose</th></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glBegin(GL_type)</code></td><td>Start defining primitives — MUST pair with glEnd()</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glEnd()</code></td><td>End primitive definition</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glVertex3f(x, y, z)</code></td><td>Specify a 3D vertex with float coords</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glColor3f(r, g, b)</code></td><td>Set current draw colour (0.0–1.0 per channel)</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glScalef(sx, sy, sz)</code></td><td>Scale transformation on all three axes</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glTranslatef(x, y, z)</code></td><td>Translate (move) the coordinate system</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glRotatef(angle,x,y,z)</code></td><td>Rotate by 'angle' degrees around axis (x,y,z)</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glClear(GL_COLOR_BUFFER_BIT)</code></td><td>Clear colour buffer before drawing new frame</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glLoadIdentity()</code></td><td>Reset current matrix to identity (no transforms)</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glEnable(GL_DEPTH_TEST)</code></td><td>Enable depth testing for correct 3D ordering</td></tr>
+      <tr><td><code style="font-family:var(--mono);font-size:11.5px;">glViewport(x,y,w,h)</code></td><td>Define the rendering area within the window</td></tr>
+    </table>
+  </div>
+
+  <div class="section-h">OpenGL Drawing Primitives</div>
+  <div class="grid g3">
+    <div class="card c-green"><div class="card-title">GL_POLYGON</div><div class="card-body">One filled convex polygon using all listed vertices. Good for simple shapes.</div></div>
+    <div class="card c-green"><div class="card-title">GL_TRIANGLES</div><div class="card-body">Separate filled triangles — every 3 vertices = 1 triangle.</div></div>
+    <div class="card c-green"><div class="card-title">GL_TRIANGLE_STRIP</div><div class="card-body">Efficient — shares vertices between adjacent triangles. Good for ribbons.</div></div>
+    <div class="card c-green"><div class="card-title">GL_QUADS</div><div class="card-body">Filled quadrilaterals — every 4 vertices = 1 quad.</div></div>
+    <div class="card c-green"><div class="card-title">GL_LINES</div><div class="card-body">Line segments — every pair of vertices = 1 line.</div></div>
+    <div class="card c-green"><div class="card-title">GL_POINTS</div><div class="card-body">Individual point at each vertex.</div></div>
+  </div>
+
+  <div class="section-h">Typical drawing pattern</div>
+  <div class="card c-acc">
+    <div class="formula" style="font-family:var(--mono);font-size:12px;line-height:1.9;">// Draw a red triangle
+gl.glBegin(GL.GL_POLYGON);
+  gl.glColor3f(1.0f, 0.0f, 0.0f);   // red
+  gl.glVertex3f( 0.0f,  1.0f, 0.0f); // top
+  gl.glVertex3f(-1.0f, -1.0f, 0.0f); // bottom-left
+  gl.glVertex3f( 1.0f, -1.0f, 0.0f); // bottom-right
+gl.glEnd();</div>
+    <div class="tip">glBegin() and glEnd() ALWAYS go together. Vertex order matters for face direction.</div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+  closeNav();
+}
+
+function toggleNav() {
+  document.getElementById('nav').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeNav() {
+  document.getElementById('nav').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// Search nav items
+document.getElementById('navSearch').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.style.display = (!q || item.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+  document.querySelectorAll('.nav-cat').forEach(cat => {
+    cat.style.display = '';
+  });
+});
+
+// Keyboard shortcut: Escape closes nav on mobile
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeNav();
+});
+</script>
+</body>
+</html>
