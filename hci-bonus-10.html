@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCI Bonus MCQs</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:#111110;color:#e8e6e1;line-height:1.7;min-height:100vh;-webkit-font-smoothing:antialiased;font-size:17px}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 60px}
+.hdr{padding:48px 0 28px;text-align:center}
+.hdr h1{font-family:'Quicksand',sans-serif;font-size:22px;font-weight:700;color:#e8e6e1}
+.hdr h1 span{color:#c9a55a}
+.hdr p{font-size:13px;color:#6b6860;margin-top:4px}
+.stats{display:flex;gap:16px;margin-bottom:24px;font-size:14px;color:#8a8580;font-weight:500}
+.stats span{color:#c9a55a;font-weight:700}
+.tpc{font-size:12px;font-weight:700;color:#c9a55a;letter-spacing:.8px;text-transform:uppercase;padding:20px 0 10px;border-top:1px solid #2a2a28;margin-top:8px}
+.tpc:first-child{border-top:none;margin-top:0;padding-top:0}
+.qc{background:#f5f0ea;border:1px solid #e5ddd4;border-radius:12px;padding:20px;margin-bottom:14px;transition:border-color .2s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.qc.ok{border-color:#b5cfb8}
+.qc.no{border-color:#d4b5a8}
+.qn{font-size:13px;font-weight:600;color:#b0a89e;margin-bottom:8px}
+.qt{font-size:16px;font-weight:600;color:#2a2520;margin-bottom:16px;line-height:1.55}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1px solid #e0d8ce;border-radius:8px;cursor:pointer;transition:.12s;font-size:15px;line-height:1.5;color:#5a5550;background:#faf6f0}
+.opt:hover{border-color:#c9a55a;background:#fff8ee}
+.opt .lt{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#ece6dc;font-weight:700;font-size:13px;color:#9b9590;flex-shrink:0;transition:.12s}
+.opt.locked{pointer-events:none}
+.opt.is-correct{border-color:#b5cfb8;background:#f0f5f0}
+.opt.is-correct .lt{background:#7ba882;color:#fff}
+.opt.is-correct .opt-text{color:#4a7a55}
+.opt.is-wrong{border-color:#d4b5a8;background:#f8f0ec}
+.opt.is-wrong .lt{background:#b8806e;color:#fff}
+.opt.is-wrong .opt-text{color:#9a6550}
+.opt.is-skip{border-color:#e0d8ce;background:#f0ebe5}
+.opt-exp{display:none;margin-top:6px;font-size:14px;line-height:1.6;padding:8px 10px;border-radius:6px}
+.opt.revealed .opt-exp{display:block}
+.opt.is-correct .opt-exp{color:#4a7a55;background:rgba(123,168,130,.08)}
+.opt.is-wrong .opt-exp,.opt.is-skip .opt-exp{color:#8a8580;background:#ede7e0}
+.opt-inner{flex:1}
+.opt-text{display:block}
+.rst{margin-top:16px;padding:8px 18px;border:1px solid #2a2a28;background:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:#8a8580;border-radius:8px;cursor:pointer;transition:.15s;float:right}
+.rst:hover{border-color:#c9a55a;color:#c9a55a}
+@media(max-width:600px){
+.wrap{padding:0 16px 60px}
+.qc{padding:16px}
+.qt{font-size:15px}
+.opt{padding:9px 10px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hdr">
+<h1>HCI <span>Bonus Round</span></h1>
+<p>10 gap-filler MCQs from mock test patterns</p>
+</div>
+<div class="stats" id="stats">0/10 answered · <span>0 correct</span></div>
+<div id="qlist"></div>
+<button class="rst" onclick="resetAll()">Reset</button>
+</div>
+<script>
+const Q=[
+{t:"Situational Awareness",q:"What does 'situational awareness' mean in interface design?",o:["The system's ability to run faster algorithms","The user's perception of system status and environment","The system's ability to reduce memory load","The clarity of system aesthetics"],a:1,x:["Situational awareness is about the user's cognition, not system performance.","Correct. Users need to know where they are, what's happening, and what they can do next. That's situational awareness.","Memory load is cognitive load, a different concept.","Aesthetics relate to visual design, not awareness of system state."]},
+{t:"Situational Awareness",q:"Which best supports 'situational awareness' in a web app?",o:["Removing all navigation elements","Breadcrumbs, progress indicators, and clear page titles","Using only keyboard shortcuts","Hiding the current page location"],a:1,x:["Removing navigation destroys awareness of position and options.","Correct. Breadcrumbs show where you are, progress indicators show what's happening, page titles confirm location. All feed situational awareness.","Keyboard shortcuts help efficiency, not awareness.","Hiding location is the opposite of supporting awareness."]},
+{t:"Forgiving Interfaces",q:"Which best describes 'forgiving interfaces'?",o:["Interfaces that eliminate all feedback","Interfaces that allow users to make mistakes without severe consequences","Interfaces that prioritize aesthetics over usability","Interfaces that reduce system efficiency"],a:1,x:["Eliminating feedback makes interfaces worse, not forgiving.","Correct. Forgiving interfaces use undo, trash (instead of permanent delete), confirmation dialogs, and auto-save so users can recover from mistakes easily.","Aesthetics over usability is a design tradeoff issue, not forgiveness.","Forgiving design doesn't affect system performance."]},
+{t:"Forgiving Interfaces",q:"Which is an example of a 'forgiving interface' feature?",o:["Permanently deleting files on first click","An undo button and a recycle bin for deleted items","Removing all confirmation dialogs","Disabling the back button"],a:1,x:["Permanent deletion on first click is the opposite of forgiving. One mistake = data gone.","Correct. Undo reverses actions. A recycle bin gives a second chance before permanent deletion. Both forgive user mistakes.","Removing confirmations lets destructive actions happen unchecked. Not forgiving.","Disabling back traps users. That's a dark pattern, not forgiveness."]},
+{t:"Consistency Across Platforms",q:"What is the main advantage of 'consistency across platforms'?",o:["It reduces hardware costs","It allows users to transfer knowledge and skills between systems","It eliminates the need for feedback","It guarantees faster system performance"],a:1,x:["Hardware costs are unrelated to design consistency.","Correct. When an app works the same on desktop and mobile, users don't have to relearn everything. Their existing knowledge transfers directly.","Consistency doesn't remove the need for feedback. Both are needed.","Consistency improves usability, not system speed."]},
+{t:"Consistency Across Platforms",q:"A user switches from Photoshop on Windows to Photoshop on Mac and immediately knows how to use the toolbar. This demonstrates:",o:["Progressive disclosure","Consistency across platforms allowing knowledge transfer","Error prevention","Cognitive friction"],a:1,x:["Progressive disclosure is about revealing info gradually, not cross-platform familiarity.","Correct. The interface is consistent across platforms. Skills transfer without relearning. This is the core benefit of cross-platform consistency.","Error prevention is about stopping mistakes, not about transferring skills.","Cognitive friction is the opposite of what's happening here. The user experienced zero friction."]},
+{t:"Efficiency as a Design Principle",q:"Which design principle emphasizes reducing the number of actions a user must take to complete a task?",o:["Consistency","Efficiency","Feedback","Visibility"],a:1,x:["Consistency is about predictable behavior, not reducing action count.","Correct. Efficiency means fewer steps, fewer clicks, less effort to reach the goal. Autofill, smart defaults, and shortcuts all serve efficiency.","Feedback is about communicating results, not reducing steps.","Visibility is about making options perceivable, not minimizing actions."]},
+{t:"Efficiency as a Design Principle",q:"Which is an example of improving 'efficiency' in interface design?",o:["Adding more confirmation dialogs","Providing keyboard shortcuts and auto-complete suggestions","Showing all options at once without grouping","Requiring users to re-enter information on every page"],a:1,x:["More dialogs ADD steps, reducing efficiency.","Correct. Shortcuts reduce steps for experts. Auto-complete reduces typing. Both cut the number of actions needed to complete a task.","Showing everything at once increases cognitive load, not efficiency.","Re-entering info is the opposite of efficiency. It adds unnecessary repetitive actions."]},
+{t:"Efficiency as a Design Principle",q:"A checkout form remembers the user's address from a previous purchase and auto-fills it. This is an example of:",o:["Error prevention","Efficiency (reducing actions to complete the task)","Visibility","Affordance"],a:1,x:["Auto-fill isn't about preventing errors. It's about saving effort.","Correct. Auto-filling saved data removes the need to retype. Fewer actions = efficiency as a design principle in action.","Visibility is about showing system state, not auto-filling forms.","Affordance is about objects suggesting their use, not about remembering user data."]},
+{t:"Situational Awareness vs Visibility",q:"'Situational awareness' and 'visibility of system status' are related but different. What is the key distinction?",o:["They are the same thing","Visibility is about the SYSTEM providing feedback; situational awareness is about the USER's overall perception","Visibility is about aesthetics; situational awareness is about speed","There is no relationship between them"],a:1,x:["They're related but NOT identical. They operate at different levels.","Correct. Visibility (Heuristic #1) is what the system shows. Situational awareness is broader: the user's complete mental picture of where they are, what's happening, and what options exist. Visibility feeds INTO awareness, but awareness also includes navigation context and task understanding.","Neither is about aesthetics or speed. Both are about understanding system state.","They are clearly related since visibility supports awareness. But they're not the same concept."]}
+];
+
+let answered={},correct=0;
+
+function render(){
+let h='',lt='';
+Q.forEach((q,i)=>{
+if(q.t!==lt){h+=`<div class="tpc">${q.t}</div>`;lt=q.t;}
+const p=answered[i],d=p!==undefined;
+h+=`<div class="qc${d?(p===q.a?' ok':' no'):''}"><div class="qn">${i+1} / 10</div><div class="qt">${q.q}</div><div class="opts">`;
+['A','B','C','D'].forEach((l,oi)=>{
+let c='opt';if(d){c+=' locked revealed';c+=oi===q.a?' is-correct':(oi===p?' is-wrong':' is-skip');}
+h+=`<div class="${c}" onclick="pick(${i},${oi})"><span class="lt">${l}</span><div class="opt-inner"><span class="opt-text">${q.o[oi]}</span>`;
+if(d)h+=`<div class="opt-exp">${q.x[oi]}</div>`;
+h+=`</div></div>`;});
+h+=`</div></div>`;});
+document.getElementById('qlist').innerHTML=h;
+let ac=Object.keys(answered).length;
+correct=0;for(let k in answered)if(answered[k]===Q[k].a)correct++;
+document.getElementById('stats').innerHTML=`${ac}/10 answered · <span>${correct} correct</span>`;
+}
+
+function pick(i,oi){if(answered[i]!==undefined)return;answered[i]=oi;render();}
+function resetAll(){answered={};correct=0;render();}
+
+// Shuffle options
+Q.forEach(q=>{
+const idx=[0,1,2,3];
+for(let i=3;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+q.o=idx.map(i=>q.o[i]);q.x=idx.map(i=>q.x[i]);q.a=idx.indexOf(q.a);
+});
+
+render();
+</script>
+</body>
+</html>
