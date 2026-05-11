@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HCI Module — 100 MCQ Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1115;
+    --bg-elev: #161922;
+    --bg-card: #1c2030;
+    --ink: #e9ecf3;
+    --ink-dim: #9aa3b8;
+    --line: #2a2f42;
+    --accent: #f5c451;
+    --accent-soft: #f5c45122;
+    --correct: #4ade80;
+    --correct-soft: #4ade8022;
+    --wrong: #f87171;
+    --wrong-soft: #f8717122;
+    --medium: #60a5fa;
+    --hard: #fb923c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.55;
+    background-image:
+      radial-gradient(circle at 15% 10%, #f5c45110 0, transparent 40%),
+      radial-gradient(circle at 85% 90%, #60a5fa10 0, transparent 40%);
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  header.top {
+    display: flex; flex-direction: column; gap: 18px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800; letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .brand span { color: var(--accent); font-style: italic; }
+  .subtitle { color: var(--ink-dim); font-size: 14px; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    justify-content: space-between;
+  }
+  .progress-info { display: flex; gap: 16px; align-items: center; font-size: 13px; }
+  .progress-info b { color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+  .score-pill {
+    background: var(--bg-card); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px; font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .score-pill .correct-c { color: var(--correct); }
+  .score-pill .wrong-c { color: var(--wrong); }
+
+  .search-bar {
+    position: relative; width: 100%;
+  }
+  .search-bar input {
+    width: 100%; padding: 12px 16px 12px 42px;
+    background: var(--bg-card); border: 1px solid var(--line);
+    border-radius: 12px; color: var(--ink);
+    font-family: inherit; font-size: 14px;
+    transition: border-color .2s, background .2s;
+  }
+  .search-bar input:focus { outline: none; border-color: var(--accent); }
+  .search-bar::before {
+    content: "⌕"; position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%); color: var(--ink-dim); font-size: 18px;
+  }
+
+  .search-results {
+    background: var(--bg-card); border: 1px solid var(--line);
+    border-radius: 12px; margin-top: 8px;
+    max-height: 280px; overflow-y: auto;
+    display: none;
+  }
+  .search-results.open { display: block; }
+  .search-result-item {
+    padding: 10px 14px; border-bottom: 1px solid var(--line);
+    cursor: pointer; font-size: 13px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:hover { background: var(--bg-elev); }
+  .search-result-item .num {
+    color: var(--accent); font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; flex-shrink: 0;
+  }
+  .search-empty { padding: 14px; color: var(--ink-dim); font-size: 13px; text-align: center; }
+
+  .progress-track {
+    height: 4px; background: var(--bg-card); border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--hard));
+    transition: width .4s ease;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 20px 60px -20px #0006;
+  }
+  .q-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+  }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--ink-dim);
+    letter-spacing: 0.08em;
+  }
+  .difficulty-tag {
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .difficulty-tag.medium { background: #60a5fa22; color: var(--medium); border: 1px solid #60a5fa44; }
+  .difficulty-tag.hard { background: #fb923c22; color: var(--hard); border: 1px solid #fb923c44; }
+
+  .topic-tag {
+    font-size: 11px; color: var(--ink-dim);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .question-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(19px, 2.4vw, 23px);
+    font-weight: 600; line-height: 1.35;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: var(--bg-elev);
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all .18s ease;
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 15px; text-align: left;
+    color: var(--ink); font-family: inherit;
+    width: 100%;
+  }
+  .option:hover:not(.locked) {
+    border-color: var(--accent); background: var(--accent-soft);
+  }
+  .option .letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; color: var(--accent);
+    flex-shrink: 0; width: 22px;
+  }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .option.correct { border-color: var(--correct); background: var(--correct-soft); }
+  .option.correct .letter { color: var(--correct); }
+  .option.wrong { border-color: var(--wrong); background: var(--wrong-soft); }
+  .option.wrong .letter { color: var(--wrong); }
+  .option.locked { cursor: default; }
+  .option .indicator { margin-left: auto; font-size: 18px; flex-shrink: 0; }
+
+  .explanation {
+    margin-top: 22px;
+    background: var(--bg-elev);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    display: none;
+  }
+  .explanation.open { display: block; animation: slide .35s ease; }
+  @keyframes slide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .explanation h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .explanation .verdict {
+    font-weight: 700; margin-bottom: 10px;
+    font-family: 'Fraunces', serif; font-size: 17px;
+  }
+  .explanation .verdict.right { color: var(--correct); }
+  .explanation .verdict.wrong-v { color: var(--wrong); }
+  .explanation .reasoning { color: var(--ink); margin-bottom: 14px; font-size: 14.5px; }
+  .explanation .opt-breakdown { display: flex; flex-direction: column; gap: 6px; }
+  .explanation .opt-breakdown div {
+    font-size: 13px; color: var(--ink-dim);
+    padding-left: 12px; border-left: 2px solid var(--line);
+  }
+  .explanation .opt-breakdown div b { color: var(--ink); font-family: 'JetBrains Mono', monospace; }
+
+  .nav {
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 24px;
+  }
+  .btn {
+    padding: 12px 22px;
+    border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .18s;
+  }
+  .btn:hover:not(:disabled) { background: var(--bg-elev); border-color: var(--accent); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.primary { background: var(--accent); color: #0f1115; border-color: var(--accent); }
+  .btn.primary:hover:not(:disabled) { background: #ffd76d; }
+  .btn.ghost { background: transparent; }
+
+  .footer-actions {
+    margin-top: 18px; display: flex; gap: 10px; justify-content: center;
+    flex-wrap: wrap;
+  }
+  .footer-actions .btn { font-size: 12px; padding: 8px 14px; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 24px 16px 60px; }
+    .card { padding: 22px; border-radius: 16px; }
+    .q-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">HCI Module <span>· 100 MCQs</span></div>
+      <div class="subtitle">Medium &amp; Hard practice exam · covers IxD, Agile UX, Evaluation, Prototypes, Visualisation, DIP, Line &amp; Circle algorithms</div>
+    </div>
+    <div class="search-bar">
+      <input id="searchInput" type="text" placeholder="Search questions by keyword (e.g. Bresenham, heuristics, prototype)..." autocomplete="off" />
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="meta-row">
+      <div class="progress-info">
+        <span>Question <b id="curNum">1</b> / <b>100</b></span>
+        <span class="score-pill">
+          <span class="correct-c" id="correctCount">0</span> ✓
+          &nbsp;·&nbsp;
+          <span class="wrong-c" id="wrongCount">0</span> ✗
+        </span>
+      </div>
+      <div class="progress-info"><span id="answeredCount">0</span>&nbsp;answered</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main id="quizArea"></main>
+
+  <div class="footer-actions">
+    <button class="btn ghost" id="resetBtn">↺ Reset all progress</button>
+    <button class="btn ghost" id="jumpBtn">⇥ Jump to first unanswered</button>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// QUESTION BANK — 100 MCQs covering every section of the HCI module
+// =====================================================================
+const QUESTIONS = [
+  // -------- INTERACTION DESIGN BASICS (Q1-10) --------
+  {
+    id: 1, difficulty: "medium", topic: "Interaction Design Basics",
+    q: "Which BEST describes the relationship between Usability goals and User Experience (UX) goals?",
+    options: [
+      "They are identical and interchangeable concepts.",
+      "Usability goals focus on measurable criteria (effective, efficient, safe); UX goals focus on subjective qualities (engaging, fun, satisfying).",
+      "UX goals are a subset of usability goals applicable only to games.",
+      "Usability goals concern aesthetics; UX goals concern performance metrics."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Usability goals are objective and measurable (effective, efficient, safe, easy to learn, easy to remember, good utility). UX goals describe how the user feels — desirable (engaging, fun, helpful) or undesirable (boring, frustrating, patronizing).",
+      perOption: [
+        "Wrong — they're related but distinct categories.",
+        "Correct — captures the objective vs. subjective split exactly.",
+        "Wrong — UX goals apply to every product type.",
+        "Wrong — this reverses the actual meaning."
+      ]
+    }
+  },
+  {
+    id: 2, difficulty: "medium", topic: "Interaction Design Basics",
+    q: "The four basic activities of the Interaction Design process are:",
+    options: [
+      "Planning, Coding, Testing, Releasing",
+      "Discovering requirements, Designing alternatives, Prototyping, Evaluating",
+      "Brainstorming, Wireframing, Coding, Deploying",
+      "Research, Design, Build, Market"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture 1 explicitly lists these four lifeblood activities of IxD, exemplifying a user-centered approach with iteration between them.",
+      perOption: [
+        "Wrong — this is a generic SDLC, not IxD.",
+        "Correct — the four core IxD activities.",
+        "Wrong — these are techniques, not the core activity model.",
+        "Wrong — too generic; missing prototyping and evaluation."
+      ]
+    }
+  },
+  {
+    id: 3, difficulty: "medium", topic: "Interaction Design Basics",
+    q: "Which is NOT one of Norman's/IxD's six usability goals?",
+    options: [
+      "Effective to use",
+      "Easy to remember how to use",
+      "Emotionally fulfilling",
+      "Safe to use"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "The six usability goals are: effective, efficient, safe, good utility, easy to learn, easy to remember. 'Emotionally fulfilling' is a UX goal (subjective), not a usability goal.",
+      perOption: [
+        "Wrong — this IS a usability goal.",
+        "Wrong — this IS a usability goal.",
+        "Correct — this is a UX goal, not a usability goal.",
+        "Wrong — this IS a usability goal."
+      ]
+    }
+  },
+  {
+    id: 4, difficulty: "hard", topic: "Interaction Design Basics",
+    q: "A designer makes 'Ctrl+S' for Save, 'Ctrl+Sp' for Spelling, 'Ctrl+Shift+L' for Select. This is an example of:",
+    options: [
+      "Strong external consistency",
+      "Breakdown of consistency increasing learning burden",
+      "Perfect application of Fitts's Law",
+      "Use of affordances to guide users"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "When multiple commands start with the same letter, the 'first initial' shortcut convention breaks down, forcing inconsistent combos which increases user errors and learning load.",
+      perOption: [
+        "Wrong — this is the opposite; consistency has broken down.",
+        "Correct — exactly the scenario described in the lecture.",
+        "Wrong — Fitts's Law concerns target size/distance, not shortcuts.",
+        "Wrong — affordances concern perceived action possibilities."
+      ]
+    }
+  },
+  {
+    id: 5, difficulty: "medium", topic: "Interaction Design Basics",
+    q: "Inclusiveness differs from Accessibility in that:",
+    options: [
+      "Accessibility focuses on disabilities; inclusiveness accommodates the widest possible range of people regardless of ability, age, education, or income.",
+      "They are exactly the same concept.",
+      "Inclusiveness applies only to mobile devices.",
+      "Accessibility is for designers, inclusiveness is for marketers."
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "The lecture stresses inclusivity is broader — disabled users don't want to feel different; products should accommodate everyone by default.",
+      perOption: [
+        "Correct — captures the lecture's distinction.",
+        "Wrong — they overlap but aren't identical.",
+        "Wrong — applies to all products.",
+        "Wrong — both are design concerns."
+      ]
+    }
+  },
+  {
+    id: 6, difficulty: "hard", topic: "Interaction Design Basics",
+    q: "User-centered design rests on three principles. Which set is correct?",
+    options: [
+      "Early focus on users and tasks · Empirical measurement · Iterative design",
+      "Brainstorming · Wireframing · Deployment",
+      "Cost reduction · Speed · Marketability",
+      "Aesthetics · Branding · Conversion optimization"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Lecture 1 defines these three UCD principles explicitly.",
+      perOption: [
+        "Correct — the textbook's three pillars of UCD.",
+        "Wrong — these are activities, not UCD principles.",
+        "Wrong — these are business goals.",
+        "Wrong — these are marketing concerns."
+      ]
+    }
+  },
+  {
+    id: 7, difficulty: "medium", topic: "Interaction Design Basics",
+    q: "Which is an example of a 'situational' disability?",
+    options: [
+      "A person with permanent paraplegia",
+      "A user trying to hear a phone call in a noisy stadium",
+      "A user with congenital blindness",
+      "A user with diagnosed dyslexia"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Situational impairments arise from the environment, not the user. Permanent and temporary impairments are the other two categories.",
+      perOption: [
+        "Wrong — this is a permanent impairment.",
+        "Correct — environmental, situational impairment.",
+        "Wrong — permanent sensory impairment.",
+        "Wrong — permanent cognitive impairment."
+      ]
+    }
+  },
+  {
+    id: 8, difficulty: "medium", topic: "Interaction Design Basics",
+    q: "Design principles in IxD are derived from a mix of:",
+    options: [
+      "Marketing data and customer reviews only",
+      "Theory-based knowledge, experience, and common sense",
+      "Government regulations and legal precedents",
+      "Random sampling of user opinions"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture 1 defines design principles as generalizable abstractions derived from theory, real-world experience, and common sense.",
+      perOption: [
+        "Wrong — too narrow.",
+        "Correct — exact triad from the lecture.",
+        "Wrong — these inform but don't define principles.",
+        "Wrong — principles are not random; they're distilled wisdom."
+      ]
+    }
+  },
+  {
+    id: 9, difficulty: "hard", topic: "Interaction Design Basics",
+    q: "Interaction Design is described as 'genuinely transdisciplinary'. Which list of fields BEST reflects this?",
+    options: [
+      "Only Computer Science and HCI",
+      "Cognitive science, ergonomics, social sciences, graphic design, engineering, informatics, CSCW",
+      "Only Graphic Design and Industrial Design",
+      "Marketing, Sales, Finance, and HR"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The transdisciplinary diagram lists academic disciplines (psychology, ergonomics, informatics, engineering, CS, social sciences) plus design practices (graphic, product, industrial, artist) and interdisciplinary fields (HCI, HF, cognitive engineering, CSCW).",
+      perOption: [
+        "Wrong — too narrow.",
+        "Correct — captures the breadth shown in the lecture diagram.",
+        "Wrong — incomplete.",
+        "Wrong — these are business functions, not IxD contributors."
+      ]
+    }
+  },
+  {
+    id: 10, difficulty: "hard", topic: "Interaction Design Basics",
+    q: "The 'Double Diamond' model of design emphasizes:",
+    options: [
+      "Two phases of divergent and convergent thinking — discovering/defining the problem, then developing/delivering the solution",
+      "Two sprints of equal length in Scrum",
+      "Two prototypes always being built in parallel",
+      "Doubling the budget for design phases"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Double Diamond = Discover (diverge) → Define (converge) → Develop (diverge) → Deliver (converge). Two diamonds of divergence/convergence.",
+      perOption: [
+        "Correct — the textbook definition.",
+        "Wrong — not a Scrum concept.",
+        "Wrong — not the model's meaning.",
+        "Wrong — has nothing to do with budgets."
+      ]
+    }
+  },
+
+  // -------- AGILE SOFTWARE ENGINEERING (Q11-20) --------
+  {
+    id: 11, difficulty: "medium", topic: "Agile Software Engineering",
+    q: "In Scrum, the Product Backlog is BEST described as:",
+    options: [
+      "A fixed contract signed before development begins",
+      "A prioritized to-do list of items to implement, reviewed and updated before each sprint",
+      "A document delivered only at the end of the project",
+      "The list of bugs found in production"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Sommerville defines the product backlog as a live, re-prioritized list of work items, refined before each sprint.",
+      perOption: [
+        "Wrong — backlogs are dynamic, not contracts.",
+        "Correct — the standard Scrum definition.",
+        "Wrong — it's maintained throughout, not delivered.",
+        "Wrong — bugs are a small subset of possible items."
+      ]
+    }
+  },
+  {
+    id: 12, difficulty: "medium", topic: "Agile Software Engineering",
+    q: "Which is NOT a key practice of Scrum?",
+    options: [
+      "Timeboxed sprints (typically 2–4 weeks)",
+      "Self-organizing teams",
+      "Detailed upfront design of all features before any coding",
+      "Daily scrum meetings"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Scrum explicitly avoids large upfront design; requirements evolve through iteration.",
+      perOption: [
+        "Wrong — this IS a Scrum practice.",
+        "Wrong — this IS a Scrum practice.",
+        "Correct — this contradicts Scrum's iterative philosophy.",
+        "Wrong — daily scrums ARE a key practice."
+      ]
+    }
+  },
+  {
+    id: 13, difficulty: "hard", topic: "Agile Software Engineering",
+    q: "What is the PRIMARY difference between XP (Extreme Programming) and Scrum?",
+    options: [
+      "XP defines specific engineering practices (test-first, pair programming); Scrum focuses on planning and management without prescribing engineering techniques.",
+      "XP is older than Scrum but no longer used.",
+      "Scrum requires C++ while XP requires Java.",
+      "XP eliminates the role of the customer."
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Sommerville explicitly notes that Scrum doesn't define engineering practices — teams choose. XP introduced practices like test-first dev and pair programming.",
+      perOption: [
+        "Correct — the key distinction.",
+        "Wrong — both are still used.",
+        "Wrong — language-agnostic.",
+        "Wrong — XP heavily involves the on-site customer."
+      ]
+    }
+  },
+  {
+    id: 14, difficulty: "medium", topic: "Agile Software Engineering",
+    q: "A 'shippable product increment' in Scrum means:",
+    options: [
+      "Code that compiles but is not yet tested",
+      "Documentation only, no working software",
+      "A potentially deliverable working product at the end of a sprint",
+      "A marketing brochure"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Each sprint produces a 'potentially shippable' increment — working software needing no further work before delivery.",
+      perOption: [
+        "Wrong — must be tested and complete.",
+        "Wrong — must be working software.",
+        "Correct — the definition.",
+        "Wrong — not a marketing artifact."
+      ]
+    }
+  },
+  {
+    id: 15, difficulty: "hard", topic: "Agile Software Engineering",
+    q: "If a team cannot complete all sprint backlog items by the sprint's end, the correct action is:",
+    options: [
+      "Extend the sprint until everything is done",
+      "Return unfinished items to the product backlog and queue for a future sprint; do NOT extend the sprint",
+      "Cancel the project",
+      "Fire the slowest developer"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Sommerville: 'If it is impossible to complete all of the sprint backlog items, the sprint is not extended. The unfinished items are returned to the product backlog.'",
+      perOption: [
+        "Wrong — sprints are timeboxed and never extended.",
+        "Correct — the standard rule.",
+        "Wrong — overreaction.",
+        "Wrong — Scrum is team-focused, not blame-focused."
+      ]
+    }
+  },
+  {
+    id: 16, difficulty: "medium", topic: "Agile Software Engineering",
+    q: "Daily scrums are intentionally short and sometimes held standing because:",
+    options: [
+      "Standing improves cardiovascular health",
+      "It dissuades long discussions and keeps the meeting focused on status updates",
+      "The room has no chairs",
+      "It's required by the Agile Manifesto"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Standing meetings are a Scrum tactic to discourage drift into long debates — the focus is brief status sharing.",
+      perOption: [
+        "Wrong — not the design intent.",
+        "Correct — exactly the lecture's reason.",
+        "Wrong — it's a choice, not a constraint.",
+        "Wrong — the Manifesto doesn't prescribe this."
+      ]
+    }
+  },
+  {
+    id: 17, difficulty: "hard", topic: "Agile Software Engineering",
+    q: "Who has the ULTIMATE authority to decide whether a sprint goal has been achieved?",
+    options: [
+      "The Scrum Master",
+      "The most senior developer",
+      "The Product Owner",
+      "The customer's lawyer"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Sommerville: 'The product owner has the ultimate authority to decide whether or not the goal of the sprint has been achieved.'",
+      perOption: [
+        "Wrong — Scrum Master facilitates but doesn't validate goals.",
+        "Wrong — seniority isn't the criterion.",
+        "Correct — the Product Owner's role.",
+        "Wrong — irrelevant to Scrum."
+      ]
+    }
+  },
+  {
+    id: 18, difficulty: "medium", topic: "Agile Software Engineering",
+    q: "Sprint reviews involve which of the following?",
+    options: [
+      "Only the Scrum Master",
+      "The whole team and possibly external stakeholders, reflecting on what worked and didn't",
+      "Lawyers and accountants",
+      "Just the Product Owner alone"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Reviews include the whole team and stakeholders to reflect on outcomes and process improvements.",
+      perOption: [
+        "Wrong — too restrictive.",
+        "Correct — by the book.",
+        "Wrong — irrelevant participants.",
+        "Wrong — collaborative, not solo."
+      ]
+    }
+  },
+  {
+    id: 19, difficulty: "hard", topic: "Agile Software Engineering",
+    q: "Why does Agile recommend AGAINST designing a complete product upfront?",
+    options: [
+      "Designers are lazy",
+      "Re-prioritization will cause much upfront design work to be discarded; some upfront work IS needed but only enough",
+      "Customers don't pay for design",
+      "It's faster to skip design entirely"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture explicitly states designing complete products upfront wastes effort due to re-prioritization; balance some upfront work with iteration.",
+      perOption: [
+        "Wrong — not the reason.",
+        "Correct — the lecture's exact rationale.",
+        "Wrong — design IS billable work.",
+        "Wrong — design is still essential."
+      ]
+    }
+  },
+  {
+    id: 20, difficulty: "medium", topic: "Agile Software Engineering",
+    q: "Key inputs to sprint planning are:",
+    options: [
+      "Effort estimates for backlog items and the team's velocity",
+      "The CEO's mood and stock prices",
+      "Only the customer's first request",
+      "Random selection from the backlog"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Sommerville: 'Key inputs are the effort estimates associated with PBIs and the team's velocity.'",
+      perOption: [
+        "Correct — the textbook answer.",
+        "Wrong — unrelated.",
+        "Wrong — backlogs evolve.",
+        "Wrong — planning is deliberate."
+      ]
+    }
+  },
+
+  // -------- AGILE UX & PARALLEL TRACKS (Q21-30) --------
+  {
+    id: 21, difficulty: "medium", topic: "Agile UX",
+    q: "AgileUX is defined as integration of:",
+    options: [
+      "Waterfall and Spiral models",
+      "Interaction design techniques with agile methods, balancing research/reflection with rapid iteration",
+      "Marketing and engineering",
+      "Solo design without user input"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "AgileUX combines UX techniques with agile cycles, balancing thoughtful design with quick iteration on user feedback.",
+      perOption: [
+        "Wrong — these are non-agile models.",
+        "Correct — the lecture definition.",
+        "Wrong — overly broad.",
+        "Wrong — opposite of AgileUX."
+      ]
+    }
+  },
+  {
+    id: 22, difficulty: "hard", topic: "Agile UX",
+    q: "In the parallel tracks AgileUX approach, designers typically work:",
+    options: [
+      "Two cycles behind developers",
+      "One (or two) iterations ahead of developers",
+      "At exactly the same pace as developers",
+      "Only after coding is complete"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The Sy (2007) model has designers working one (sometimes two) cycles ahead so developers always have validated designs ready.",
+      perOption: [
+        "Wrong — opposite direction.",
+        "Correct — the Sy model.",
+        "Wrong — designs would never be ready in time.",
+        "Wrong — too late for designers' input."
+      ]
+    }
+  },
+  {
+    id: 23, difficulty: "medium", topic: "Agile UX",
+    q: "What happens in Cycle 0 of the parallel tracks approach?",
+    options: [
+      "Final deployment to production",
+      "Planning and gathering customer data before development begins",
+      "Bug fixing for the previous release",
+      "Marketing campaign launch"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Cycle 0 is the prep cycle — gather customer data, set product vision, prepare for development to start.",
+      perOption: [
+        "Wrong — this is end of project.",
+        "Correct — the lecture's Cycle 0 role.",
+        "Wrong — irrelevant in Cycle 0.",
+        "Wrong — that's post-launch."
+      ]
+    }
+  },
+  {
+    id: 24, difficulty: "hard", topic: "Agile UX",
+    q: "Which is NOT cited as an advantage of the parallel tracks approach?",
+    options: [
+      "No design time wasted on features that won't be implemented",
+      "Usability testing and contextual inquiry can share customer visits",
+      "Timely feedback on designs from developers and customers",
+      "Eliminates the need for any user research"
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "The lecture lists the first three as advantages. Parallel tracks INTEGRATES user research, not eliminates it.",
+      perOption: [
+        "Wrong — IS an advantage.",
+        "Wrong — IS an advantage.",
+        "Wrong — IS an advantage.",
+        "Correct — opposite of the truth."
+      ]
+    }
+  },
+  {
+    id: 25, difficulty: "medium", topic: "Agile UX",
+    q: "In Cycle 1 of parallel tracks, developers typically focus on:",
+    options: [
+      "Features with high development cost but low UI complexity (e.g., infrastructure, payment gateway)",
+      "Only the most visually complex UI components",
+      "Marketing materials",
+      "Nothing — they wait for designers"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Developers tackle backend-heavy, UI-light work first, giving designers time to validate UI in parallel.",
+      perOption: [
+        "Correct — the Sy model recommendation.",
+        "Wrong — UI work needs validated designs first.",
+        "Wrong — devs aren't on marketing.",
+        "Wrong — devs always have work in Cycle 1."
+      ]
+    }
+  },
+  {
+    id: 26, difficulty: "hard", topic: "Agile UX",
+    q: "Three practical areas where AgileUX requires careful integration are:",
+    options: [
+      "User research, aligning work practices, documentation",
+      "Coding, testing, deploying",
+      "Sales, marketing, support",
+      "Design, art, writing"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Lecture 6 names these three as the AgileUX areas: how to research, how to align practices, and how much/what to document.",
+      perOption: [
+        "Correct — the three practical areas.",
+        "Wrong — these are dev activities only.",
+        "Wrong — business functions.",
+        "Wrong — too broad and unrelated."
+      ]
+    }
+  },
+  {
+    id: 27, difficulty: "medium", topic: "Agile UX",
+    q: "In AgileUX, requirements are best characterized as:",
+    options: [
+      "Fully specified upfront and never changed",
+      "Elaborated and re-prioritized over iterations rather than specified up-front",
+      "Written by the CEO at project end",
+      "Ignored entirely in favor of intuition"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "AgileUX explicitly evolves requirements through iterations; upfront-only specs contradict its philosophy.",
+      perOption: [
+        "Wrong — anti-agile.",
+        "Correct — the lecture's wording.",
+        "Wrong — not how AgileUX works.",
+        "Wrong — requirements still matter."
+      ]
+    }
+  },
+  {
+    id: 28, difficulty: "hard", topic: "Agile UX",
+    q: "AgileUX teams are typically described as 'cross-functional' because:",
+    options: [
+      "They include only programmers",
+      "They include designers, developers, researchers, and testers working together on the product, not in silos",
+      "They cross departmental boundaries for budget approvals only",
+      "Their members are physically located in different time zones"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Cross-functional teams in AgileUX bring multiple disciplines together so deliverables are integrated, not handed off.",
+      perOption: [
+        "Wrong — programmers alone wouldn't be cross-functional.",
+        "Correct — the standard definition.",
+        "Wrong — narrow misreading.",
+        "Wrong — irrelevant criterion."
+      ]
+    }
+  },
+  {
+    id: 29, difficulty: "medium", topic: "Agile UX",
+    q: "In AgileUX, the deliverable focus shifts from 'design' to:",
+    options: [
+      "Marketing materials",
+      "The product itself — design is a means to a working product, not the end goal",
+      "Detailed specification documents",
+      "Stakeholder reports"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "AgileUX explicitly says: 'Focus on product, not design, as deliverable.'",
+      perOption: [
+        "Wrong — not the agile focus.",
+        "Correct — the lecture's wording.",
+        "Wrong — agile minimizes heavy docs.",
+        "Wrong — reports are byproducts."
+      ]
+    }
+  },
+  {
+    id: 30, difficulty: "hard", topic: "Agile UX",
+    q: "A team uses Cycle 2 to test the code from Cycle 1, prepare designs for Cycle 3, and gather customer data for Cycle 4. This activity belongs to:",
+    options: [
+      "The Developer Track",
+      "The Interaction Designer Track",
+      "The Marketing Track",
+      "The QA Track"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Per the Sy diagram, the designer track in each cycle: tests previous cycle's code, designs for next cycle, gathers data for the cycle after.",
+      perOption: [
+        "Wrong — developers IMPLEMENT, not test designs with users.",
+        "Correct — exact designer track responsibilities.",
+        "Wrong — not in the model.",
+        "Wrong — QA is typically dev-side."
+      ]
+    }
+  },
+
+  // -------- DATA GATHERING & ANALYSIS (Q31-40) --------
+  {
+    id: 31, difficulty: "medium", topic: "Data Gathering",
+    q: "Three fundamental data-gathering techniques for requirements are:",
+    options: [
+      "Coding, testing, debugging",
+      "Interviews, observation, questionnaires",
+      "Wireframing, mockups, prototypes",
+      "Sales pitches, ad campaigns, press releases"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture 2 names these three as the fundamental requirements-gathering means.",
+      perOption: [
+        "Wrong — these are development activities.",
+        "Correct — the lecture triad.",
+        "Wrong — these are design outputs.",
+        "Wrong — irrelevant."
+      ]
+    }
+  },
+  {
+    id: 32, difficulty: "hard", topic: "Data Gathering",
+    q: "In an interview, an OPEN question would typically produce:",
+    options: [
+      "Quantitative data analyzed statistically",
+      "Qualitative data analyzed by themes; each answer must be analyzed separately",
+      "No usable data at all",
+      "Yes/no binary responses only"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Open questions invite free-form responses; each one is analyzed separately, often qualitatively. Closed questions yield quantifiable data.",
+      perOption: [
+        "Wrong — open questions are not typically quantitative.",
+        "Correct — the lecture's distinction.",
+        "Wrong — open questions are valuable.",
+        "Wrong — that describes closed questions."
+      ]
+    }
+  },
+  {
+    id: 33, difficulty: "medium", topic: "Data Gathering",
+    q: "Quantitative data is BEST described as:",
+    options: [
+      "Data expressed in numbers",
+      "Data that resists numerical measurement",
+      "Random opinions",
+      "Color choices in a UI"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Quantitative = numerical; qualitative = nature/themes/patterns/stories.",
+      perOption: [
+        "Correct — by definition.",
+        "Wrong — that's qualitative.",
+        "Wrong — opinions can be either.",
+        "Wrong — these are design choices, not a data type."
+      ]
+    }
+  },
+  {
+    id: 34, difficulty: "hard", topic: "Data Gathering",
+    q: "Which observation type involves the researcher being PART of the studied culture for an extended period?",
+    options: [
+      "Indirect observation via interaction logs",
+      "Ethnographic participation",
+      "A/B testing",
+      "Diary studies"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Ethnography involves the researcher embedding in the participants' context, often as an insider over time.",
+      perOption: [
+        "Wrong — indirect doesn't involve embedding.",
+        "Correct — ethnographic, culture-based.",
+        "Wrong — A/B is analytics, not embedded study.",
+        "Wrong — diaries are self-report, not embedded."
+      ]
+    }
+  },
+  {
+    id: 35, difficulty: "medium", topic: "Data Gathering",
+    q: "The 'think aloud' technique requires participants to:",
+    options: [
+      "Stay silent during tasks and answer questions later",
+      "Verbalize their thoughts and decisions as they perform tasks",
+      "Write a 1000-word essay after each task",
+      "Mime their thoughts without speaking"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Think-aloud has users speak their reasoning aloud during the task, giving real-time insight into cognition and confusion.",
+      perOption: [
+        "Wrong — opposite of think-aloud.",
+        "Correct — the definition.",
+        "Wrong — that's a written reflection.",
+        "Wrong — verbal expression is required."
+      ]
+    }
+  },
+  {
+    id: 36, difficulty: "hard", topic: "Data Gathering",
+    q: "When combining data gathering methods (interviews + observation + diaries), the main benefit is:",
+    options: [
+      "It always reduces project cost",
+      "Triangulation — multiple methods compensate for each method's weaknesses and provide richer, more reliable insights",
+      "It removes the need for ethical approval",
+      "It eliminates all biases automatically"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Combining methods is 'highly productive' (Hollis et al., 2017) because each compensates for the others' blind spots.",
+      perOption: [
+        "Wrong — may increase cost.",
+        "Correct — triangulation rationale.",
+        "Wrong — ethics ALWAYS required.",
+        "Wrong — reduces but doesn't eliminate bias."
+      ]
+    }
+  },
+  {
+    id: 37, difficulty: "medium", topic: "Data Gathering",
+    q: "Studying documentation (manuals, regulations) as a data source is valuable because:",
+    options: [
+      "It replaces all need for user observation",
+      "It captures procedures and rules without consuming stakeholder time, useful as background but not in isolation",
+      "Documentation is always perfectly accurate",
+      "It's the only legally allowed source"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture notes documentation as a good source for background and rules with no stakeholder-time cost, but not to be used alone.",
+      perOption: [
+        "Wrong — supplement, not replacement.",
+        "Correct — the lecture's framing.",
+        "Wrong — docs can be outdated.",
+        "Wrong — no such restriction."
+      ]
+    }
+  },
+  {
+    id: 38, difficulty: "hard", topic: "Data Gathering",
+    q: "Mean, median, mode are tools used in:",
+    options: [
+      "Qualitative thematic analysis",
+      "Basic quantitative analysis of numerical data",
+      "Ethnographic field notes",
+      "Heuristic evaluation"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "These three averages are basic quantitative measures, listed in Lecture 2's quantitative analysis section.",
+      perOption: [
+        "Wrong — themes are qualitative.",
+        "Correct — averages are quantitative tools.",
+        "Wrong — field notes are typically qualitative.",
+        "Wrong — heuristics don't use averages."
+      ]
+    }
+  },
+  {
+    id: 39, difficulty: "medium", topic: "Data Gathering",
+    q: "Inductive analysis in qualitative data work means:",
+    options: [
+      "Categories are pre-specified before data collection",
+      "Themes emerge from the data during analysis rather than being imposed beforehand",
+      "Only numbers are analyzed",
+      "Analysis is done by a computer with no human input"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Inductive = themes emerge from data; deductive = pre-specified categories applied to data.",
+      perOption: [
+        "Wrong — that's deductive.",
+        "Correct — emergent theming.",
+        "Wrong — qualitative isn't about numbers.",
+        "Wrong — analyst still interprets."
+      ]
+    }
+  },
+  {
+    id: 40, difficulty: "hard", topic: "Data Gathering",
+    q: "Which is the BEST approach to most real-world UX research projects?",
+    options: [
+      "Pure inductive analysis only",
+      "Pure deductive analysis only",
+      "A combination of inductive and deductive analysis",
+      "No analysis — just intuition"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "The lecture explicitly states: 'In practice, combination of inductive and deductive.'",
+      perOption: [
+        "Wrong — too restrictive.",
+        "Wrong — misses emergent insights.",
+        "Correct — the practical recommendation.",
+        "Wrong — intuition alone is unreliable."
+      ]
+    }
+  },
+
+  // -------- EVALUATION (Q41-50) --------
+  {
+    id: 41, difficulty: "medium", topic: "Evaluation",
+    q: "Heuristic evaluation, as developed by Nielsen, is:",
+    options: [
+      "A controlled experiment with hundreds of participants",
+      "An expert review of an interface against a set of usability heuristics",
+      "A purely automated evaluation by AI",
+      "A survey filled by end users only"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Heuristic evaluation is an inspection method where experts review the UI against established heuristics — no end users needed.",
+      perOption: [
+        "Wrong — experiments are different.",
+        "Correct — the textbook definition.",
+        "Wrong — humans (experts) do it.",
+        "Wrong — no users involved."
+      ]
+    }
+  },
+  {
+    id: 42, difficulty: "hard", topic: "Evaluation",
+    q: "Nielsen suggests that, on average, how many evaluators identify 75–80% of usability problems?",
+    options: [
+      "Exactly 1",
+      "5 evaluators",
+      "At least 50",
+      "100+"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Nielsen's classic finding: ~5 evaluators identify 75–80% of usability problems. The curve plateaus quickly after 5.",
+      perOption: [
+        "Wrong — one finds far fewer.",
+        "Correct — the Nielsen benchmark.",
+        "Wrong — diminishing returns long before 50.",
+        "Wrong — overkill."
+      ]
+    }
+  },
+  {
+    id: 43, difficulty: "medium", topic: "Evaluation",
+    q: "Which is NOT one of Nielsen's revised (2014) 10 usability heuristics?",
+    options: [
+      "Visibility of system status",
+      "Match between system and the real world",
+      "Maximum animation on every page",
+      "Error prevention"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "The 10 heuristics: visibility of status, match with real world, user control & freedom, consistency & standards, error prevention, recognition rather than recall, flexibility & efficiency, aesthetic & minimalist design, help users recover from errors, help & documentation. Animation maximization is the opposite of minimalism.",
+      perOption: [
+        "Wrong — IS a heuristic.",
+        "Wrong — IS a heuristic.",
+        "Correct — contradicts 'aesthetic and minimalist design.'",
+        "Wrong — IS a heuristic."
+      ]
+    }
+  },
+  {
+    id: 44, difficulty: "hard", topic: "Evaluation",
+    q: "The heuristic 'Recognition rather than recall' implies an interface should:",
+    options: [
+      "Force users to memorize commands and recall them later",
+      "Make objects, actions, and options visible so users don't have to remember information from one part of the dialogue to another",
+      "Show only icons, never text labels",
+      "Hide all features behind keyboard shortcuts"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "This heuristic minimizes user memory load by keeping options visible — recognition is easier than recall.",
+      perOption: [
+        "Wrong — opposite of the heuristic.",
+        "Correct — the canonical interpretation.",
+        "Wrong — icons alone reduce recognition.",
+        "Wrong — hidden shortcuts violate the principle."
+      ]
+    }
+  },
+  {
+    id: 45, difficulty: "medium", topic: "Evaluation",
+    q: "Usability Testing differs from Experimental Research primarily in that:",
+    options: [
+      "Usability testing aims to improve a specific product; experiments aim to discover generalizable knowledge",
+      "Usability testing requires more participants than experiments",
+      "Experiments don't use any participants",
+      "There's no difference"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Usability testing = applied, few participants, informs product design. Experiments = research, many participants, statistically validated, discover knowledge.",
+      perOption: [
+        "Correct — the core distinction.",
+        "Wrong — experiments usually have MORE.",
+        "Wrong — experiments use many.",
+        "Wrong — they differ significantly."
+      ]
+    }
+  },
+  {
+    id: 46, difficulty: "hard", topic: "Evaluation",
+    q: "Ecological validity refers to:",
+    options: [
+      "Whether the evaluation produced consistent results across sessions",
+      "Whether the environment of the evaluation distorts how realistic the results are",
+      "Whether the experiment is environmentally sustainable",
+      "Whether participants gave informed consent"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Ecological validity asks whether artificial lab conditions skew results away from real-world behavior.",
+      perOption: [
+        "Wrong — that's reliability.",
+        "Correct — ecological validity definition.",
+        "Wrong — not about sustainability.",
+        "Wrong — that's ethics."
+      ]
+    }
+  },
+  {
+    id: 47, difficulty: "medium", topic: "Evaluation",
+    q: "Walkthroughs as an inspection method involve:",
+    options: [
+      "Walking around the office to talk to users",
+      "Stepping through a pre-planned scenario and noting potential usability problems",
+      "Random keyboard mashing to find bugs",
+      "Live A/B testing with real users"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Cognitive walkthroughs trace a representative task scenario through the interface, flagging issues at each step.",
+      perOption: [
+        "Wrong — that's casual chats.",
+        "Correct — the standard definition.",
+        "Wrong — that's stress testing.",
+        "Wrong — different method."
+      ]
+    }
+  },
+  {
+    id: 48, difficulty: "hard", topic: "Evaluation",
+    q: "WCAG (Web Content Accessibility Guidelines) has FOUR key concepts. Which set is correct?",
+    options: [
+      "Perceivable, Operable, Understandable, Robust",
+      "Pretty, Original, Unique, Rare",
+      "Fast, Cheap, Good, Pick Two",
+      "Visible, Audible, Tactile, Cognitive"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "WCAG 2.1's four principles (POUR): Perceivable, Operable, Understandable, Robust.",
+      perOption: [
+        "Correct — POUR.",
+        "Wrong — invented.",
+        "Wrong — project management adage.",
+        "Wrong — these are senses, not WCAG concepts."
+      ]
+    }
+  },
+  {
+    id: 49, difficulty: "medium", topic: "Evaluation",
+    q: "Bruce Tognazzini's quote 'Iterative design with its repeating cycle of design and testing is the only validated methodology...' supports which idea?",
+    options: [
+      "Evaluation only at end of project",
+      "Continuous, iterative testing integrated into design",
+      "Skipping evaluation if budget is tight",
+      "Designing perfectly the first time"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Tognazzini's point: testing must be integral and continuous, not a one-shot final step.",
+      perOption: [
+        "Wrong — late testing wastes work.",
+        "Correct — the iterative philosophy.",
+        "Wrong — budget cuts on evaluation are penny-wise pound-foolish.",
+        "Wrong — perfection on first try is a myth."
+      ]
+    }
+  },
+  {
+    id: 50, difficulty: "hard", topic: "Evaluation",
+    q: "Cockton & Woolrych (2001) qualify Nielsen's '5 evaluators' rule by arguing:",
+    options: [
+      "Five evaluators is always enough regardless of the system",
+      "The number of evaluators needed to find 75–80% of problems depends on context and the nature of task problems",
+      "You only need one evaluator if they have a PhD",
+      "Heuristic evaluation is useless"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Cockton & Woolrych contextualize Nielsen's heuristic — it's a useful average but not universal.",
+      perOption: [
+        "Wrong — they argue the opposite.",
+        "Correct — the qualifying argument.",
+        "Wrong — credentials don't equate to coverage.",
+        "Wrong — they offer nuance, not rejection."
+      ]
+    }
+  },
+
+  // -------- INTERFACES (Q51-60) --------
+  {
+    id: 51, difficulty: "medium", topic: "Interfaces",
+    q: "WIMP stands for:",
+    options: [
+      "Windows, Icons, Menus, Pointer",
+      "Web, Interactive, Mobile, Pad",
+      "Wireless, Internet, Multimedia, Pen",
+      "Workflow, Image, Method, Process"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "WIMP = Windows, Icons, Menus, Pointing device — the basis of GUIs, popularized by Xerox Star.",
+      perOption: [
+        "Correct — Xerox Star's WIMP.",
+        "Wrong — invented acronym.",
+        "Wrong — invented acronym.",
+        "Wrong — invented acronym."
+      ]
+    }
+  },
+  {
+    id: 52, difficulty: "medium", topic: "Interfaces",
+    q: "Which interface type is BEST suited for visually-impaired users seeking flight information?",
+    options: [
+      "VR (virtual reality) interfaces",
+      "Voice (speech) interfaces",
+      "Gesture interfaces",
+      "Tangible interfaces"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Voice interfaces let users query and act without visual input — well-suited for visually impaired users.",
+      perOption: [
+        "Wrong — VR is highly visual.",
+        "Correct — voice is accessible.",
+        "Wrong — gesture often needs visual confirmation.",
+        "Wrong — physical objects don't help with flight info."
+      ]
+    }
+  },
+  {
+    id: 53, difficulty: "hard", topic: "Interfaces",
+    q: "Gesture-based interfaces typically use which of the following to recognize movement?",
+    options: [
+      "Only keyboards",
+      "Camera recognition, sensors, and computer vision",
+      "Voice transcripts",
+      "Magnetic tape readers"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Gesture systems use cameras (e.g., Kinect), sensors, and computer vision to track arms and hands.",
+      perOption: [
+        "Wrong — keyboards don't sense gestures.",
+        "Correct — the lecture's enumeration.",
+        "Wrong — that's voice.",
+        "Wrong — outdated, irrelevant."
+      ]
+    }
+  },
+  {
+    id: 54, difficulty: "medium", topic: "Interfaces",
+    q: "Which interface type involves the use of physical objects to interact with digital information?",
+    options: [
+      "Tangible interface",
+      "Voice interface",
+      "Command line interface",
+      "Web interface"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Tangible interfaces embed digital interaction in physical objects (e.g., reacTable, Sifteo blocks).",
+      perOption: [
+        "Correct — by definition.",
+        "Wrong — voice has no physical objects.",
+        "Wrong — command line is text-based.",
+        "Wrong — web is screen-based."
+      ]
+    }
+  },
+  {
+    id: 55, difficulty: "hard", topic: "Interfaces",
+    q: "The lecture lists 20 interface types. Which is NOT one of them?",
+    options: [
+      "Brain–computer interaction",
+      "Augmented reality",
+      "Shareable interfaces",
+      "Telegraph interfaces"
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "The 20 types include command, graphical, multimedia, VR, web, mobile, appliance, voice, pen, touch, gesture, haptic, multimodal, shareable, tangible, AR, wearables, robots/drones, brain–computer, smart. Telegraph is not on the list.",
+      perOption: [
+        "Wrong — IS on the list.",
+        "Wrong — IS on the list.",
+        "Wrong — IS on the list.",
+        "Correct — not among the 20 types."
+      ]
+    }
+  },
+  {
+    id: 56, difficulty: "medium", topic: "Interfaces",
+    q: "Multimodal interfaces combine:",
+    options: [
+      "Multiple users on one device",
+      "Multiple modes of input/output (e.g., speech + touch + gesture) in one interface",
+      "Multiple programming languages",
+      "Multiple operating systems"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Multimodal = multiple modalities of interaction operating together (voice + touch, sight + sound, etc.).",
+      perOption: [
+        "Wrong — that's shareable.",
+        "Correct — multimodal definition.",
+        "Wrong — irrelevant.",
+        "Wrong — irrelevant."
+      ]
+    }
+  },
+  {
+    id: 57, difficulty: "hard", topic: "Interfaces",
+    q: "Why must gestures in gesture-based systems often be 'presented sequentially' to be understood?",
+    options: [
+      "Because cameras only work in sequence",
+      "Because, like sentences, meaning is constructed from ordered units",
+      "Because gestures must be alphabetized",
+      "Because RAM limitations"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture analogizes gestures to sentence construction — sequence carries meaning.",
+      perOption: [
+        "Wrong — cameras stream continuously.",
+        "Correct — the lecture's reasoning.",
+        "Wrong — there's no alphabet.",
+        "Wrong — not the constraint."
+      ]
+    }
+  },
+  {
+    id: 58, difficulty: "medium", topic: "Interfaces",
+    q: "Haptic interfaces give feedback primarily through:",
+    options: [
+      "Sound",
+      "Touch (vibration, force feedback)",
+      "Smell",
+      "Visual flashing"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Haptic = touch-based, often vibration or force feedback (e.g., game controllers).",
+      perOption: [
+        "Wrong — sound is auditory.",
+        "Correct — haptic = touch.",
+        "Wrong — olfactory, not haptic.",
+        "Wrong — visual, not haptic."
+      ]
+    }
+  },
+  {
+    id: 59, difficulty: "hard", topic: "Interfaces",
+    q: "Brain–computer interaction (BCI) primarily uses signals from:",
+    options: [
+      "Heart rate monitors",
+      "Brain activity (e.g., EEG, neural signals)",
+      "Skin temperature",
+      "Voice"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "BCI reads brain signals (EEG most commonly) to drive interaction — e.g., for assistive tech.",
+      perOption: [
+        "Wrong — heart rate is cardiac, not brain.",
+        "Correct — brain signals define BCI.",
+        "Wrong — skin temp is bio but not BCI.",
+        "Wrong — voice is a different modality."
+      ]
+    }
+  },
+  {
+    id: 60, difficulty: "medium", topic: "Interfaces",
+    q: "Which is the BEST justification for choosing a command-line interface over a GUI for a specific task?",
+    options: [
+      "It's prettier",
+      "It supports advanced users who want efficient, scriptable, repeatable control (flexibility and efficiency of use)",
+      "It's easier for absolute beginners",
+      "It uses less electricity"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "CLIs reward expertise: scriptable, fast, precise. Beginners typically struggle; GUIs win for discoverability.",
+      perOption: [
+        "Wrong — CLIs aren't aesthetically richer.",
+        "Correct — Nielsen's 'flexibility & efficiency' heuristic applies.",
+        "Wrong — opposite is true.",
+        "Wrong — irrelevant claim."
+      ]
+    }
+  },
+
+  // -------- PROTOTYPING (Q61-70) --------
+  {
+    id: 61, difficulty: "medium", topic: "Prototyping",
+    q: "A low-fidelity prototype is BEST characterized by:",
+    options: [
+      "Use of final-product materials and complete functionality",
+      "Quick, cheap, easily-changed materials (paper, sticky notes, sketches) unlike the final medium",
+      "Being indistinguishable from the shipped product",
+      "Requiring expert development tools"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lo-fi prototypes are deliberately rough and disposable to encourage rapid iteration and honest feedback.",
+      perOption: [
+        "Wrong — that's hi-fi.",
+        "Correct — defining characteristics of lo-fi.",
+        "Wrong — opposite of lo-fi.",
+        "Wrong — minimal tooling is the point."
+      ]
+    }
+  },
+  {
+    id: 62, difficulty: "medium", topic: "Prototyping",
+    q: "Wizard-of-Oz prototyping involves:",
+    options: [
+      "Animating fantasy characters",
+      "A human secretly simulating system responses to test how users would interact with a not-yet-built system",
+      "Using AI to generate prototypes",
+      "Prototyping only in 3D"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "WoZ: a hidden human plays the role of the system, letting designers test interaction designs before backend exists.",
+      perOption: [
+        "Wrong — unrelated.",
+        "Correct — WoZ definition.",
+        "Wrong — that's modern AI-assisted design.",
+        "Wrong — not a 3D constraint."
+      ]
+    }
+  },
+  {
+    id: 63, difficulty: "hard", topic: "Prototyping",
+    q: "What is the main DANGER of high-fidelity prototypes?",
+    options: [
+      "They are too cheap to make",
+      "Users may think they have a complete, finished system and miss the compromises still present",
+      "They cannot be tested",
+      "They violate copyright"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Hi-fi prototypes can deceive users (and stakeholders) into thinking the product is more done than it is, hiding necessary compromises.",
+      perOption: [
+        "Wrong — hi-fi is typically expensive, not cheap.",
+        "Correct — the lecture's stated danger.",
+        "Wrong — they can be tested.",
+        "Wrong — not the issue."
+      ]
+    }
+  },
+  {
+    id: 64, difficulty: "medium", topic: "Prototyping",
+    q: "Horizontal prototyping provides:",
+    options: [
+      "A lot of detail for only a few functions",
+      "A wide range of functions with little detail in each",
+      "Only error messages",
+      "Just the database schema"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Horizontal = wide but shallow; Vertical = narrow but deep. The lecture defines both.",
+      perOption: [
+        "Wrong — that's vertical.",
+        "Correct — horizontal definition.",
+        "Wrong — incomplete description.",
+        "Wrong — irrelevant."
+      ]
+    }
+  },
+  {
+    id: 65, difficulty: "hard", topic: "Prototyping",
+    q: "A conceptual model is BEST described as:",
+    options: [
+      "A coded software module",
+      "An outline of what people can do with a product and what concepts are needed to understand and interact with it",
+      "A 3D printed mockup",
+      "A user persona document"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Conceptual models capture the product's mental scaffolding — what users can do, what they need to understand.",
+      perOption: [
+        "Wrong — that's a code artifact.",
+        "Correct — the textbook definition.",
+        "Wrong — that's a physical prototype.",
+        "Wrong — personas describe users, not the product's concepts."
+      ]
+    }
+  },
+  {
+    id: 66, difficulty: "medium", topic: "Prototyping",
+    q: "A storyboard in HCI is:",
+    options: [
+      "A list of features in priority order",
+      "A series of sketches/images illustrating a user's interaction narrative with a product",
+      "A code review template",
+      "A pricing document"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Storyboards visualize the user journey to communicate context, identify problems, and gather early feedback.",
+      perOption: [
+        "Wrong — that's a backlog.",
+        "Correct — storyboard definition.",
+        "Wrong — irrelevant.",
+        "Wrong — irrelevant."
+      ]
+    }
+  },
+  {
+    id: 67, difficulty: "hard", topic: "Prototyping",
+    q: "What is the relationship between User Stories and Scenarios?",
+    options: [
+      "Scenarios are the same as user stories",
+      "Scenarios build on user stories by adding the interaction with the product/service to the story",
+      "User stories replace scenarios completely",
+      "They have no relationship"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture: 'Scenarios are built upon user stories but scenarios are not equal to user stories. They take User Stories to the next level by adding the interaction with the product or service to the story.'",
+      perOption: [
+        "Wrong — they're related but distinct.",
+        "Correct — the lecture's exact wording.",
+        "Wrong — they coexist.",
+        "Wrong — they are related."
+      ]
+    }
+  },
+  {
+    id: 68, difficulty: "medium", topic: "Prototyping",
+    q: "A user story typically identifies:",
+    options: [
+      "The full technical architecture",
+      "Who the user is, what they need, and why",
+      "The pricing strategy",
+      "The legal terms of service"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "User story format: As a [user], I want [need] so that [why]. One story per persona usually.",
+      perOption: [
+        "Wrong — too detailed.",
+        "Correct — the standard format.",
+        "Wrong — business concern.",
+        "Wrong — legal concern."
+      ]
+    }
+  },
+  {
+    id: 69, difficulty: "hard", topic: "Prototyping",
+    q: "Concrete design differs from Conceptual design primarily in:",
+    options: [
+      "Concrete design is about specifics (colors, icons, buttons, accessibility, cultural conventions); conceptual design is about the high-level model",
+      "Concrete design uses paper, conceptual uses code",
+      "There is no difference",
+      "Concrete design comes before conceptual design"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "The difference is emphasis: conceptual establishes the mental model; concrete handles the visible/interaction details.",
+      perOption: [
+        "Correct — the lecture's framing.",
+        "Wrong — backward.",
+        "Wrong — they differ.",
+        "Wrong — conceptual comes first."
+      ]
+    }
+  },
+  {
+    id: 70, difficulty: "medium", topic: "Prototyping",
+    q: "Cross-cultural design considerations include:",
+    options: [
+      "Only language translation",
+      "Language, colors, icons, information architecture, date formats (dd/mm/yyyy vs mm/dd/yyyy), and indigenous perspectives",
+      "Just color schemes",
+      "Only currency symbols"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture lists language, colors, icons, info architecture, date formats, and indigenous knowledge as cross-cultural concerns.",
+      perOption: [
+        "Wrong — incomplete.",
+        "Correct — the full list.",
+        "Wrong — incomplete.",
+        "Wrong — incomplete."
+      ]
+    }
+  },
+
+  // -------- VISUALISATION (Q71-78) --------
+  {
+    id: 71, difficulty: "medium", topic: "Visualisation",
+    q: "Information Visualization (InfoVis) is defined as:",
+    options: [
+      "Use of computer-supported interactive visual representation of abstract data to amplify cognition",
+      "Drawing pictures of code",
+      "Replacing text with random images",
+      "3D rendering of physical objects"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Card, Mackinlay & Shneiderman's classic definition; the lecture quotes it directly.",
+      perOption: [
+        "Correct — verbatim from the lecture.",
+        "Wrong — that's software visualization.",
+        "Wrong — opposite of clarity.",
+        "Wrong — that's 3D modeling."
+      ]
+    }
+  },
+  {
+    id: 72, difficulty: "hard", topic: "Visualisation",
+    q: "Which is NOT one of the patterns visualizations help users observe?",
+    options: [
+      "Trends",
+      "Clusters",
+      "Outliers",
+      "Stock prices for next year"
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "Visualizations show trends, clusters, gaps, outliers, groups, and individual items — but can't predict the future.",
+      perOption: [
+        "Wrong — IS observable.",
+        "Wrong — IS observable.",
+        "Wrong — IS observable.",
+        "Correct — prediction is not an observation pattern."
+      ]
+    }
+  },
+  {
+    id: 73, difficulty: "medium", topic: "Visualisation",
+    q: "Which data type is QUANTITATIVE and CONTINUOUS?",
+    options: [
+      "Gender (Male/Female/Other)",
+      "Grade (A, B, C)",
+      "Length of a piece of string",
+      "Number of children in a family"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Continuous quantitative = float/double values (length, weight). Number of children is discrete integer.",
+      perOption: [
+        "Wrong — qualitative nominal.",
+        "Wrong — qualitative ordinal.",
+        "Correct — continuous numeric value.",
+        "Wrong — discrete integer."
+      ]
+    }
+  },
+  {
+    id: 74, difficulty: "hard", topic: "Visualisation",
+    q: "Ordinal data is BEST described as:",
+    options: [
+      "Qualitative data with no natural order",
+      "Qualitative data with a natural order (e.g., grades A, B, C)",
+      "Quantitative discrete data",
+      "Quantitative continuous data"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Nominal = no order (Male/Female). Ordinal = ordered categories (A>B>C; satisfied/neutral/dissatisfied).",
+      perOption: [
+        "Wrong — that's nominal.",
+        "Correct — ordinal definition.",
+        "Wrong — wrong category.",
+        "Wrong — wrong category."
+      ]
+    }
+  },
+  {
+    id: 75, difficulty: "medium", topic: "Visualisation",
+    q: "The 'visualization umbrella' described in the lecture includes which of the following areas?",
+    options: [
+      "Only Information Visualization",
+      "Animation, software viz, computer graphics, image processing, virtual reality, scientific viz, information viz, and more",
+      "Only Scientific Visualization",
+      "Only data charts"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The umbrella spans nine areas: animation, software viz, viz environments, volume rendering, computer graphics, visual programming, image processing, VR, scientific viz, InfoVis.",
+      perOption: [
+        "Wrong — too narrow.",
+        "Correct — the full umbrella.",
+        "Wrong — too narrow.",
+        "Wrong — too narrow."
+      ]
+    }
+  },
+  {
+    id: 76, difficulty: "hard", topic: "Visualisation",
+    q: "Why is choice of chart type important for usability?",
+    options: [
+      "Different data types (1D linear, 2D map, 3D world, multi-dim, temporal, tree, network) require different representations to communicate effectively",
+      "Chart type doesn't matter — all charts work for all data",
+      "Only pie charts should ever be used",
+      "Charts are decorative only"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Lecture lists multiple data types each requiring different visual representations to convey meaning.",
+      perOption: [
+        "Correct — the lecture's data type list.",
+        "Wrong — chart-data mismatch destroys clarity.",
+        "Wrong — pies are often misused.",
+        "Wrong — they're functional."
+      ]
+    }
+  },
+  {
+    id: 77, difficulty: "medium", topic: "Visualisation",
+    q: "What's the core purpose of visualization according to the lecture's quote from Feynman & McCormick?",
+    options: [
+      "Replace scientific computation",
+      "See the unseen — transform symbolic data into geometric form to enable discovery and insight",
+      "Make presentations longer",
+      "Add visual decoration to slides"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "McCormick et al. (1987): visualization 'offers a method for seeing the unseen' and 'enriches scientific discovery.'",
+      perOption: [
+        "Wrong — visualization complements computation.",
+        "Correct — the lecture's framing.",
+        "Wrong — opposite intent.",
+        "Wrong — superficial framing."
+      ]
+    }
+  },
+  {
+    id: 78, difficulty: "hard", topic: "Visualisation",
+    q: "When designing a comparison view for furniture items (price, dimensions, materials, stock), which technique is MOST appropriate?",
+    options: [
+      "Walls of dense unformatted text",
+      "Side-by-side comparison tables with icons, colour-coded availability, and interactive filters",
+      "A single low-resolution photo for all items",
+      "Audio descriptions only"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Comparison demands aligned structure (tables), encoded categorical info (color), and user-driven exploration (filters).",
+      perOption: [
+        "Wrong — overwhelming.",
+        "Correct — applies viz principles.",
+        "Wrong — discards key info.",
+        "Wrong — loses parallel visual comparison."
+      ]
+    }
+  },
+
+  // -------- LINE & CIRCLE DRAWING ALGORITHMS (Q79-90) --------
+  {
+    id: 79, difficulty: "medium", topic: "Line/Circle Algorithms",
+    q: "DDA (Digital Differential Analyzer) line drawing is BEST characterized by:",
+    options: [
+      "Using only integer arithmetic with no floating point",
+      "Incrementally computing each pixel via slope addition, often using floating-point arithmetic and rounding",
+      "Drawing only horizontal lines",
+      "Tracing arcs and curves only"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "DDA: compute slope m = dy/dx; increment x by 1, increment y by m; round to nearest pixel. Floating-point heavy.",
+      perOption: [
+        "Wrong — that's Bresenham's strength.",
+        "Correct — the DDA algorithm.",
+        "Wrong — handles any slope.",
+        "Wrong — that's the circle algorithm."
+      ]
+    }
+  },
+  {
+    id: 80, difficulty: "hard", topic: "Line/Circle Algorithms",
+    q: "A key LIMITATION of the DDA algorithm is:",
+    options: [
+      "It only works on color displays",
+      "Round-off errors accumulate (especially for long lines with steep slopes), causing line drift",
+      "It requires a GPU",
+      "It cannot draw vertical lines"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "DDA's reliance on floating-point and rounding introduces drift, particularly for long/steep lines — motivating Bresenham.",
+      perOption: [
+        "Wrong — color irrelevant.",
+        "Correct — the standard DDA limitation.",
+        "Wrong — runs on CPU fine.",
+        "Wrong — handles vertical lines."
+      ]
+    }
+  },
+  {
+    id: 81, difficulty: "medium", topic: "Line/Circle Algorithms",
+    q: "Bresenham's line algorithm is preferred over DDA primarily because:",
+    options: [
+      "It uses only integer arithmetic (addition/subtraction), avoiding floating-point cost and rounding error",
+      "It produces fancier colors",
+      "It supports 3D natively",
+      "It's required by law"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Bresenham's integer-only decision parameter makes it faster and more accurate on raster displays.",
+      perOption: [
+        "Correct — Bresenham's defining advantage.",
+        "Wrong — colors are independent of algorithm.",
+        "Wrong — 2D only.",
+        "Wrong — no legal mandate."
+      ]
+    }
+  },
+  {
+    id: 82, difficulty: "hard", topic: "Line/Circle Algorithms",
+    q: "In Bresenham's line algorithm, the initial decision parameter is:",
+    options: [
+      "p = dx − dy",
+      "p = 2·dy − dx",
+      "p = 3 − 2r",
+      "p = dx²+dy²"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "For Bresenham line: p₀ = 2·dy − dx. (The 3 − 2r is for Bresenham CIRCLE.)",
+      perOption: [
+        "Wrong — not the formula.",
+        "Correct — Bresenham line decision parameter.",
+        "Wrong — that's the circle initial parameter.",
+        "Wrong — that's distance squared."
+      ]
+    }
+  },
+  {
+    id: 83, difficulty: "medium", topic: "Line/Circle Algorithms",
+    q: "In Bresenham's line algorithm, if the decision parameter p < 0, the next pixel is:",
+    options: [
+      "(x+1, y+1) — diagonal step",
+      "(x+1, y) — horizontal step; then p = p + 2·dy",
+      "(x, y+1) — vertical step",
+      "(x−1, y) — backward step"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "p < 0 means stay on same y row; only x increments. Then p is updated by 2·dy.",
+      perOption: [
+        "Wrong — that's when p ≥ 0.",
+        "Correct — the rule from the pseudocode.",
+        "Wrong — DDA-style not Bresenham.",
+        "Wrong — Bresenham moves forward."
+      ]
+    }
+  },
+  {
+    id: 84, difficulty: "hard", topic: "Line/Circle Algorithms",
+    q: "The Midpoint Line Algorithm uses the decision criterion F(MP) where:",
+    options: [
+      "F < 0 means midpoint is below line; F > 0 means above line",
+      "F < 0 means midpoint is above line, so next pixel is (x+1, y); F ≥ 0 means below or on line, so next pixel is (x+1, y+1)",
+      "F is always 0 by definition",
+      "F equals the slope"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Slide content: 'If Fk < 0: midpoint above line → next pixel (xk+1, yk). If Fk ≥ 0: midpoint below or on line → (xk+1, yk+1).'",
+      perOption: [
+        "Wrong — reversed.",
+        "Correct — the lecture's exact rule.",
+        "Wrong — F varies.",
+        "Wrong — F is a positional decision, not slope."
+      ]
+    }
+  },
+  {
+    id: 85, difficulty: "medium", topic: "Line/Circle Algorithms",
+    q: "The Midpoint (Bresenham) Circle algorithm exploits which property to reduce calculations?",
+    options: [
+      "Linear interpolation",
+      "8-way symmetry — compute one octant and reflect to fill the others",
+      "Quadtree decomposition",
+      "Random sampling"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "A circle is symmetric in 8 directions; computing one octant and reflecting fills the full circle efficiently.",
+      perOption: [
+        "Wrong — not used here.",
+        "Correct — 8-way symmetry.",
+        "Wrong — that's a spatial indexing structure.",
+        "Wrong — randomness doesn't yield a circle."
+      ]
+    }
+  },
+  {
+    id: 86, difficulty: "hard", topic: "Line/Circle Algorithms",
+    q: "In Bresenham's circle algorithm, the initial decision parameter is:",
+    options: [
+      "p = 2·dy − dx",
+      "p = 3 − 2r",
+      "p = r²",
+      "p = 0"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Bresenham circle: p₀ = 3 − 2r. Starting at (0, r) and stepping along x-axis.",
+      perOption: [
+        "Wrong — that's the line algorithm.",
+        "Correct — circle initial parameter.",
+        "Wrong — too crude.",
+        "Wrong — would skip first decision."
+      ]
+    }
+  },
+  {
+    id: 87, difficulty: "medium", topic: "Line/Circle Algorithms",
+    q: "In Bresenham's circle algorithm, if p < 0, the next pixel choice is:",
+    options: [
+      "(x+1, y) — east; then p = p + 4x + 6",
+      "(x+1, y−1) — southeast; then p = p + 4(x−y) + 10",
+      "(x, y+1)",
+      "(x−1, y+1)"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "p < 0 → midpoint inside circle → choose East. Update: p = p + 4x + 6.",
+      perOption: [
+        "Correct — East step.",
+        "Wrong — that's when p ≥ 0 (SE step).",
+        "Wrong — opposite stepping direction.",
+        "Wrong — invalid step."
+      ]
+    }
+  },
+  {
+    id: 88, difficulty: "hard", topic: "Line/Circle Algorithms",
+    q: "Aliasing in raster graphics is:",
+    options: [
+      "A type of network latency",
+      "Jagged 'stair-step' artifacts when smooth curves/diagonals are sampled into pixel grids",
+      "Lossless compression",
+      "A copyright term"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Aliasing = jaggies, the stair-step look when high-resolution shapes are forced into discrete pixels.",
+      perOption: [
+        "Wrong — unrelated.",
+        "Correct — aliasing definition.",
+        "Wrong — compression is separate.",
+        "Wrong — unrelated."
+      ]
+    }
+  },
+  {
+    id: 89, difficulty: "medium", topic: "Line/Circle Algorithms",
+    q: "Anti-aliasing aims to:",
+    options: [
+      "Increase jagged edges",
+      "Smooth out jagged edges by blending pixel intensities along edges",
+      "Remove all color from images",
+      "Disable rendering"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Anti-aliasing softens jaggies by partially shading edge pixels, simulating sub-pixel detail.",
+      perOption: [
+        "Wrong — opposite intent.",
+        "Correct — anti-aliasing purpose.",
+        "Wrong — unrelated.",
+        "Wrong — opposite."
+      ]
+    }
+  },
+  {
+    id: 90, difficulty: "hard", topic: "Line/Circle Algorithms",
+    q: "Drawing a line from P(1,1) to Q(5,9) with DDA, what is dx, dy, and the number of plotted points?",
+    options: [
+      "dx=4, dy=8, points = 8",
+      "dx=8, dy=4, points = 4",
+      "dx=4, dy=8, points = 4",
+      "dx=5, dy=9, points = 14"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "dx = 5−1 = 4, dy = 9−1 = 8. Points = max(|dx|, |dy|) = max(4, 8) = 8.",
+      perOption: [
+        "Correct — the worked example from the lecture.",
+        "Wrong — dx and dy swapped.",
+        "Wrong — points should be max not min.",
+        "Wrong — used coordinates directly instead of differences."
+      ]
+    }
+  },
+
+  // -------- DIGITAL IMAGE PROCESSING (Q91-100) --------
+  {
+    id: 91, difficulty: "medium", topic: "Digital Image Processing",
+    q: "A digital image is BEST described as:",
+    options: [
+      "A 2D matrix of intensity (grayscale or color) values at integer coordinates",
+      "A continuous analog signal",
+      "A 3D solid object",
+      "A text file"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Digital images are 2D matrices indexed by integer (x, y) coordinates with intensity values per pixel.",
+      perOption: [
+        "Correct — by definition.",
+        "Wrong — analog is pre-digitization.",
+        "Wrong — that's a 3D model.",
+        "Wrong — that's a text file."
+      ]
+    }
+  },
+  {
+    id: 92, difficulty: "medium", topic: "Digital Image Processing",
+    q: "How many values per pixel does an RGBA image have?",
+    options: [
+      "1 (grayscale)",
+      "3 (Red, Green, Blue)",
+      "4 (Red, Green, Blue, Alpha/opacity)",
+      "8"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "RGBA adds an alpha channel for opacity to the standard RGB three channels.",
+      perOption: [
+        "Wrong — that's grayscale.",
+        "Wrong — that's RGB.",
+        "Correct — RGBA has 4 channels.",
+        "Wrong — not a standard format."
+      ]
+    }
+  },
+  {
+    id: 93, difficulty: "hard", topic: "Digital Image Processing",
+    q: "Digitization causes a digital image to:",
+    options: [
+      "Become a perfect copy of the real scene",
+      "Become an approximation of the real scene (loss of continuous detail to discrete pixels)",
+      "Be unviewable",
+      "Become a 3D model"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The lecture repeatedly stresses: digitization = approximation. Pixels can never perfectly capture a continuous analog scene.",
+      perOption: [
+        "Wrong — perfect copies don't exist in sampling.",
+        "Correct — the lecture's emphasis.",
+        "Wrong — viewable, just approximate.",
+        "Wrong — 2D, not 3D."
+      ]
+    }
+  },
+  {
+    id: 94, difficulty: "medium", topic: "Digital Image Processing",
+    q: "Which is NOT one of the key stages in Digital Image Processing (per Gonzalez & Woods)?",
+    options: [
+      "Image acquisition",
+      "Image enhancement",
+      "Segmentation",
+      "Search engine optimization"
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "The key stages: acquisition, enhancement, restoration, morphological processing, segmentation, representation & description, object recognition, color image processing, image compression.",
+      perOption: [
+        "Wrong — IS a stage.",
+        "Wrong — IS a stage.",
+        "Wrong — IS a stage.",
+        "Correct — SEO is a web concept, not DIP."
+      ]
+    }
+  },
+  {
+    id: 95, difficulty: "hard", topic: "Digital Image Processing",
+    q: "Segmentation in DIP is defined as:",
+    options: [
+      "Reducing image file size",
+      "Dividing an image into its constituent parts (regions, objects)",
+      "Changing contrast",
+      "Capturing the image"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Segmentation separates an image into meaningful regions (e.g., brain regions in an MRI).",
+      perOption: [
+        "Wrong — that's compression.",
+        "Correct — segmentation definition.",
+        "Wrong — that's enhancement.",
+        "Wrong — that's acquisition."
+      ]
+    }
+  },
+  {
+    id: 96, difficulty: "medium", topic: "Digital Image Processing",
+    q: "Image enhancement typically aims to:",
+    options: [
+      "Compress the image to reduce size",
+      "Improve visual quality (e.g., change contrast, sharpen) so detail becomes clearer",
+      "Encrypt the image",
+      "Delete the image"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Enhancement improves subjective/objective image quality — the lecture's example is changing contrast.",
+      perOption: [
+        "Wrong — that's compression.",
+        "Correct — enhancement purpose.",
+        "Wrong — that's security, not DIP.",
+        "Wrong — opposite of enhancement."
+      ]
+    }
+  },
+  {
+    id: 97, difficulty: "hard", topic: "Digital Image Processing",
+    q: "Morphological processing is BEST described as:",
+    options: [
+      "Extracting image components useful for representation and description (e.g., boundaries, skeletons)",
+      "Recording a video",
+      "Compressing color data",
+      "Capturing an image with a camera"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Morphological ops (erosion, dilation, opening, closing) help extract structural info like edges and shapes.",
+      perOption: [
+        "Correct — morphology's role.",
+        "Wrong — video is a different domain.",
+        "Wrong — that's color image processing/compression.",
+        "Wrong — that's acquisition."
+      ]
+    }
+  },
+  {
+    id: 98, difficulty: "medium", topic: "Digital Image Processing",
+    q: "Which compression format is BEST suited to product photos on a furniture e-commerce site to balance quality and load speed?",
+    options: [
+      "BMP uncompressed (huge files)",
+      "JPEG — lossy compression with good visual quality at small file size for photos",
+      "TXT files",
+      "RAW (camera sensor data)"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "JPEG is the de-facto standard for photographs online — good compression with acceptable visual quality.",
+      perOption: [
+        "Wrong — too large.",
+        "Correct — appropriate for photos.",
+        "Wrong — not an image format.",
+        "Wrong — huge files, not web-ready."
+      ]
+    }
+  },
+  {
+    id: 99, difficulty: "hard", topic: "Digital Image Processing",
+    q: "What is the main risk if image compression is too aggressive on a product image?",
+    options: [
+      "Image becomes too small to upload",
+      "Visible artifacts (blocking, color banding, loss of fine detail) reduce perceived product quality and customer trust",
+      "The image rotates by itself",
+      "The image changes language"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Aggressive lossy compression introduces visible artifacts that degrade perceived quality and erode customer trust.",
+      perOption: [
+        "Wrong — small files upload fine.",
+        "Correct — the real risk for e-commerce.",
+        "Wrong — nonsense.",
+        "Wrong — nonsense."
+      ]
+    }
+  },
+  {
+    id: 100, difficulty: "hard", topic: "Digital Image Processing",
+    q: "An e-commerce site uses object recognition to auto-tag furniture images ('sofa', 'dining chair'). Which DIP stage is being applied?",
+    options: [
+      "Image acquisition",
+      "Object recognition (typically preceded by segmentation and feature representation)",
+      "Image compression",
+      "Color image processing only"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Auto-tagging is the classic object-recognition output, usually built on prior segmentation and feature extraction.",
+      perOption: [
+        "Wrong — acquisition is just capturing.",
+        "Correct — recognition is the right stage.",
+        "Wrong — compression doesn't classify.",
+        "Wrong — color is a subdomain, not the recognition step."
+      ]
+    }
+  }
+];
+
+// =====================================================================
+// STATE MANAGEMENT (localStorage-backed)
+// =====================================================================
+const STORAGE_KEY = "hci_mcq_exam_state_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    if (typeof parsed.currentIndex !== "number" || !parsed.answers) return defaultState();
+    return parsed;
+  } catch { return defaultState(); }
+}
+
+function defaultState() {
+  return { currentIndex: 0, answers: {} };
+}
+
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { console.warn("Save failed", e); }
+}
+
+let state = loadState();
+
+// =====================================================================
+// RENDERING
+// =====================================================================
+const quizArea = document.getElementById("quizArea");
+const curNumEl = document.getElementById("curNum");
+const correctCountEl = document.getElementById("correctCount");
+const wrongCountEl = document.getElementById("wrongCount");
+const answeredCountEl = document.getElementById("answeredCount");
+const progressFill = document.getElementById("progressFill");
+
+function updateMeta() {
+  curNumEl.textContent = state.currentIndex + 1;
+  const answered = Object.keys(state.answers).length;
+  let correct = 0, wrong = 0;
+  Object.entries(state.answers).forEach(([qid, selected]) => {
+    const q = QUESTIONS.find(x => x.id === Number(qid));
+    if (!q) return;
+    if (selected === q.correct) correct++; else wrong++;
+  });
+  correctCountEl.textContent = correct;
+  wrongCountEl.textContent = wrong;
+  answeredCountEl.textContent = answered;
+  progressFill.style.width = ((state.currentIndex + 1) / QUESTIONS.length * 100) + "%";
+}
+
+function letterFor(i) { return ["A", "B", "C", "D"][i]; }
+
+function renderQuestion(index) {
+  const q = QUESTIONS[index];
+  const userChoice = state.answers[q.id];
+  const answered = userChoice !== undefined;
+
+  const optionsHtml = q.options.map((opt, i) => {
+    let cls = "option";
+    let indicator = "";
+    if (answered) {
+      cls += " locked";
+      if (i === q.correct) { cls += " correct"; indicator = "✓"; }
+      else if (i === userChoice) { cls += " wrong"; indicator = "✗"; }
+    } else if (userChoice === i) {
+      cls += " selected";
+    }
+    return `
+      <button class="${cls}" data-idx="${i}" ${answered ? "disabled" : ""}>
+        <span class="letter">${letterFor(i)}</span>
+        <span>${opt}</span>
+        ${indicator ? `<span class="indicator">${indicator}</span>` : ""}
+      </button>`;
+  }).join("");
+
+  let explanationHtml = "";
+  if (answered) {
+    const isRight = userChoice === q.correct;
+    const breakdownHtml = q.explanation.perOption.map((txt, i) =>
+      `<div><b>${letterFor(i)}.</b> ${txt}</div>`
+    ).join("");
+    explanationHtml = `
+      <div class="explanation open">
+        <h4>Explanation</h4>
+        <div class="verdict ${isRight ? "right" : "wrong-v"}">
+          ${isRight ? "✓ Correct" : "✗ Incorrect"} — answer is ${letterFor(q.correct)}
+        </div>
+        <div class="reasoning">${q.explanation.reasoning}</div>
+        <div class="opt-breakdown">${breakdownHtml}</div>
+      </div>`;
+  }
+
+  quizArea.innerHTML = `
+    <div class="card">
+      <div class="q-header">
+        <div class="q-num">QUESTION ${String(q.id).padStart(3, "0")} / 100</div>
+        <div class="difficulty-tag ${q.difficulty}">${q.difficulty}</div>
+      </div>
+      <div class="topic-tag">${q.topic}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">${optionsHtml}</div>
+      ${explanationHtml}
+      <div class="nav">
+        <button class="btn" id="prevBtn" ${index === 0 ? "disabled" : ""}>← Back</button>
+        <button class="btn primary" id="nextBtn" ${index === QUESTIONS.length - 1 ? "disabled" : ""}>Next →</button>
+      </div>
+    </div>`;
+
+  document.querySelectorAll(".option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("locked")) return;
+      const idx = Number(btn.dataset.idx);
+      state.answers[q.id] = idx;
+      saveState(state);
+      renderQuestion(index);
+      updateMeta();
+    });
+  });
+  document.getElementById("prevBtn").addEventListener("click", () => goTo(index - 1));
+  document.getElementById("nextBtn").addEventListener("click", () => goTo(index + 1));
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx >= QUESTIONS.length) return;
+  state.currentIndex = idx;
+  saveState(state);
+  renderQuestion(idx);
+  updateMeta();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// =====================================================================
+// SEARCH
+// =====================================================================
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+
+searchInput.addEventListener("input", (e) => {
+  const query = e.target.value.trim().toLowerCase();
+  if (!query) { searchResults.classList.remove("open"); searchResults.innerHTML = ""; return; }
+  const matches = QUESTIONS.filter(q =>
+    q.q.toLowerCase().includes(query) ||
+    q.topic.toLowerCase().includes(query) ||
+    q.options.some(o => o.toLowerCase().includes(query))
+  ).slice(0, 25);
+
+  if (matches.length === 0) {
+    searchResults.innerHTML = `<div class="search-empty">No questions match "${escapeHtml(query)}"</div>`;
+  } else {
+    searchResults.innerHTML = matches.map(q => `
+      <div class="search-result-item" data-id="${q.id}">
+        <span class="num">${String(q.id).padStart(3, "0")}</span>
+        <span>${highlightMatch(q.q, query)} <em style="color:var(--ink-dim); font-size:11px;">— ${q.topic}</em></span>
+      </div>`).join("");
+    document.querySelectorAll(".search-result-item").forEach(it => {
+      it.addEventListener("click", () => {
+        const qid = Number(it.dataset.id);
+        const idx = QUESTIONS.findIndex(x => x.id === qid);
+        if (idx >= 0) {
+          goTo(idx);
+          searchInput.value = "";
+          searchResults.classList.remove("open");
+        }
+      });
+    });
+  }
+  searchResults.classList.add("open");
+});
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".search-bar")) searchResults.classList.remove("open");
+});
+
+function highlightMatch(text, query) {
+  const safe = escapeHtml(text);
+  const re = new RegExp(`(${escapeRegex(query)})`, "ig");
+  return safe.replace(re, "<mark style='background:var(--accent-soft); color:var(--accent); padding:0 2px; border-radius:3px;'>$1</mark>");
+}
+function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+// =====================================================================
+// FOOTER ACTIONS
+// =====================================================================
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("Reset all progress? This will clear all your answers.")) return;
+  state = defaultState();
+  saveState(state);
+  renderQuestion(0);
+  updateMeta();
+});
+
+document.getElementById("jumpBtn").addEventListener("click", () => {
+  const firstUnanswered = QUESTIONS.findIndex(q => state.answers[q.id] === undefined);
+  if (firstUnanswered === -1) {
+    alert("All questions answered! 🎉");
+  } else {
+    goTo(firstUnanswered);
+  }
+});
+
+// =====================================================================
+// KEYBOARD SHORTCUTS
+// =====================================================================
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT") return;
+  if (e.key === "ArrowLeft") goTo(state.currentIndex - 1);
+  if (e.key === "ArrowRight") goTo(state.currentIndex + 1);
+});
+
+// =====================================================================
+// INIT
+// =====================================================================
+renderQuestion(state.currentIndex);
+updateMeta();
+</script>
+</body>
+</html>
