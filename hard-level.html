@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HCI Module — Complex MCQs (50)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e14;
+    --bg-elev: #14171f;
+    --bg-card: #181b25;
+    --ink: #e9ecf3;
+    --ink-dim: #9aa3b8;
+    --line: #262c3f;
+    --accent: #e85d4e;
+    --accent-soft: #e85d4e22;
+    --correct: #4ade80;
+    --correct-soft: #4ade8022;
+    --wrong: #f87171;
+    --wrong-soft: #f8717122;
+    --complex: #e85d4e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  header.top {
+    display: flex; flex-direction: column; gap: 18px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800; letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .brand span { color: var(--accent); font-style: italic; }
+  .subtitle { color: var(--ink-dim); font-size: 14px; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    justify-content: space-between;
+  }
+  .progress-info { display: flex; gap: 16px; align-items: center; font-size: 13px; }
+  .progress-info b { color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+  .score-pill {
+    background: var(--bg-card); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px; font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .score-pill .correct-c { color: var(--correct); }
+  .score-pill .wrong-c { color: var(--wrong); }
+
+  .search-bar { position: relative; width: 100%; }
+  .search-bar input {
+    width: 100%; padding: 12px 16px 12px 42px;
+    background: var(--bg-card); border: 1px solid var(--line);
+    border-radius: 12px; color: var(--ink);
+    font-family: inherit; font-size: 14px;
+    transition: border-color .2s, background .2s;
+  }
+  .search-bar input:focus { outline: none; border-color: var(--accent); }
+  .search-bar::before {
+    content: "⌕"; position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%); color: var(--ink-dim); font-size: 18px;
+  }
+
+  .search-results {
+    background: var(--bg-card); border: 1px solid var(--line);
+    border-radius: 12px; margin-top: 8px;
+    max-height: 280px; overflow-y: auto;
+    display: none;
+  }
+  .search-results.open { display: block; }
+  .search-result-item {
+    padding: 10px 14px; border-bottom: 1px solid var(--line);
+    cursor: pointer; font-size: 13px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:hover { background: var(--bg-elev); }
+  .search-result-item .num {
+    color: var(--accent); font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; flex-shrink: 0;
+  }
+  .search-empty { padding: 14px; color: var(--ink-dim); font-size: 13px; text-align: center; }
+
+  .progress-track {
+    height: 4px; background: var(--bg-card); border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), #ffaf7b);
+    transition: width .4s ease;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 20px 60px -20px #0008;
+  }
+  .q-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+  }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--ink-dim);
+    letter-spacing: 0.08em;
+  }
+  .difficulty-tag {
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--accent-soft); color: var(--complex);
+    border: 1px solid #e85d4e55;
+  }
+
+  .topic-tag {
+    font-size: 11px; color: var(--ink-dim);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .question-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(19px, 2.4vw, 23px);
+    font-weight: 600; line-height: 1.4;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: var(--bg-elev);
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all .18s ease;
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 15px; text-align: left;
+    color: var(--ink); font-family: inherit;
+    width: 100%;
+  }
+  .option:hover:not(.locked) {
+    border-color: var(--accent); background: var(--accent-soft);
+  }
+  .option .letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; color: var(--accent);
+    flex-shrink: 0; width: 22px;
+  }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .option.correct { border-color: var(--correct); background: var(--correct-soft); }
+  .option.correct .letter { color: var(--correct); }
+  .option.wrong { border-color: var(--wrong); background: var(--wrong-soft); }
+  .option.wrong .letter { color: var(--wrong); }
+  .option.locked { cursor: default; }
+  .option .indicator { margin-left: auto; font-size: 18px; flex-shrink: 0; }
+
+  .explanation {
+    margin-top: 22px;
+    background: var(--bg-elev);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    display: none;
+  }
+  .explanation.open { display: block; animation: slide .35s ease; }
+  @keyframes slide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .explanation h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .explanation .verdict {
+    font-weight: 700; margin-bottom: 10px;
+    font-family: 'Fraunces', serif; font-size: 17px;
+  }
+  .explanation .verdict.right { color: var(--correct); }
+  .explanation .verdict.wrong-v { color: var(--wrong); }
+  .explanation .reasoning { color: var(--ink); margin-bottom: 14px; font-size: 14.5px; }
+  .explanation .opt-breakdown { display: flex; flex-direction: column; gap: 6px; }
+  .explanation .opt-breakdown div {
+    font-size: 13px; color: var(--ink-dim);
+    padding-left: 12px; border-left: 2px solid var(--line);
+  }
+  .explanation .opt-breakdown div b { color: var(--ink); font-family: 'JetBrains Mono', monospace; }
+
+  .nav {
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 24px;
+  }
+  .btn {
+    padding: 12px 22px;
+    border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .18s;
+  }
+  .btn:hover:not(:disabled) { background: var(--bg-elev); border-color: var(--accent); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.primary { background: var(--accent); color: #0c0e14; border-color: var(--accent); }
+  .btn.primary:hover:not(:disabled) { background: #ff7c6e; }
+  .btn.ghost { background: transparent; }
+
+  .footer-actions {
+    margin-top: 18px; display: flex; gap: 10px; justify-content: center;
+    flex-wrap: wrap;
+  }
+  .footer-actions .btn { font-size: 12px; padding: 8px 14px; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 24px 16px 60px; }
+    .card { padding: 22px; border-radius: 16px; }
+    .q-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">HCI Complex <span>· 50 MCQs</span></div>
+      <div class="subtitle">High-difficulty practice · all four options look plausible · fine distinctions, scenarios &amp; calculations</div>
+    </div>
+    <div class="search-bar">
+      <input id="searchInput" type="text" placeholder="Search complex questions by keyword..." autocomplete="off" />
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="meta-row">
+      <div class="progress-info">
+        <span>Question <b id="curNum">1</b> / <b>50</b></span>
+        <span class="score-pill">
+          <span class="correct-c" id="correctCount">0</span> ✓
+          &nbsp;·&nbsp;
+          <span class="wrong-c" id="wrongCount">0</span> ✗
+        </span>
+      </div>
+      <div class="progress-info"><span id="answeredCount">0</span>&nbsp;answered</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main id="quizArea"></main>
+
+  <div class="footer-actions">
+    <button class="btn ghost" id="resetBtn">↺ Reset all progress</button>
+    <button class="btn ghost" id="jumpBtn">⇥ Jump to first unanswered</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    id: 1, topic: "Interaction Design",
+    q: "A designer claims their product 'is highly usable AND provides an excellent UX'. Which scenario BEST illustrates a possible trade-off between these two goal sets?",
+    options: [
+      "A medical infusion pump that is fast and efficient but feels clinical and impersonal to use.",
+      "A children's learning game that is fun and engaging but takes hours to learn properly.",
+      "A banking app that is consistent and easy to remember but uses platform-standard icons.",
+      "A spreadsheet tool that is efficient for experts and provides shortcuts for power users."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Trade-offs occur when one goal set is achieved at the cost of the other. The children's game maximizes UX (fun, engaging) but sacrifices usability (easy to learn). Lecture 1 explicitly raises: 'can a product be both fun and safe?'",
+      perOption: [
+        "Plausible but weak — clinical feel is a UX issue, but the description doesn't show a true conflict.",
+        "Correct — engagement (UX) directly conflicts with 'easy to learn' (usability).",
+        "No trade-off — consistency and easy-to-remember are both usability goals.",
+        "No trade-off — efficiency and shortcuts align without conflict."
+      ]
+    }
+  },
+  {
+    id: 2, topic: "Interaction Design",
+    q: "A coffee machine has a single button. Pressing it once brews espresso; pressing twice within 2 seconds brews a double; holding for 3 seconds enters cleaning mode. Which design principle is MOST violated?",
+    options: [
+      "Affordance — the button affords pressing, which is what users do.",
+      "Mapping — there is a clear mapping between the button and brewing.",
+      "Visibility — the available actions and how to trigger them are not apparent from the interface.",
+      "Feedback — the machine gives feedback when each action completes."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Hidden modal interactions (double-press, long-press) are invisible to users. Without visible cues, users cannot know what actions are possible.",
+      perOption: [
+        "Affordance is preserved — the button clearly affords pressing.",
+        "Mapping is partly preserved for the basic action.",
+        "Correct — invisible modes mean users have no way to discover the hidden behaviors.",
+        "Feedback may be present; the question is about discoverability, not response."
+      ]
+    }
+  },
+  {
+    id: 3, topic: "Interaction Design",
+    q: "Which scenario BEST exemplifies a 'temporary' impairment per the lecture's classification of disability?",
+    options: [
+      "A worker in a construction site cannot hear notifications due to loud machinery.",
+      "A person with congenital low vision uses a screen reader at all times.",
+      "A user with a broken dominant arm types one-handed for six weeks after surgery.",
+      "An elderly user has progressive memory loss that worsens each year."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Three categories: permanent, temporary, situational. A broken arm healing in 6 weeks is the textbook temporary case.",
+      perOption: [
+        "Situational — environment causes the impairment.",
+        "Permanent — congenital condition is lifelong.",
+        "Correct — accident/illness with recovery is the definition of temporary.",
+        "Permanent — progressive and irreversible."
+      ]
+    }
+  },
+  {
+    id: 4, topic: "Interaction Design",
+    q: "A team designs 'Ctrl+S' for Save, 'Ctrl+P' for Print, and 'Ctrl+Shift+S' for Save As. Which statement BEST captures the consistency situation?",
+    options: [
+      "Internal consistency is fully maintained because all commands use Ctrl as the modifier key.",
+      "Internal consistency is partially broken because 'Save As' requires an extra modifier, breaking the 'Ctrl + first letter' rule.",
+      "External consistency is broken because Ctrl+P should mean Paste, not Print.",
+      "Both internal and external consistency are perfectly preserved across platforms."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "When commands share a first letter (Save, Save As), the 'Ctrl + first initial' rule breaks down and designers add modifiers, weakening internal consistency.",
+      perOption: [
+        "Misleading — using Ctrl alone doesn't guarantee internal consistency.",
+        "Correct — the scenario the lecture describes as a consistency breakdown.",
+        "Ctrl+P for Print is the convention; not the issue here.",
+        "Overstates correctness; internal consistency has broken down."
+      ]
+    }
+  },
+  {
+    id: 5, topic: "Interaction Design",
+    q: "Which sequence correctly orders the IxD lifecycle activities as a typical first iteration?",
+    options: [
+      "Designing alternatives → Discovering requirements → Prototyping → Evaluating",
+      "Discovering requirements → Designing alternatives → Prototyping → Evaluating",
+      "Prototyping → Discovering requirements → Evaluating → Designing alternatives",
+      "Evaluating → Prototyping → Designing alternatives → Discovering requirements"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Textbook order: discover what's needed → design options → prototype → evaluate → iterate.",
+      perOption: [
+        "Designing before discovering wastes effort on unvalidated needs.",
+        "Correct — the canonical first iteration order.",
+        "Prototyping before requirements is the anti-pattern this lifecycle prevents.",
+        "Reverses the entire lifecycle."
+      ]
+    }
+  },
+  {
+    id: 6, topic: "Agile Software Engineering",
+    q: "A team finishes a sprint with 8 of 10 backlog items complete. The Product Owner says items 9 and 10 are critical. What is the CORRECT next action per Scrum?",
+    options: [
+      "Extend the current sprint by 3 days to complete items 9 and 10.",
+      "Move items 9 and 10 to the next sprint's backlog and prioritize them in sprint planning.",
+      "Add items 9 and 10 to the product backlog and let them be re-prioritized like all other items.",
+      "Mark items 9 and 10 as failed and remove them from the project scope."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Sommerville: unfinished sprint items are 'returned to the product backlog and queued for a future sprint.' They go through normal prioritization.",
+      perOption: [
+        "Violates Scrum — sprints are timeboxed and never extended.",
+        "Skips prioritization — the Product Owner may decide other items rank higher.",
+        "Correct — items return to product backlog, then sprint planning decides priority.",
+        "Overreaction — incomplete items are deferred, not removed."
+      ]
+    }
+  },
+  {
+    id: 7, topic: "Agile Software Engineering",
+    q: "Which statement BEST distinguishes Scrum from XP per the lecture?",
+    options: [
+      "Scrum requires test-first development; XP does not.",
+      "XP introduced practices like user stories and continuous integration; Scrum focuses on planning and management without prescribing engineering practices.",
+      "Scrum uses sprints; XP uses iterations of indefinite length with no time bound.",
+      "XP requires pair programming; Scrum requires four-person teams minimum."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Sommerville explicitly states XP introduced specific engineering practices, while Scrum 'does not define the engineering practices to be used.'",
+      perOption: [
+        "Reversed — XP introduced test-first; Scrum is silent on it.",
+        "Correct — the exact lecture distinction.",
+        "False — both use timeboxed iterations.",
+        "Fabricated rules — Scrum has no team-size minimum tied to XP."
+      ]
+    }
+  },
+  {
+    id: 8, topic: "Agile Software Engineering",
+    q: "When does a Product Backlog Item (PBI) qualify as 'complete' per the Sommerville checklist?",
+    options: [
+      "When unit tests pass and the developer signs off on the code.",
+      "When it is reviewed, unit tested, integrated, integration tested, AND accepted by product owner/team.",
+      "When the code compiles and is committed to the main branch.",
+      "When the developer demonstrates it in the daily scrum to teammates."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The code completeness checklist has FIVE criteria: reviewed, unit tested, integrated, integration tested, accepted.",
+      perOption: [
+        "Insufficient — review, integration, and acceptance are missing.",
+        "Correct — all five criteria.",
+        "Insufficient — no testing, review, or acceptance.",
+        "A demo is not a completion criterion."
+      ]
+    }
+  },
+  {
+    id: 9, topic: "Agile Software Engineering",
+    q: "Per Sommerville's 'managing external interactions' diagram, who handles TEAM-focused external interactions vs PRODUCT-focused external interactions?",
+    options: [
+      "ScrumMaster handles team-focused; Product Owner handles product-focused.",
+      "Product Owner handles team-focused; ScrumMaster handles product-focused.",
+      "ScrumMaster handles both; Product Owner manages internal team only.",
+      "Senior developer handles team-focused; ScrumMaster handles product-focused."
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Sommerville Fig 2.10: ScrumMaster shields the team (team-focused), Product Owner represents the product (product-focused).",
+      perOption: [
+        "Correct — the diagram's exact split.",
+        "Reversed — Product Owner is product-facing.",
+        "ScrumMaster is not product-facing.",
+        "Senior dev is not a Scrum role in this diagram."
+      ]
+    }
+  },
+  {
+    id: 10, topic: "Agile Software Engineering",
+    q: "A self-organizing team in Scrum is BEST characterized by which behavior?",
+    options: [
+      "Team members report daily to the ScrumMaster who assigns specific tasks to each developer.",
+      "The Product Owner directs daily work assignments based on backlog priority.",
+      "Team members make their own decisions about who does what, by discussion and consensus.",
+      "An external project manager allocates tasks based on developer skill profiles."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Sommerville: 'Self-organizing teams make their own decisions and work by discussing issues and making decisions by consensus.'",
+      perOption: [
+        "Wrong — ScrumMaster facilitates, doesn't assign tasks.",
+        "Wrong — Product Owner sets priority, not daily assignments.",
+        "Correct — definition of self-organizing.",
+        "Wrong — contradicts self-organization."
+      ]
+    }
+  },
+  {
+    id: 11, topic: "Agile UX",
+    q: "A team in Cycle 3 of parallel tracks is doing the following. Which activity is OUT OF PLACE for that cycle's designer track per the Sy (2007) model?",
+    options: [
+      "Testing code from Cycle 2 with users.",
+      "Designing features intended for Cycle 4 implementation.",
+      "Gathering customer data to inform Cycle 5.",
+      "Implementing the UI components for Cycle 3 designs."
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "Designer track each cycle: test previous code, design for next cycle, gather data for cycle-after-next. Implementing UI is the developer track.",
+      perOption: [
+        "Correct designer activity.",
+        "Correct designer activity.",
+        "Correct designer activity.",
+        "Out of place — implementation belongs to the developer track."
+      ]
+    }
+  },
+  {
+    id: 12, topic: "Agile UX",
+    q: "Which is NOT among the THREE practical areas where AgileUX requires careful planning?",
+    options: [
+      "User research",
+      "Aligning work practices between designers and developers",
+      "Documentation: how polished and how much",
+      "Choosing the agile framework (Scrum vs XP vs Kanban)"
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "Lecture 6 lists exactly three: user research, aligning work practices, documentation. Framework choice is separate.",
+      perOption: [
+        "IS one of the three.",
+        "IS one of the three.",
+        "IS one of the three.",
+        "Correct — framework selection is not on this list."
+      ]
+    }
+  },
+  {
+    id: 13, topic: "Agile UX",
+    q: "A team in Cycle 1 of parallel tracks must decide what developers should implement first. Which is the BEST choice per the Sy model?",
+    options: [
+      "Polished UI components with high visual complexity to set the visual standard early.",
+      "Backend features with high development cost but low UI complexity (e.g., payment gateway, database integration).",
+      "Marketing landing pages to attract early adopters.",
+      "Final accessibility audits for completed designs."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Sy diagram: 'Implement high dev cost, low UI cost features' first, while designers prepare UI for Cycle 2.",
+      perOption: [
+        "UI-heavy work needs validated designs first.",
+        "Correct — backend work in Cycle 1.",
+        "Marketing is not a parallel-tracks dev activity.",
+        "Audits happen after implementation."
+      ]
+    }
+  },
+  {
+    id: 14, topic: "Agile UX",
+    q: "What is the central tension that AgileUX must balance?",
+    options: [
+      "Cost of designers versus cost of developers.",
+      "Customer requests versus business priorities.",
+      "Need for research and reflection for good UX versus rapid iteration with user feedback.",
+      "Frontend complexity versus backend complexity."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Lecture 6: 'AgileUX requires balancing research and reflection for good UX with rapid iterations incorporating user feedback.'",
+      perOption: [
+        "Salary tension is not the AgileUX concern.",
+        "A Product Owner issue, not the AgileUX balance.",
+        "Correct — the lecture's exact framing.",
+        "A technical concern, not the AgileUX balance."
+      ]
+    }
+  },
+  {
+    id: 15, topic: "Agile UX",
+    q: "Cycle 0 in the parallel tracks approach has which PRIMARY purpose?",
+    options: [
+      "Implement the first shippable increment to validate the deployment pipeline.",
+      "Run user acceptance testing on Cycle -1 outputs.",
+      "Plan and gather customer data; establish product vision before development begins.",
+      "Refactor legacy code in preparation for new features."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Sy's diagram labels Cycle 0 as 'Plan and gather customer data.' This precedes development.",
+      perOption: [
+        "Implementation begins in Cycle 1, not Cycle 0.",
+        "There is no Cycle -1 in the model.",
+        "Correct — the diagram's exact label.",
+        "Refactoring is not the Cycle 0 purpose."
+      ]
+    }
+  },
+  {
+    id: 16, topic: "Data Gathering",
+    q: "A researcher pre-defines five categories (speed, accuracy, satisfaction, errors, recovery) and codes interview transcripts against them. This is BEST classified as:",
+    options: [
+      "Inductive analysis with emergent themes.",
+      "Deductive analysis with pre-specified categorization.",
+      "Mixed-methods analysis combining both approaches.",
+      "Grounded theory analysis."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Pre-specified categories applied top-down = deductive. Inductive lets themes emerge from data.",
+      perOption: [
+        "Wrong — emergent themes are discovered from data, not pre-defined.",
+        "Correct — pre-specified categorization is deductive.",
+        "Could become mixed if combined with emergent themes; as described it's deductive.",
+        "Grounded theory is heavily inductive — opposite of this approach."
+      ]
+    }
+  },
+  {
+    id: 17, topic: "Data Gathering",
+    q: "Which question type is HARDEST to analyze quantitatively but RICHEST for understanding user motivation?",
+    options: [
+      "Closed Yes/No questions with checkboxes.",
+      "Five-point Likert scales measuring agreement.",
+      "Open-ended questions allowing free-form responses.",
+      "Semantic differential scales using paired adjectives."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Open questions produce qualitative data — hard to count, rich in context. Closed/Likert/Semantic are designed for quick numeric analysis.",
+      perOption: [
+        "Easiest to quantify — opposite of the question.",
+        "Designed for quantitative analysis on a known scale.",
+        "Correct — qualitative, hard to quantify, rich for motivation.",
+        "Quantifiable via numeric scale points."
+      ]
+    }
+  },
+  {
+    id: 18, topic: "Data Gathering",
+    q: "A researcher uses interviews, diaries, AND interaction logs to study a memory aid for traumatic brain injury patients. The primary methodological benefit of combining methods is:",
+    options: [
+      "It guarantees statistical significance with fewer participants.",
+      "Triangulation: each method compensates for the weaknesses of the others, producing richer and more reliable findings.",
+      "It removes the need for ethical review since combined data is anonymized.",
+      "It allows replacing qualitative analysis with quantitative analysis entirely."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The lecture describes this exact combination as 'highly productive' because methods cover each other's blind spots.",
+      perOption: [
+        "Method combination does not guarantee significance.",
+        "Correct — triangulation rationale.",
+        "Ethics review is always required.",
+        "Combination supplements, doesn't replace, qualitative analysis."
+      ]
+    }
+  },
+  {
+    id: 19, topic: "Data Gathering",
+    q: "An interviewer asks: 'Why do you like this new feature?' This is an example of which question flaw?",
+    options: [
+      "A compound question combining multiple ideas.",
+      "A leading question that assumes the participant likes the feature.",
+      "A closed question with no answer options.",
+      "A semantic question with unclear connotation."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The lecture lists 'leading questions that make assumptions, for example, why do you like…?' as a flaw to avoid.",
+      perOption: [
+        "It's a single idea, not compound.",
+        "Correct — assumes 'liking' before checking.",
+        "It's open-ended, not closed.",
+        "Semantic scales are a response format, not a question flaw."
+      ]
+    }
+  },
+  {
+    id: 20, topic: "Data Gathering",
+    q: "In direct observation, which framework consideration distinguishes 'ethnographic participation' from a standard controlled study?",
+    options: [
+      "The researcher uses video recording in ethnography but not in controlled studies.",
+      "Ethnography requires more participants to be statistically valid.",
+      "The researcher's degree of insider/outsider participation in the culture being studied.",
+      "Ethnography forbids note-taking; controlled studies require it."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "The lecture lists 'Degree of (insider or outsider) ethnographic participation (culture based)' as the framework axis.",
+      perOption: [
+        "Both can use video.",
+        "Ethnography is typically qualitative with few participants over long periods.",
+        "Correct — degree of cultural participation is the key axis.",
+        "Both allow notes; this is fabricated."
+      ]
+    }
+  },
+  {
+    id: 21, topic: "Evaluation",
+    q: "A team evaluates an unreleased prototype mid-development to identify issues and refine the design. Six months later, after launch, a separate study assesses whether the shipped product meets the regulator's accessibility standard. These two studies are respectively:",
+    options: [
+      "Formative and summative evaluations.",
+      "Summative and formative evaluations.",
+      "Predictive and analytical evaluations.",
+      "Heuristic and ecological evaluations."
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Formative = during design, to improve. Summative = after release, to assess success or compliance.",
+      perOption: [
+        "Correct — mid-development is formative, post-launch is summative.",
+        "Reversed.",
+        "Predictive uses models; analytical inspects without users — neither fits.",
+        "Heuristic is an inspection method; ecological is a validity concept."
+      ]
+    }
+  },
+  {
+    id: 22, topic: "Evaluation",
+    q: "A heuristic evaluation finds 50% of usability problems with 2 evaluators. To find approximately 75–80% of problems per Nielsen's classic curve, how many evaluators are typically needed?",
+    options: [
+      "3 evaluators",
+      "5 evaluators",
+      "10 evaluators",
+      "15 evaluators"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Nielsen's curve: ~5 evaluators reach the 75–80% range, then plateaus.",
+      perOption: [
+        "Below the typical threshold.",
+        "Correct — the classic Nielsen benchmark.",
+        "Beyond the plateau; diminishing returns.",
+        "Far past the point of useful return."
+      ]
+    }
+  },
+  {
+    id: 23, topic: "Evaluation",
+    q: "A booking app shows 'Error 0x80042': what went wrong with no explanation. Which heuristic is MOST directly violated?",
+    options: [
+      "Match between system and the real world — using internal jargon.",
+      "Help users recognize, diagnose, and recover from errors — message must be in plain language and suggest a solution.",
+      "Error prevention — the system should prevent errors before they occur.",
+      "Visibility of system status — keeping users informed of what is happening."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The 9th heuristic specifically demands plain language (no codes), pinpoint the problem, and suggest a fix.",
+      perOption: [
+        "Related but the deeper violation is about error message quality.",
+        "Correct — Recognize/Diagnose/Recover is the specific match.",
+        "Error prevention is for preventing the error initially.",
+        "Visibility is about ongoing status, not error message quality."
+      ]
+    }
+  },
+  {
+    id: 24, topic: "Evaluation",
+    q: "A study finds users complete a task 20% faster in the lab than in the field. This is a concern about:",
+    options: [
+      "Reliability — the lab and field results disagree.",
+      "Validity — the test doesn't measure the intended construct.",
+      "Ecological validity — the controlled lab environment distorts how users behave compared to real-world settings.",
+      "Sampling bias — the lab participants are not representative."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Ecological validity asks whether the evaluation environment distorts findings.",
+      perOption: [
+        "Reliability is consistency across sessions of the SAME method.",
+        "Validity broadly — but the specific concept is ecological validity.",
+        "Correct — environmental distortion = ecological validity.",
+        "Sampling bias would be about who, not environment."
+      ]
+    }
+  },
+  {
+    id: 25, topic: "Evaluation",
+    q: "Walkthroughs differ from heuristic evaluation primarily in that walkthroughs:",
+    options: [
+      "Use users to test the interface; heuristic evaluation does not.",
+      "Step through a pre-planned scenario noting issues, while heuristic evaluation reviews the whole interface against a heuristic list.",
+      "Are conducted post-launch; heuristic evaluation is conducted pre-launch.",
+      "Require statistical analysis; heuristic evaluation does not."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Both are inspection methods (no users). Walkthroughs trace specific task scenarios; heuristic evaluation scans against a heuristic checklist.",
+      perOption: [
+        "Neither uses end users.",
+        "Correct — the methodological distinction.",
+        "Both can run at any stage.",
+        "Neither requires statistical analysis."
+      ]
+    }
+  },
+  {
+    id: 26, topic: "Evaluation",
+    q: "Which set of four WCAG 2.1 principles is correct?",
+    options: [
+      "Perceivable, Operable, Understandable, Robust",
+      "Predictable, Observable, Usable, Reliable",
+      "Performant, Optimized, Universal, Responsive",
+      "Perceivable, Obvious, Usable, Reachable"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "POUR: Perceivable, Operable, Understandable, Robust.",
+      perOption: [
+        "Correct — POUR principles.",
+        "Plausible but invented.",
+        "Web performance terms, not WCAG.",
+        "Two are right but the rest are made up."
+      ]
+    }
+  },
+  {
+    id: 27, topic: "Interfaces",
+    q: "A museum exhibit lets visitors arrange physical wooden blocks on a table; a projector overlays digital information that responds to block positions. Which interface type does this BEST exemplify?",
+    options: [
+      "Augmented reality interface, since digital info overlays the physical world.",
+      "Tangible interface, since physical objects manipulate digital information.",
+      "Shareable interface, since multiple visitors interact at once.",
+      "Multimodal interface, combining vision and touch."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Tangible UIs are defined by physical object manipulation driving digital state. The blocks ARE the input.",
+      perOption: [
+        "Tempting but the defining feature is the blocks AS input devices.",
+        "Correct — physical objects manipulating digital info.",
+        "Shareability is a property but not the primary classification.",
+        "Multimodal is a separate axis."
+      ]
+    }
+  },
+  {
+    id: 28, topic: "Interfaces",
+    q: "A car dashboard combines voice commands ('play music'), touchscreen taps, and steering-wheel buttons for the same actions. This is BEST classified as:",
+    options: [
+      "Multimedia interface, because audio and visual are both used.",
+      "Multimodal interface, because multiple input modalities operate together for the same actions.",
+      "Shareable interface, because driver and passenger can both use it.",
+      "Voice interface with optional touch fallback."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Multimodal = multiple modalities for input/output. Multimedia refers to media types being output, not input modalities.",
+      perOption: [
+        "Multimedia is about output media types.",
+        "Correct — multiple input modes for the same actions.",
+        "Shareability is a separate property.",
+        "Voice is one of several equal modalities, not primary with others as fallback."
+      ]
+    }
+  },
+  {
+    id: 29, topic: "Interfaces",
+    q: "Which is NOT among the 20 interface types covered in Lecture 4?",
+    options: [
+      "Brain–computer interaction",
+      "Robots and drones",
+      "Holographic projection interface",
+      "Wearables"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "The 20 types include BCI, robots/drones, wearables, smart, AR, etc. Holographic projection is not a distinct category in the list.",
+      perOption: [
+        "IS in the 20 — #19.",
+        "IS in the 20 — #18.",
+        "Correct — not a distinct category.",
+        "IS in the 20 — #17."
+      ]
+    }
+  },
+  {
+    id: 30, topic: "Interfaces",
+    q: "The lecture notes gestures must often be 'presented sequentially' to be understood. The reasoning is MOST similar to which linguistic concept?",
+    options: [
+      "Phonemes — sound units that must be pronounced individually.",
+      "Sentences — meaning is constructed from ordered units.",
+      "Synonyms — alternative ways to express the same idea.",
+      "Idioms — fixed expressions with non-literal meanings."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture: 'Gestures need to be presented sequentially to be understood (compare with the way sentences are constructed).'",
+      perOption: [
+        "Phonemes are sound units within words.",
+        "Correct — exact lecture analogy.",
+        "Synonyms don't explain sequential requirement.",
+        "The lecture compares to sentences, not idioms."
+      ]
+    }
+  },
+  {
+    id: 31, topic: "Interfaces",
+    q: "Voice User Interfaces are MOST appropriate as a primary input method in which scenario?",
+    options: [
+      "An expert audio editor needing precise frame-level control over a waveform.",
+      "A hands-busy cooking app where the user follows a recipe with sticky fingers.",
+      "A high-security banking interface entering account numbers and passwords.",
+      "A collaborative design tool with multiple users in a quiet shared workspace."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Voice excels when hands are busy or eyes engaged elsewhere — exactly the cooking scenario.",
+      perOption: [
+        "Precision tasks need direct manipulation.",
+        "Correct — hands-busy is the canonical voice use case.",
+        "Voice in public exposes credentials.",
+        "Multiple voices cause recognition errors."
+      ]
+    }
+  },
+  {
+    id: 32, topic: "Prototyping",
+    q: "A team builds a fully-coded prototype with real database queries and final styling, but only the checkout flow works — other features are stubbed. This is BEST described as:",
+    options: [
+      "A horizontal high-fidelity prototype.",
+      "A vertical high-fidelity prototype.",
+      "A horizontal low-fidelity prototype.",
+      "A vertical low-fidelity prototype."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Vertical = deep detail in narrow scope. High-fidelity = uses near-final tech and styling.",
+      perOption: [
+        "Horizontal would cover many features at shallow depth.",
+        "Correct — one feature deep + production-grade fidelity.",
+        "Low-fi uses paper/sketches; this uses real code.",
+        "Same fidelity mismatch."
+      ]
+    }
+  },
+  {
+    id: 33, topic: "Prototyping",
+    q: "A team shows a polished, animated prototype to stakeholders. Stakeholders assume the product is nearly done and reject further changes. This BEST illustrates which prototyping compromise?",
+    options: [
+      "Horizontal compromise: too many features shown at once.",
+      "Vertical compromise: too much depth in one area.",
+      "The hi-fi prototype danger: stakeholders mistake the prototype for a finished product and miss remaining compromises.",
+      "Low-fi prototype limitation: insufficient realism leads to misinterpretation."
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "Lecture warns: hi-fi prototypes risk users/stakeholders thinking the system is complete — they 'miss the compromises.'",
+      perOption: [
+        "Horizontal isn't about polish.",
+        "Vertical isn't about polish.",
+        "Correct — the textbook hi-fi danger.",
+        "Reversed — low-fi forces awareness of incompleteness."
+      ]
+    }
+  },
+  {
+    id: 34, topic: "Prototyping",
+    q: "Which BEST captures the relationship between user stories and scenarios?",
+    options: [
+      "User stories and scenarios are synonyms used in different agile methods.",
+      "User stories identify who, what, and why; scenarios extend stories by adding the interaction with the product or service.",
+      "User stories describe interactions; scenarios describe goals and motivations.",
+      "Scenarios are a Scrum artifact; user stories are an XP artifact."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture: 'Scenarios are built upon user stories... They take User Stories to the next level by adding the interaction with the product or service.'",
+      perOption: [
+        "Related but distinct.",
+        "Correct — the lecture's exact framing.",
+        "Reversed.",
+        "Both can be used in any agile method."
+      ]
+    }
+  },
+  {
+    id: 35, topic: "Prototyping",
+    q: "A 'mood board' in conceptual design serves PRIMARILY to:",
+    options: [
+      "Capture the desired feel and emotional tone of the future product.",
+      "Document the technical architecture using visual diagrams.",
+      "Specify exact color codes and typography for the final product.",
+      "Define accessibility requirements for the product."
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Lecture: 'Mood board may capture desired feel.' Aesthetic/emotional anchors during conceptual design.",
+      perOption: [
+        "Correct.",
+        "Architecture diagrams are separate.",
+        "That's a style guide.",
+        "Accessibility requirements are documented separately."
+      ]
+    }
+  },
+  {
+    id: 36, topic: "Prototyping",
+    q: "The Wizard-of-Oz technique requires what to function?",
+    options: [
+      "A fully working backend with an unstyled frontend.",
+      "A hidden human simulating the system's responses while the user believes the system is automated.",
+      "AI-generated responses from a large language model.",
+      "Audio-only feedback to test voice interactions."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "WoZ tests the interaction model before building the backend by having a human covertly play the system.",
+      perOption: [
+        "Backend doesn't exist in WoZ — that's the point.",
+        "Correct — hidden human acting as the system.",
+        "Modern AI is unrelated; classic WoZ predates LLMs.",
+        "WoZ works for any modality."
+      ]
+    }
+  },
+  {
+    id: 37, topic: "Visualisation",
+    q: "A dataset records 'satisfaction' as 'Very Dissatisfied / Dissatisfied / Neutral / Satisfied / Very Satisfied'. This data is:",
+    options: [
+      "Qualitative nominal — categories with no natural order.",
+      "Qualitative ordinal — categories with a natural order.",
+      "Quantitative discrete — countable integer values.",
+      "Quantitative continuous — measurable real values."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Ordinal = ordered categories without equal intervals. Likert satisfaction scales are the canonical ordinal example.",
+      perOption: [
+        "Wrong — there IS a natural order.",
+        "Correct — ordered categories.",
+        "Wrong — categories, not counts.",
+        "Wrong — no continuous measurement."
+      ]
+    }
+  },
+  {
+    id: 38, topic: "Visualisation",
+    q: "Per McCormick et al. (1987), the core promise of visualization is to:",
+    options: [
+      "Replace numerical computation with geometric intuition.",
+      "Transform the symbolic into the geometric, enabling researchers to see the unseen.",
+      "Convert qualitative findings into quantitative metrics.",
+      "Decorate scientific papers with appealing imagery."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "The lecture quotes McCormick: visualization 'transforms the symbolic into the geometric... offers a method for seeing the unseen.'",
+      perOption: [
+        "Visualization complements computation.",
+        "Correct — McCormick's exact framing.",
+        "Visualization isn't about converting data types.",
+        "Trivializes the lecture's framing."
+      ]
+    }
+  },
+  {
+    id: 39, topic: "Visualisation",
+    q: "Which is NOT among the nine areas of the 'visualization umbrella' in Lecture 7?",
+    options: [
+      "Software visualisation",
+      "Volume rendering and visualization",
+      "Cryptographic visualisation",
+      "Information Visualization"
+    ],
+    correct: 2,
+    explanation: {
+      reasoning: "The nine areas: animation, software viz, viz environments, volume rendering, computer graphics, visual programming, image processing, VR, scientific viz (and InfoVis).",
+      perOption: [
+        "IS in the umbrella.",
+        "IS in the umbrella.",
+        "Correct — not on the lecture's list.",
+        "IS in the umbrella."
+      ]
+    }
+  },
+  {
+    id: 40, topic: "Visualisation",
+    q: "InfoVis 'amplifies cognition' by enabling users to observe patterns. Which pattern is NOT in the lecture's list?",
+    options: [
+      "Trends and clusters",
+      "Gaps and outliers",
+      "Groups and individual items",
+      "Future market values and price predictions"
+    ],
+    correct: 3,
+    explanation: {
+      reasoning: "The lecture's list: trends, clusters, gaps, outliers, groups, individual items. Visualization shows what IS in the data.",
+      perOption: [
+        "Listed.",
+        "Listed.",
+        "Listed.",
+        "Correct — prediction is inference, not observation."
+      ]
+    }
+  },
+  {
+    id: 41, topic: "Line/Circle Algorithms",
+    q: "In Bresenham's line algorithm for a line from (0,0) to (10,4), the initial decision parameter p₀ equals:",
+    options: [
+      "p₀ = 2·dy − dx = 2·4 − 10 = −2",
+      "p₀ = 2·dx − dy = 2·10 − 4 = 16",
+      "p₀ = dy − dx = 4 − 10 = −6",
+      "p₀ = 3 − 2·dy = 3 − 8 = −5"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Bresenham line: p₀ = 2·dy − dx. With dx=10, dy=4: p₀ = 8 − 10 = −2.",
+      perOption: [
+        "Correct.",
+        "Wrong — formula reverses dx and dy.",
+        "Wrong — missing the factor of 2.",
+        "Wrong — that's the Bresenham CIRCLE formula."
+      ]
+    }
+  },
+  {
+    id: 42, topic: "Line/Circle Algorithms",
+    q: "Drawing a line from (0,0) to (5,3) with Bresenham, after plotting (0,0), p₀ = 2·3 − 5 = 1. Since p ≥ 0, the next pixel and update are:",
+    options: [
+      "Next = (1, 0); p_new = p + 2·dy = 1 + 6 = 7",
+      "Next = (1, 1); p_new = p + 2·dy − 2·dx = 1 + 6 − 10 = −3",
+      "Next = (0, 1); p_new = p + 2·dx = 1 + 10 = 11",
+      "Next = (1, 1); p_new = p + 2·dy = 1 + 6 = 7"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "When p ≥ 0: next pixel = (x+1, y+1), update p = p + 2·dy − 2·dx. From (0,0) with p=1: next is (1,1) and new p = 1 + 6 − 10 = −3.",
+      perOption: [
+        "Wrong direction — this is for p<0.",
+        "Correct — diagonal step and correct p update.",
+        "Wrong — Bresenham steps x by 1 each iteration.",
+        "Right pixel but wrong update — that's the p<0 update."
+      ]
+    }
+  },
+  {
+    id: 43, topic: "Line/Circle Algorithms",
+    q: "In Bresenham's CIRCLE algorithm with r = 8, the initial decision parameter is:",
+    options: [
+      "p₀ = 3 − 2r = 3 − 16 = −13",
+      "p₀ = 1 − r = 1 − 8 = −7",
+      "p₀ = r − 1 = 7",
+      "p₀ = 2·r − 3 = 13"
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "Bresenham circle initial parameter: p₀ = 3 − 2r. With r=8: p₀ = 3 − 16 = −13.",
+      perOption: [
+        "Correct.",
+        "Wrong — that's the Midpoint Circle alternative form.",
+        "Wrong — invented formula.",
+        "Wrong — sign reversed."
+      ]
+    }
+  },
+  {
+    id: 44, topic: "Line/Circle Algorithms",
+    q: "In Bresenham's circle algorithm, after starting at (0, r), if p < 0 in a step the algorithm chooses the East pixel. The update is:",
+    options: [
+      "p_new = p + 4·x + 6, where x is the new x value.",
+      "p_new = p + 4·(x − y) + 10, where x and y are new values.",
+      "p_new = p + 2·x + 1.",
+      "p_new = p + 4·y + 6."
+    ],
+    correct: 0,
+    explanation: {
+      reasoning: "When p < 0 (East step), p_new = p + 4·x + 6. The other update is for p ≥ 0 (SE step).",
+      perOption: [
+        "Correct — East-step update.",
+        "Wrong — that's the SE step.",
+        "Wrong — missing +6 and wrong coefficient.",
+        "Wrong — uses y instead of x."
+      ]
+    }
+  },
+  {
+    id: 45, topic: "Line/Circle Algorithms",
+    q: "Plotting line from P(1,1) to Q(5,9) using DDA, the number of points plotted equals:",
+    options: [
+      "min(|dx|, |dy|) = min(4, 8) = 4",
+      "max(|dx|, |dy|) = max(4, 8) = 8",
+      "|dx| + |dy| = 4 + 8 = 12",
+      "√(dx² + dy²) ≈ 8.94, rounded to 9"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "DDA plots max(|dx|, |dy|) points for accuracy on the steeper axis.",
+      perOption: [
+        "Using min would skip pixels.",
+        "Correct.",
+        "That's Manhattan distance.",
+        "Euclidean distance isn't the pixel count."
+      ]
+    }
+  },
+  {
+    id: 46, topic: "Line/Circle Algorithms",
+    q: "The Midpoint Algorithm decision criterion F(MP) < 0 indicates the midpoint is ABOVE the line. The next pixel selected is:",
+    options: [
+      "(x_k+1, y_k+1) — step diagonally upward.",
+      "(x_k+1, y_k) — step right only.",
+      "(x_k, y_k+1) — step upward only.",
+      "(x_k−1, y_k) — step left."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Lecture: 'If Fk < 0: midpoint is above the line. Next pixel is (xk+1, yk).' Right-only step.",
+      perOption: [
+        "Wrong — that's for F ≥ 0.",
+        "Correct.",
+        "Wrong — midpoint algorithm increments x each step.",
+        "Wrong — never steps backward."
+      ]
+    }
+  },
+  {
+    id: 47, topic: "Digital Image Processing",
+    q: "A satellite photo has random speckle noise from sensor errors. Which DIP stage is MOST appropriate to address this?",
+    options: [
+      "Image enhancement — adjust contrast to make noise less visible.",
+      "Image restoration — apply noise removal techniques based on noise models.",
+      "Segmentation — separate noisy regions from clean regions.",
+      "Image compression — reduce file size to discard noise."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Restoration explicitly targets removing known degradations (noise, blur). The lecture's restoration example: 'Remove Noise.'",
+      perOption: [
+        "Enhancement may amplify noise.",
+        "Correct — restoration's textbook purpose.",
+        "Segmentation classifies regions, doesn't denoise.",
+        "Compression doesn't selectively remove noise."
+      ]
+    }
+  },
+  {
+    id: 48, topic: "Digital Image Processing",
+    q: "Which DIP stage extracts features useful for representation and description such as boundaries and skeletons?",
+    options: [
+      "Image acquisition",
+      "Morphological processing",
+      "Image enhancement",
+      "Image compression"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Morphological operations extract structural features like boundaries and skeletons.",
+      perOption: [
+        "Acquisition captures raw images.",
+        "Correct — morphology extracts structural attributes.",
+        "Enhancement improves visibility, not features.",
+        "Compression reduces size."
+      ]
+    }
+  },
+  {
+    id: 49, topic: "Digital Image Processing",
+    q: "An e-commerce team uses image processing to: (1) capture, (2) clean noise, (3) enhance contrast, (4) separate object from background, (5) auto-tag as 'sofa'. The correct sequence of DIP stages is:",
+    options: [
+      "Acquisition → Enhancement → Restoration → Segmentation → Object Recognition",
+      "Acquisition → Restoration → Enhancement → Segmentation → Object Recognition",
+      "Acquisition → Segmentation → Restoration → Enhancement → Object Recognition",
+      "Enhancement → Acquisition → Restoration → Object Recognition → Segmentation"
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "Per Gonzalez & Woods flow: Acquire → Restore → Enhance → Segment → Recognize.",
+      perOption: [
+        "Enhancement should come AFTER restoration.",
+        "Correct — matches the diagram.",
+        "Segmenting before cleaning would segment noise alongside objects.",
+        "Acquisition must come first."
+      ]
+    }
+  },
+  {
+    id: 50, topic: "Digital Image Processing",
+    q: "A team must choose between JPEG and PNG for product images of upholstered furniture (continuous tones, textures, no transparency). Which choice is MORE appropriate and why?",
+    options: [
+      "PNG — it preserves every pixel losslessly, ensuring perfect color fidelity for textures.",
+      "JPEG — it uses lossy compression tuned for natural photographs, yielding smaller files at acceptable quality.",
+      "PNG — its alpha channel improves furniture rendering even without explicit transparency.",
+      "JPEG — its built-in vector support handles texture better than raster PNG."
+    ],
+    correct: 1,
+    explanation: {
+      reasoning: "JPEG is designed for continuous-tone photographs. PNG's lossless preservation is wasted on photos.",
+      perOption: [
+        "Plausible but file size penalty is severe; JPEG perceptual quality is sufficient.",
+        "Correct.",
+        "Alpha channel is irrelevant without transparency need.",
+        "Fabricated — JPEG is a raster format."
+      ]
+    }
+  }
+];
+
+const STORAGE_KEY = "hci_mcq_complex_state_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    if (typeof parsed.currentIndex !== "number" || !parsed.answers) return defaultState();
+    return parsed;
+  } catch { return defaultState(); }
+}
+
+function defaultState() {
+  return { currentIndex: 0, answers: {} };
+}
+
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { console.warn("Save failed", e); }
+}
+
+let state = loadState();
+
+const quizArea = document.getElementById("quizArea");
+const curNumEl = document.getElementById("curNum");
+const correctCountEl = document.getElementById("correctCount");
+const wrongCountEl = document.getElementById("wrongCount");
+const answeredCountEl = document.getElementById("answeredCount");
+const progressFill = document.getElementById("progressFill");
+
+function updateMeta() {
+  curNumEl.textContent = state.currentIndex + 1;
+  const answered = Object.keys(state.answers).length;
+  let correct = 0, wrong = 0;
+  Object.entries(state.answers).forEach(([qid, selected]) => {
+    const q = QUESTIONS.find(x => x.id === Number(qid));
+    if (!q) return;
+    if (selected === q.correct) correct++; else wrong++;
+  });
+  correctCountEl.textContent = correct;
+  wrongCountEl.textContent = wrong;
+  answeredCountEl.textContent = answered;
+  progressFill.style.width = ((state.currentIndex + 1) / QUESTIONS.length * 100) + "%";
+}
+
+function letterFor(i) { return ["A", "B", "C", "D"][i]; }
+
+function renderQuestion(index) {
+  const q = QUESTIONS[index];
+  const userChoice = state.answers[q.id];
+  const answered = userChoice !== undefined;
+
+  const optionsHtml = q.options.map((opt, i) => {
+    let cls = "option";
+    let indicator = "";
+    if (answered) {
+      cls += " locked";
+      if (i === q.correct) { cls += " correct"; indicator = "✓"; }
+      else if (i === userChoice) { cls += " wrong"; indicator = "✗"; }
+    } else if (userChoice === i) {
+      cls += " selected";
+    }
+    return `
+      <button class="${cls}" data-idx="${i}" ${answered ? "disabled" : ""}>
+        <span class="letter">${letterFor(i)}</span>
+        <span>${opt}</span>
+        ${indicator ? `<span class="indicator">${indicator}</span>` : ""}
+      </button>`;
+  }).join("");
+
+  let explanationHtml = "";
+  if (answered) {
+    const isRight = userChoice === q.correct;
+    const breakdownHtml = q.explanation.perOption.map((txt, i) =>
+      `<div><b>${letterFor(i)}.</b> ${txt}</div>`
+    ).join("");
+    explanationHtml = `
+      <div class="explanation open">
+        <h4>Explanation</h4>
+        <div class="verdict ${isRight ? "right" : "wrong-v"}">
+          ${isRight ? "✓ Correct" : "✗ Incorrect"} — answer is ${letterFor(q.correct)}
+        </div>
+        <div class="reasoning">${q.explanation.reasoning}</div>
+        <div class="opt-breakdown">${breakdownHtml}</div>
+      </div>`;
+  }
+
+  quizArea.innerHTML = `
+    <div class="card">
+      <div class="q-header">
+        <div class="q-num">QUESTION ${String(q.id).padStart(3, "0")} / 50</div>
+        <div class="difficulty-tag">complex</div>
+      </div>
+      <div class="topic-tag">${q.topic}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">${optionsHtml}</div>
+      ${explanationHtml}
+      <div class="nav">
+        <button class="btn" id="prevBtn" ${index === 0 ? "disabled" : ""}>← Back</button>
+        <button class="btn primary" id="nextBtn" ${index === QUESTIONS.length - 1 ? "disabled" : ""}>Next →</button>
+      </div>
+    </div>`;
+
+  document.querySelectorAll(".option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("locked")) return;
+      const idx = Number(btn.dataset.idx);
+      state.answers[q.id] = idx;
+      saveState(state);
+      renderQuestion(index);
+      updateMeta();
+    });
+  });
+  document.getElementById("prevBtn").addEventListener("click", () => goTo(index - 1));
+  document.getElementById("nextBtn").addEventListener("click", () => goTo(index + 1));
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx >= QUESTIONS.length) return;
+  state.currentIndex = idx;
+  saveState(state);
+  renderQuestion(idx);
+  updateMeta();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+
+searchInput.addEventListener("input", (e) => {
+  const query = e.target.value.trim().toLowerCase();
+  if (!query) { searchResults.classList.remove("open"); searchResults.innerHTML = ""; return; }
+  const matches = QUESTIONS.filter(q =>
+    q.q.toLowerCase().includes(query) ||
+    q.topic.toLowerCase().includes(query) ||
+    q.options.some(o => o.toLowerCase().includes(query))
+  ).slice(0, 25);
+
+  if (matches.length === 0) {
+    searchResults.innerHTML = `<div class="search-empty">No questions match "${escapeHtml(query)}"</div>`;
+  } else {
+    searchResults.innerHTML = matches.map(q => `
+      <div class="search-result-item" data-id="${q.id}">
+        <span class="num">${String(q.id).padStart(3, "0")}</span>
+        <span>${highlightMatch(q.q, query)} <em style="color:var(--ink-dim); font-size:11px;">— ${q.topic}</em></span>
+      </div>`).join("");
+    document.querySelectorAll(".search-result-item").forEach(it => {
+      it.addEventListener("click", () => {
+        const qid = Number(it.dataset.id);
+        const idx = QUESTIONS.findIndex(x => x.id === qid);
+        if (idx >= 0) {
+          goTo(idx);
+          searchInput.value = "";
+          searchResults.classList.remove("open");
+        }
+      });
+    });
+  }
+  searchResults.classList.add("open");
+});
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".search-bar")) searchResults.classList.remove("open");
+});
+
+function highlightMatch(text, query) {
+  const safe = escapeHtml(text);
+  const re = new RegExp(`(${escapeRegex(query)})`, "ig");
+  return safe.replace(re, "<mark style='background:var(--accent-soft); color:var(--accent); padding:0 2px; border-radius:3px;'>$1</mark>");
+}
+function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("Reset all progress? This will clear all your answers in the Complex MCQs set.")) return;
+  state = defaultState();
+  saveState(state);
+  renderQuestion(0);
+  updateMeta();
+});
+
+document.getElementById("jumpBtn").addEventListener("click", () => {
+  const firstUnanswered = QUESTIONS.findIndex(q => state.answers[q.id] === undefined);
+  if (firstUnanswered === -1) {
+    alert("All complex questions answered! 🎉");
+  } else {
+    goTo(firstUnanswered);
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT") return;
+  if (e.key === "ArrowLeft") goTo(state.currentIndex - 1);
+  if (e.key === "ArrowRight") goTo(state.currentIndex + 1);
+});
+
+renderQuestion(state.currentIndex);
+updateMeta();
+</script>
+</body>
+</html>
