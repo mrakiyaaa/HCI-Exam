@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MCQ Practice — HCI & Graphics</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #161616;
+    --border: #1f1f1f;
+    --border-strong: #2a2a2a;
+    --text: #e8e8e8;
+    --text-dim: #8a8a8a;
+    --text-faint: #5a5a5a;
+    --accent: #e8e8e8;
+    --correct: #4ade80;
+    --correct-bg: rgba(74, 222, 128, 0.08);
+    --wrong: #f87171;
+    --wrong-bg: rgba(248, 113, 113, 0.08);
+    --selected: #3b82f6;
+    --selected-bg: rgba(59, 130, 246, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .stats {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .stats strong { color: var(--text); font-weight: 600; }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  select, .search-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  select { cursor: pointer; flex-shrink: 0; }
+  select:hover, select:focus { border-color: var(--border-strong); }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-wrap input {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+  }
+
+  .search-wrap input::placeholder { color: var(--text-faint); }
+
+  .search-results {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .search-results.active { display: block; }
+
+  .search-result {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.1s;
+  }
+
+  .search-result:last-child { border-bottom: none; }
+  .search-result:hover { background: var(--surface-2); }
+
+  .search-result .meta {
+    color: var(--text-faint);
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .search-result .text {
+    color: var(--text-dim);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .search-result mark {
+    background: rgba(59, 130, 246, 0.25);
+    color: var(--text);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  .empty-search {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+
+  .progress-track {
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  .q-meta .badge {
+    background: var(--surface-2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .q-text {
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .q-sketch {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-dim);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .option {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--text);
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    line-height: 1.5;
+  }
+
+  .option:hover:not(:disabled) {
+    border-color: var(--border-strong);
+    background: #1a1a1a;
+  }
+
+  .option:disabled { cursor: default; }
+
+  .option .letter {
+    font-weight: 600;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    min-width: 18px;
+  }
+
+  .option.selected {
+    border-color: var(--selected);
+    background: var(--selected-bg);
+  }
+
+  .option.selected .letter { color: var(--selected); }
+
+  .option.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+  }
+
+  .option.correct .letter { color: var(--correct); }
+
+  .option.wrong {
+    border-color: var(--wrong);
+    background: var(--wrong-bg);
+  }
+
+  .option.wrong .letter { color: var(--wrong); }
+
+  .option .indicator {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .option.correct .indicator { color: var(--correct); }
+  .option.wrong .indicator { color: var(--wrong); }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+  }
+
+  .feedback.show { display: block; }
+
+  .feedback.correct {
+    background: var(--correct-bg);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+    color: var(--correct);
+  }
+
+  .feedback.wrong {
+    background: var(--wrong-bg);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    color: var(--wrong);
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: inherit;
+    margin-top: 24px;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover {
+    color: var(--wrong);
+    border-color: rgba(248, 113, 113, 0.4);
+  }
+
+  .q-counter {
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 12px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 20px 16px 60px; }
+    header { flex-direction: column; gap: 12px; }
+    .stats { text-align: left; }
+    .question-card { padding: 20px; }
+    .q-text { font-size: 15px; }
+    .option { font-size: 13px; padding: 12px 14px; }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div>
+      <h1>MCQ Practice</h1>
+      <div class="subtitle">HCI & Computer Graphics — answers saved locally</div>
+    </div>
+    <div class="stats" id="stats">—</div>
+  </header>
+
+  <div class="controls">
+    <select id="setSelect"></select>
+    <div class="search-wrap">
+      <input type="text" id="search" placeholder="Search questions…" autocomplete="off" />
+    </div>
+  </div>
+
+  <div class="search-results" id="searchResults"></div>
+
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div id="questionContainer"></div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn">← Back</button>
+    <div class="q-counter" id="qCounter"></div>
+    <button class="nav-btn" id="nextBtn">Next →</button>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">Reset answers for this set</button>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const DATA = {
+  "mock1": {
+    name: "Mock Test 1 — HCI",
+    questions: [
+      { q: "In multimodal interfaces, which combination is most commonly used to enhance accessibility?",
+        options: { A: "Voice and gesture input", B: "Keyboard and mouse input", C: "Touchscreen and stylus input", D: "Monitor and printer output" }, answer: "A" },
+      { q: "Which of the following is a key advantage of eyetracking technology in HCI research?",
+        options: { A: "It reduces system processing time", B: "It provides insights into user attention and visual focus", C: "It eliminates the need for usability testing", D: "It guarantees higher recall scores in experiments" }, answer: "B" },
+      { q: "Which of the following is an ethical concern in HCI research?",
+        options: { A: "System latency", B: "User privacy and data protection", C: "Screen resolution", D: "Processing speed of algorithms" }, answer: "B" },
+      { q: "In adaptive interfaces, what does “context awareness” primarily refer to?",
+        options: { A: "The system’s ability to adjust based on user location, activity, or environment", B: "The system’s ability to store large datasets", C: "The system’s ability to run faster algorithms", D: "The system’s ability to reduce hardware costs" }, answer: "A" },
+      { q: "Which of the following best describes “ubiquitous computing” in HCI?",
+        options: { A: "Computing limited to desktop environments", B: "Computing embedded seamlessly into everyday objects and environments", C: "Computing restricted to mobile phones", D: "Computing focused only on cloud servers" }, answer: "B" },
+      { q: "Which evaluation method in HCI relies on expert reviewers applying established usability principles?",
+        options: { A: "Field study", B: "Heuristic inspection", C: "Controlled experiment", D: "Eyetracking analysis" }, answer: "B" },
+      { q: "Which of the following is a benefit of multimodal feedback (e.g., visual + auditory cues) in interface design?",
+        options: { A: "It reduces system cost", B: "It improves user engagement and error recovery", C: "It eliminates the need for training", D: "It guarantees faster hardware performance" }, answer: "B" },
+      { q: "What is the primary focus of Human-Computer Interaction (HCI)?",
+        options: { A: "Developing faster computer processors", B: "Improving the usability and interaction between humans and computers", C: "Designing computer hardware components", D: "Writing complex algorithms" }, answer: "B" },
+      { q: "Which of the following is NOT a core principle of HCI?",
+        options: { A: "Usability", B: "User experience", C: "Cryptography", D: "Accessibility" }, answer: "C" },
+      { q: "What does the term \"affordance\" refer to in HCI?",
+        options: { A: "The cost of designing an interface", B: "A property of an object that suggests how it can be used", C: "The speed of a user interface", D: "The aesthetic appeal of a design" }, answer: "B" },
+      { q: "Which design principle emphasizes reducing the number of actions a user must take to complete a task?",
+        options: { A: "Consistency", B: "Efficiency", C: "Feedback", D: "Visibility" }, answer: "B" },
+      { q: "What is the purpose of a \"persona\" in HCI?",
+        options: { A: "To represent the hardware specifications of a system", B: "To model a typical user to guide design decisions", C: "To test the security of an interface", D: "To define the color scheme of a UI" }, answer: "B" },
+      { q: "Which of the following is an example of a usability goal?",
+        options: { A: "Making a system visually appealing", B: "Ensuring a system is easy to learn", C: "Increasing the system’s processing speed", D: "Reducing the cost of production" }, answer: "B" },
+      { q: "What does Fitts’ Law predict in the context of HCI?",
+        options: { A: "The time it takes to move to a target based on its size and distance", B: "The number of errors a user will make in a task", C: "The aesthetic quality of an interface", D: "The memory load on a user" }, answer: "A" },
+      { q: "Which evaluation method involves observing users as they interact with a system?",
+        options: { A: "Heuristic evaluation", B: "Cognitive walkthrough", C: "User testing", D: "A/B testing" }, answer: "C" },
+      { q: "What is the main goal of a \"heuristic evaluation\" in HCI?",
+        options: { A: "To measure user satisfaction", B: "To identify usability problems using a set of guidelines", C: "To test the system’s performance under heavy load", D: "To generate a prototype" }, answer: "B" },
+      { q: "Which of the following is a common input device studied in HCI?",
+        options: { A: "Monitor", B: "Mouse", C: "Speaker", D: "Printer" }, answer: "B" },
+      { q: "What does the acronym \"GUI\" stand for in HCI?",
+        options: { A: "General User Interface", B: "Graphical User Interface", C: "Guided User Interaction", D: "Global Usability Index" }, answer: "B" },
+      { q: "Which of the following best describes \"user-centered design\"?",
+        options: { A: "Designing systems based on hardware limitations", B: "Prioritizing the needs and preferences of users throughout the design process", C: "Focusing on the aesthetic appeal of the interface", D: "Creating systems without user feedback" }, answer: "B" },
+      { q: "What is the purpose of providing \"feedback\" in an interface?",
+        options: { A: "To confuse the user", B: "To inform the user about the result of their actions", C: "To increase the system’s processing time", D: "To reduce the need for user input" }, answer: "B" },
+      { q: "Which of the following is an example of a \"cognitive load\" in HCI?",
+        options: { A: "The physical weight of a device", B: "The mental effort required to use an interface", C: "The time it takes to load a webpage", D: "The cost of designing a system" }, answer: "B" },
+      { q: "What is the primary benefit of using prototypes in HCI?",
+        options: { A: "To finalize the product design", B: "To test and refine ideas before full implementation", C: "To increase the system’s security", D: "To reduce the need for user testing" }, answer: "B" },
+      { q: "Which of the following is a key component of Norman’s model of interaction?",
+        options: { A: "Execution and evaluation", B: "Encryption and decryption", C: "Hardware and software", D: "Input and output" }, answer: "A" },
+      { q: "What does \"accessibility\" in HCI refer to?",
+        options: { A: "The speed of an interface", B: "Designing systems that can be used by people with disabilities", C: "The cost of accessing a system", D: "The availability of a system online" }, answer: "B" },
+      { q: "Which of the following is an example of a \"direct manipulation\" interface?",
+        options: { A: "Typing commands in a terminal", B: "Dragging and dropping files on a desktop", C: "Using a voice assistant", D: "Writing code to perform a task" }, answer: "B" },
+      { q: "What is the purpose of a \"task analysis\" in HCI?",
+        options: { A: "To evaluate the system’s hardware", B: "To break down user activities into steps for better design", C: "To measure the system’s energy consumption", D: "To test the system’s security features" }, answer: "B" },
+      { q: "Which of the following is a common challenge in designing mobile interfaces?",
+        options: { A: "Unlimited screen size", B: "Lack of user input methods", C: "Limited screen space and touch input accuracy", D: "Excessive processing power" }, answer: "C" },
+      { q: "In HCI, what is the primary purpose of a “lowfidelity prototype”?",
+        options: { A: "To test system performance under heavy load", B: "To quickly explore design ideas without investing in full development", C: "To finalize the visual design of the interface", D: "To measure the efficiency of algorithms" }, answer: "B" },
+      { q: "Which of the following is an example of “multimodal interaction”?",
+        options: { A: "Using only a keyboard to input text", B: "Combining speech commands with touch gestures to control a device", C: "Navigating a system through a single menu option", D: "Running multiple applications simultaneously" }, answer: "B" },
+      { q: "Which of the following best describes “error tolerance” in interface design?",
+        options: { A: "The ability of a system to prevent users from making mistakes", B: "The ability of a system to continue functioning correctly even when users make mistakes", C: "The ability of a system to run faster under heavy load", D: "The ability of a system to reduce memory usage" }, answer: "B" }
+    ]
+  },
+  "mock2": {
+    name: "Mock Test 2 — Advanced HCI + Graphics",
+    questions: [
+      { q: "Which of the following best describes “progressive disclosure” in interface design?",
+        options: { A: "Showing all options at once", B: "Revealing information gradually to avoid overwhelming users", C: "Hiding system feedback until errors occur", D: "Using animations to make interfaces engaging" }, answer: "B" },
+      { q: "In HCI, what does “error recovery” emphasize?",
+        options: { A: "Preventing all user mistakes", B: "Providing clear pathways for users to correct mistakes", C: "Reducing system processing time", D: "Eliminating feedback mechanisms" }, answer: "B" },
+      { q: "Which of the following is a key benefit of “eyetracking heatmaps” in usability studies?",
+        options: { A: "They measure system latency", B: "They show where users focus their attention on a screen", C: "They reduce cognitive load", D: "They eliminate the need for prototypes" }, answer: "B" },
+      { q: "What is the primary purpose of “Wizard of Oz” prototyping in HCI?",
+        options: { A: "To test system performance under heavy load", B: "To simulate system functionality by having a human secretly perform tasks", C: "To finalize interface aesthetics", D: "To reduce hardware costs" }, answer: "B" },
+      { q: "Which of the following best describes “situational awareness” in interface design?",
+        options: { A: "The system’s ability to adapt to user preferences", B: "The user’s perception of system status and environment", C: "The system’s ability to run faster algorithms", D: "The reduction of memory load" }, answer: "B" },
+      { q: "In mobile interface design, what is a common usability challenge?",
+        options: { A: "Unlimited screen space", B: "Limited accuracy of touch input on small screens", C: "Excessive processing power", D: "Lack of wireless connectivity" }, answer: "B" },
+      { q: "Which of the following is a key principle of “responsive design”?",
+        options: { A: "Interfaces should adapt seamlessly to different screen sizes and devices", B: "Interfaces should prioritize speed over usability", C: "Interfaces should eliminate feedback mechanisms", D: "Interfaces should be identical across all platforms" }, answer: "A" },
+      { q: "What is the main purpose of “card sorting” in HCI research?",
+        options: { A: "To evaluate hardware performance", B: "To understand how users categorize and organize information", C: "To measure system latency", D: "To finalize color schemes" }, answer: "B" },
+      { q: "Which of the following is a drawback of “voice user interfaces” (VUIs)?",
+        options: { A: "They cannot handle multiple languages", B: "They struggle with variability in accents and speech patterns", C: "They eliminate multimodal interaction", D: "They reduce system efficiency" }, answer: "B" },
+      { q: "In HCI, what does “learnability” measure?",
+        options: { A: "How quickly a system processes commands", B: "How easily new users can understand and use a system", C: "How aesthetically pleasing a system is", D: "How well a system prevents errors" }, answer: "B" },
+      { q: "Which of the following best describes “mental models” in HCI?",
+        options: { A: "The system’s internal architecture", B: "The user’s understanding of how a system works", C: "The designer’s blueprint of the interface", D: "The hardware specifications of a device" }, answer: "B" },
+      { q: "What is the primary purpose of “storyboarding” in HCI design?",
+        options: { A: "To measure system efficiency", B: "To visualize user interactions and scenarios", C: "To finalize hardware specifications", D: "To reduce cognitive load" }, answer: "B" },
+      { q: "Which of the following is a key advantage of “gesturebased interfaces”?",
+        options: { A: "They eliminate the need for visual feedback", B: "They allow natural, intuitive interactions with devices", C: "They reduce system processing time", D: "They guarantee higher recall scores" }, answer: "B" },
+      { q: "In accessibility design, what does “WCAG” stand for?",
+        options: { A: "Web Content Accessibility Guidelines", B: "World Computing Architecture Group", C: "Wireless Communication Access Grid", D: "Web Computing and Graphics Association" }, answer: "A" },
+      { q: "Which of the following best describes “modal interfaces”?",
+        options: { A: "Interfaces that allow multiple tasks simultaneously", B: "Interfaces that restrict user actions until a specific task is completed", C: "Interfaces that adapt to user preferences", D: "Interfaces that eliminate feedback mechanisms" }, answer: "B" },
+      { q: "What is the primary purpose of “contextual menus” in interface design?",
+        options: { A: "To provide options relevant to the current task or selection", B: "To reduce system latency", C: "To finalize system aesthetics", D: "To eliminate multimodal interaction" }, answer: "A" },
+      { q: "Which of the following is a limitation of “touchscreen interfaces”?",
+        options: { A: "They cannot display graphics", B: "They may lack tactile feedback compared to physical buttons", C: "They eliminate multimodal interaction", D: "They reduce system efficiency" }, answer: "B" },
+      { q: "In HCI, what does “discoverability” refer to?",
+        options: { A: "The system’s ability to run faster algorithms", B: "The ease with which users can find and understand available actions", C: "The system’s ability to reduce memory load", D: "The clarity of system aesthetics" }, answer: "B" },
+      { q: "Which of the following best describes “enduser programming” in HCI?",
+        options: { A: "Allowing users to modify system code directly", B: "Providing tools for users to customize or automate tasks without coding expertise", C: "Restricting users to predefined actions", D: "Eliminating feedback mechanisms" }, answer: "B" },
+      { q: "What is the primary purpose of “A/B testing” in interface evaluation?",
+        options: { A: "To compare two design alternatives and measure user preference or performance", B: "To finalize system architecture", C: "To reduce system latency", D: "To eliminate multimodal interaction" }, answer: "A" },
+      { q: "Which of the following is a key challenge in designing “wearable interfaces”?",
+        options: { A: "Excessive screen size", B: "Limited display area and input methods", C: "Unlimited battery life", D: "Lack of wireless connectivity" }, answer: "B" },
+      { q: "In HCI, what does “consistency” ensure?",
+        options: { A: "That system performance remains stable under heavy load", B: "That similar actions produce similar results across the interface", C: "That system aesthetics remain unchanged", D: "That system latency is minimized" }, answer: "B" },
+      { q: "Which of the following best describes “adaptive menus”?",
+        options: { A: "Menus that remain static regardless of user behavior", B: "Menus that change based on user preferences or usage patterns", C: "Menus that eliminate feedback mechanisms", D: "Menus that reduce system efficiency" }, answer: "B" },
+      { q: "What is the primary purpose of “error messages” in interface design?",
+        options: { A: "To confuse users", B: "To inform users about problems and guide recovery", C: "To reduce system latency", D: "To finalize system aesthetics" }, answer: "B" },
+      { q: "Which of the following is a key advantage of “augmented reality” interfaces?",
+        options: { A: "They eliminate the need for physical devices", B: "They overlay digital information onto the physical world for enhanced interaction", C: "They reduce system efficiency", D: "They guarantee higher recall scores" }, answer: "B" },
+      { q: "In HCI, what does “usability testing” primarily measure?",
+        options: { A: "System processing speed", B: "User performance, satisfaction, and error rates", C: "Hardware durability", D: "System aesthetics" }, answer: "B" },
+      { q: "Which of the following best describes “flat design” in interface design?",
+        options: { A: "Using realistic textures and shadows to mimic physical objects", B: "Employing minimalistic, two-dimensional elements without heavy gradients or embellishments", C: "Eliminating all forms of user feedback", D: "Reducing system efficiency by adding animations" }, answer: "B" },
+      { q: "What is the primary purpose of “personas” in HCI design?",
+        options: { A: "To represent typical users and guide design decisions", B: "To finalize system architecture", C: "To reduce system latency", D: "To eliminate multimodal interaction" }, answer: "A" },
+      { q: "Which of the following is a drawback of “highfidelity prototypes”?",
+        options: { A: "They are quick and inexpensive to build", B: "They may lead stakeholders to believe the design is final", C: "They eliminate the need for user feedback", D: "They reduce system efficiency" }, answer: "B" },
+      { q: "In HCI, what does “learnability vs. efficiency tradeoff” refer to?",
+        options: { A: "Systems that are easy to learn may not always be the most efficient for expert users", B: "Systems that are efficient always require more training", C: "Systems that reduce latency are harder to learn", D: "Systems that prioritize aesthetics over usability" }, answer: "A" },
+      { q: "What does DDA stand for in computer graphics?",
+        options: { A: "Digital Differential Analyzer", B: "Direct Drawing Algorithm", C: "Dynamic Data Analysis", D: "Data Display Algorithm" }, answer: "A" },
+      { q: "What is the primary purpose of the DDA algorithm?",
+        options: { A: "To generate curves", B: "To render 3D models", C: "To draw straight lines", D: "To fill shapes" }, answer: "C" },
+      { q: "Which type of arithmetic operation does the DDA algorithm primarily use?",
+        options: { A: "Floating-point arithmetic", B: "Integer arithmetic", C: "Bitwise operations", D: "String manipulation" }, answer: "A" },
+      { q: "The Midpoint Circle algorithm is mainly used to:",
+        options: { A: "Fill polygons", B: "Rasterize circles using integer arithmetic and symmetry", C: "Compute polygon normals", D: "Draw ellipses only" }, answer: "B" },
+      { q: "In the Midpoint Circle algorithm, what is the role of the decision parameter?",
+        options: { A: "It determines the radius", B: "It helps in deciding which pixel to plot next", C: "It controls the color of the circle", D: "It sets the thickness of the line" }, answer: "B" }
+    ]
+  },
+  "mock3": {
+    name: "Mock Test 3 — HCI",
+    questions: [
+      { q: "Which of the following best explains “mode errors” in HCI?",
+        options: { A: "Errors caused by hardware malfunction", B: "Mistakes that occur when users perform actions valid in one system state but invalid in another", C: "Errors due to poor network connectivity", D: "Mistakes caused by excessive system latency" }, answer: "B" },
+      { q: "In interface design, what does “visibility of system status” ensure?",
+        options: { A: "Users can always see the underlying code", B: "The system keeps users informed about what is happening through timely feedback", C: "The system hides processes to reduce distraction", D: "Users can only view completed tasks" }, answer: "B" },
+      { q: "Which of the following best describes “slips” versus “mistakes” in user errors?",
+        options: { A: "Slips are intentional, mistakes are accidental", B: "Slips occur when the action is wrong, mistakes occur when the goal itself is wrong", C: "Slips are caused by hardware, mistakes by software", D: "Slips are recoverable, mistakes are not" }, answer: "B" },
+      { q: "In HCI, why is “mapping” important in control design?",
+        options: { A: "It ensures that system performance is optimized", B: "It defines the relationship between controls and their effects in the real world", C: "It reduces memory load by eliminating feedback", D: "It guarantees faster system response" }, answer: "B" },
+      { q: "Which of the following best describes “graceful degradation” in interface design?",
+        options: { A: "A system continues to function at reduced capacity when parts fail", B: "A system shuts down immediately when errors occur", C: "A system eliminates feedback to reduce load", D: "A system prioritizes aesthetics over usability" }, answer: "A" },
+      { q: "What is the primary purpose of “error prevention” in usability heuristics?",
+        options: { A: "To reduce system processing time", B: "To design interfaces that minimize the chance of user mistakes", C: "To eliminate the need for feedback", D: "To reduce hardware costs" }, answer: "B" },
+      { q: "Which of the following best describes “chunking” in interface design?",
+        options: { A: "Breaking information into smaller, manageable units to reduce cognitive load", B: "Combining multiple tasks into one step", C: "Eliminating feedback to simplify design", D: "Increasing system latency to slow down user actions" }, answer: "A" },
+      { q: "In HCI, what is the main advantage of “consistency across platforms”?",
+        options: { A: "It reduces hardware costs", B: "It allows users to transfer knowledge and skills between systems", C: "It eliminates the need for feedback", D: "It guarantees faster system performance" }, answer: "B" },
+      { q: "Which of the following best describes “forgiving interfaces”?",
+        options: { A: "Interfaces that allow users to make mistakes without severe consequences", B: "Interfaces that eliminate all feedback", C: "Interfaces that prioritize aesthetics over usability", D: "Interfaces that reduce system efficiency" }, answer: "A" },
+      { q: "In usability testing, why is “task completion rate” considered a critical metric?",
+        options: { A: "It measures system processing speed", B: "It indicates how effectively users can achieve their goals using the system", C: "It evaluates hardware durability", D: "It measures the aesthetic appeal of the interface" }, answer: "B" },
+      { q: "Look at the sketch of a login screen — which usability principle is MOST relevant here?",
+        sketch: "+----------------------+\n|   Username: [_____]  |\n|   Password: [_____]  |\n|   [ Login ]          |\n+----------------------+",
+        options: { A: "Visibility of system status", B: "Error prevention", C: "Consistency and standards", D: "Flexibility and efficiency of use" }, answer: "B" },
+      { q: "Consider the menu layout — which design principle is illustrated by this arrangement?",
+        sketch: "[ File ] [ Edit ] [ View ] [ Help ]",
+        options: { A: "Mapping", B: "Consistency", C: "Affordance", D: "Feedback" }, answer: "B" },
+      { q: "Look at the sketch of a progress bar — what type of feedback does this represent?",
+        sketch: "Loading... [██████____] 60%",
+        options: { A: "Immediate feedback", B: "Delayed feedback", C: "Visual feedback", D: "Auditory feedback" }, answer: "C" },
+      { q: "Examine the sketch of a mobile interface — what usability principle is demonstrated by these icons?",
+        sketch: "+----------------------+\n| [🏠] [🔍] [📁] [⚙️] |\n+----------------------+",
+        options: { A: "Affordance", B: "Error tolerance", C: "Flexibility", D: "Minimalism" }, answer: "A" },
+      { q: "Consider the sketch of a confirmation dialog — which principle is being applied here?",
+        sketch: "+----------------------------------+\n|  Are you sure you want to exit?  |\n|  [ Yes ]        [ No ]           |\n+----------------------------------+",
+        options: { A: "Error prevention", B: "Visibility", C: "Feedback", D: "Efficiency" }, answer: "A" }
+    ]
+  },
+  "lineCircle": {
+    name: "Line & Circle Quiz — Graphics",
+    questions: [
+      { q: "Which of the following best describes the Digital Differential Analyzer (DDA) line drawing algorithm?",
+        options: { A: "It uses floating-point arithmetic to incrementally calculate points along a line.", B: "It calculates line points using trigonometric functions.", C: "It uses only integer arithmetic to plot line points.", D: "It is based on recursive subdivision of line segments." }, answer: "A" },
+      { q: "What is the main disadvantage of the DDA algorithm?",
+        options: { A: "It produces jagged lines.", B: "It requires floating-point operations, which are slower.", C: "It cannot handle negative slopes.", D: "It requires recursion." }, answer: "B" },
+      { q: "Which algorithm is more efficient in terms of integer arithmetic for line drawing?",
+        options: { A: "DDA", B: "Bresenham’s Line Algorithm", C: "Midpoint Circle Algorithm" }, answer: "C" },
+      { q: "In the Midpoint Circle Algorithm, what is the key decision parameter used for?",
+        options: { A: "To compute the circle’s center.", B: "To calculate the slope of the tangent.", C: "To determine whether to move horizontally or diagonally.", D: "To adjust the circle’s radius." }, answer: "C" },
+      { q: "Which property of circles is exploited in the Midpoint Circle Algorithm?",
+        options: { A: "Tangency", B: "Symmetry", C: "Recursion", D: "Scaling" }, answer: "B" },
+      { q: "Which of the following is true about DDA compared to Bresenham’s algorithm?",
+        options: { A: "DDA is faster because it uses floating-point arithmetic.", B: "DDA is slower because it uses floating-point arithmetic.", C: "DDA produces smoother lines than Bresenham’s algorithm.", D: "DDA requires recursion while Bresenham does not." }, answer: "B" },
+      { q: "In line drawing, what does the slope (m) determine in the DDA algorithm?",
+        options: { A: "Whether to increment x or y at each step.", B: "The decision parameter value.", C: "The radius of the circle.", D: "The symmetry of the line." }, answer: "A" },
+      { q: "Which of the following best describes the output of the Midpoint Circle Algorithm?",
+        options: { A: "A set of points forming a circle using symmetry.", B: "A set of points forming a polygon.", C: "A set of points forming an ellipse.", D: "A set of points forming a line segment." }, answer: "A" }
+    ]
+  }
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const STORAGE_KEY = "mcq_quiz_state_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { currentSet: "mock1", answers: {}, indices: {} };
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+let state = loadState();
+if (!DATA[state.currentSet]) state.currentSet = "mock1";
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const setSelect = document.getElementById("setSelect");
+const searchInput = document.getElementById("search");
+const searchResults = document.getElementById("searchResults");
+const questionContainer = document.getElementById("questionContainer");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const qCounter = document.getElementById("qCounter");
+const progressFill = document.getElementById("progressFill");
+const stats = document.getElementById("stats");
+const resetBtn = document.getElementById("resetBtn");
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  // populate set dropdown
+  Object.entries(DATA).forEach(([key, set]) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = set.name;
+    setSelect.appendChild(opt);
+  });
+  setSelect.value = state.currentSet;
+
+  setSelect.addEventListener("change", () => {
+    state.currentSet = setSelect.value;
+    saveState();
+    render();
+  });
+
+  prevBtn.addEventListener("click", () => {
+    const idx = getIndex();
+    if (idx > 0) setIndex(idx - 1);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    const idx = getIndex();
+    const total = DATA[state.currentSet].questions.length;
+    if (idx < total - 1) setIndex(idx + 1);
+  });
+
+  searchInput.addEventListener("input", handleSearch);
+  searchInput.addEventListener("focus", handleSearch);
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".search-wrap") && !e.target.closest(".search-results")) {
+      searchResults.classList.remove("active");
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    if (confirm("Clear all answers for \"" + DATA[state.currentSet].name + "\"?")) {
+      delete state.answers[state.currentSet];
+      saveState();
+      render();
+    }
+  });
+
+  // keyboard nav
+  document.addEventListener("keydown", (e) => {
+    if (document.activeElement === searchInput) return;
+    if (e.key === "ArrowRight") nextBtn.click();
+    if (e.key === "ArrowLeft") prevBtn.click();
+    if (["1","2","3","4","a","b","c","d","A","B","C","D"].includes(e.key)) {
+      const map = { "1":"A","2":"B","3":"C","4":"D","a":"A","b":"B","c":"C","d":"D","A":"A","B":"B","C":"C","D":"D" };
+      selectOption(map[e.key]);
+    }
+  });
+
+  render();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getIndex() {
+  return state.indices[state.currentSet] || 0;
+}
+
+function setIndex(i) {
+  state.indices[state.currentSet] = i;
+  saveState();
+  render();
+}
+
+function getAnswers() {
+  if (!state.answers[state.currentSet]) state.answers[state.currentSet] = {};
+  return state.answers[state.currentSet];
+}
+
+function selectOption(letter) {
+  const set = DATA[state.currentSet];
+  const idx = getIndex();
+  const q = set.questions[idx];
+  if (!q.options[letter]) return; // option doesn't exist for this Q
+  const answers = getAnswers();
+  answers[idx] = letter;
+  saveState();
+  render();
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  const set = DATA[state.currentSet];
+  const idx = getIndex();
+  const total = set.questions.length;
+  const q = set.questions[idx];
+  const answers = getAnswers();
+  const userAnswer = answers[idx];
+
+  // stats
+  const answered = Object.keys(answers).length;
+  const correct = Object.entries(answers).filter(([i, a]) => set.questions[i].answer === a).length;
+  stats.innerHTML = `<strong>${correct}</strong> correct / <strong>${answered}</strong> answered<br><span style="color:var(--text-faint)">of ${total} total</span>`;
+
+  // progress
+  progressFill.style.width = ((idx + 1) / total * 100) + "%";
+
+  // counter
+  qCounter.textContent = `Question ${idx + 1} of ${total}`;
+
+  // nav buttons
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = idx === total - 1;
+
+  // question card
+  const sketchHtml = q.sketch ? `<div class="q-sketch">${escapeHtml(q.sketch)}</div>` : "";
+  const optionsHtml = Object.entries(q.options).map(([letter, text]) => {
+    let cls = "option";
+    let indicator = "";
+    if (userAnswer) {
+      if (letter === q.answer) {
+        cls += " correct";
+        indicator = `<span class="indicator">✓ Correct</span>`;
+      } else if (letter === userAnswer) {
+        cls += " wrong";
+        indicator = `<span class="indicator">✗ Your answer</span>`;
+      }
+    } else if (userAnswer === letter) {
+      cls += " selected";
+    }
+    return `<button class="${cls}" data-letter="${letter}" ${userAnswer ? "disabled" : ""}>
+      <span class="letter">${letter}</span>
+      <span>${escapeHtml(text)}</span>
+      ${indicator}
+    </button>`;
+  }).join("");
+
+  let feedbackHtml = "";
+  if (userAnswer) {
+    if (userAnswer === q.answer) {
+      feedbackHtml = `<div class="feedback correct show">Correct — answer is ${q.answer}.</div>`;
+    } else {
+      feedbackHtml = `<div class="feedback wrong show">Incorrect. Correct answer: ${q.answer}) ${escapeHtml(q.options[q.answer])}</div>`;
+    }
+  }
+
+  questionContainer.innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="badge">${set.name}</span>
+        <span>${idx + 1} / ${total}</span>
+      </div>
+      <div class="q-text">${escapeHtml(q.q)}</div>
+      ${sketchHtml}
+      <div class="options">${optionsHtml}</div>
+      ${feedbackHtml}
+    </div>
+  `;
+
+  // wire option clicks
+  questionContainer.querySelectorAll(".option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!btn.disabled) selectOption(btn.dataset.letter);
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function handleSearch() {
+  const query = searchInput.value.trim().toLowerCase();
+  if (!query) {
+    searchResults.classList.remove("active");
+    return;
+  }
+
+  const matches = [];
+  Object.entries(DATA).forEach(([setKey, set]) => {
+    set.questions.forEach((q, idx) => {
+      const haystack = (q.q + " " + Object.values(q.options).join(" ")).toLowerCase();
+      if (haystack.includes(query)) {
+        matches.push({ setKey, setName: set.name, idx, q: q.q });
+      }
+    });
+  });
+
+  if (matches.length === 0) {
+    searchResults.innerHTML = `<div class="empty-search">No matches for "${escapeHtml(query)}"</div>`;
+  } else {
+    searchResults.innerHTML = matches.slice(0, 30).map(m => {
+      const highlighted = highlight(m.q, query);
+      return `<div class="search-result" data-set="${m.setKey}" data-idx="${m.idx}">
+        <div class="meta">${escapeHtml(m.setName)} · Q${m.idx + 1}</div>
+        <div class="text">${highlighted}</div>
+      </div>`;
+    }).join("");
+    if (matches.length > 30) {
+      searchResults.innerHTML += `<div class="empty-search">+${matches.length - 30} more — refine your search</div>`;
+    }
+  }
+  searchResults.classList.add("active");
+
+  searchResults.querySelectorAll(".search-result").forEach(el => {
+    el.addEventListener("click", () => {
+      state.currentSet = el.dataset.set;
+      setSelect.value = el.dataset.set;
+      state.indices[state.currentSet] = parseInt(el.dataset.idx, 10);
+      saveState();
+      searchInput.value = "";
+      searchResults.classList.remove("active");
+      render();
+    });
+  });
+}
+
+function highlight(text, query) {
+  const escaped = escapeHtml(text);
+  const re = new RegExp("(" + query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+  return escaped.replace(re, "<mark>$1</mark>");
+}
+
+init();
+</script>
+</body>
+</html>
